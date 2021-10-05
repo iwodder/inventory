@@ -1,0 +1,25 @@
+<!DOCTYPE html >
+<html xml:lang="en" xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+<f:view>
+    <h:head>
+        <title>Home Inventory</title>
+        <h:outputStylesheet name="stylesheets/layout.css"/>
+    </h:head>
+    <h:body>
+        <ui:include src="page-header.xhtml"/>
+        <div class="main-panel">
+            <ui:include src="links.xhtml"/>
+            <div class="right-main">
+                <ui:insert name="panel-main">
+                    <p>Add Content Here</p>
+                </ui:insert>
+            </div>
+        </div>
+        <ui:include src="page-footer.xhtml"/>
+    </h:body>
+</f:view>
+</html>
