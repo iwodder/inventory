@@ -6,8 +6,9 @@ import java.util.*;
 public class ConsoleMenu {
 	private final String menuName;
 	private ConsoleMenu parentMenu;
+	private InputHandler inputHandler;
 
-	ConsoleMenu(String name) {
+	public ConsoleMenu(String name) {
 		menuName = name;
 	}
 
@@ -45,6 +46,14 @@ public class ConsoleMenu {
 
 	public void exitMenu() {
 		throw new UnsupportedOperationException(getUnsupportedOpMsg("exitMenu"));
+	}
+
+	public void setInputHandler(InputHandler inputHandler) {
+		this.inputHandler = inputHandler;
+	}
+
+	public void handleInput(Scanner in, PrintStream out) {
+		inputHandler.handleInput(in, out);
 	}
 
 	public String getMenuName() {

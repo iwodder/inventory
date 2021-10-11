@@ -7,7 +7,7 @@ public class RootMenu extends ConsoleMenu {
 	private final List<ConsoleMenu> subMenus;
 	private ConsoleMenu activeMenu;
 
-	RootMenu(String name) {
+	public RootMenu(String name) {
 		super(name);
 		subMenus = new ArrayList<>();
 		activeMenu = this;
@@ -33,7 +33,7 @@ public class RootMenu extends ConsoleMenu {
 
 	@Override
 	public void readInput(Scanner input) {
-
+		activeMenu.handleInput(input, null);
 	}
 
 	@Override

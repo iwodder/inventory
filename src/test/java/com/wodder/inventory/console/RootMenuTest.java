@@ -1,5 +1,6 @@
 package com.wodder.inventory.console;
 
+import com.wodder.inventory.console.menus.*;
 import org.junit.jupiter.api.*;
 
 import java.io.*;
@@ -7,9 +8,10 @@ import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class RootMenuTest {
+class RootMenuTest implements InputHandler {
 	private ByteArrayOutputStream baos;
 	private ConsoleMenu menu;
+	private boolean inputHandled = false;
 
 	@BeforeEach
 	void setup() {
@@ -27,7 +29,7 @@ class RootMenuTest {
 	@Test
 	@DisplayName("Adding submenu sets parent menu")
 	void add_menu_1() {
-		ConsoleMenu invMenu = new InventoryItemMenu("Inventory Item Menu");
+		ConsoleMenu invMenu = new SubMenu("Inventory Item Menu");
 		menu.addMenu(invMenu);
 		assertSame(menu, invMenu.getParentMenu());
 	}
@@ -37,17 +39,17 @@ class RootMenuTest {
 	void print_menu() {
 		menu.printMenu(new PrintStream(baos));
 		String output = baos.toString();
-		String expected = "====== RootMenu ======\n1) Exit Menu\n";
+		String expected = String.format("====== RootMenu ======%n1) Exit Menu%n");
 		assertEquals(expected, output);
 	}
 
 	@Test
 	@DisplayName("RootMenu prints name, SubMenu title, and exit command")
 	void print_menu_1() {
-		menu.addMenu(new InventoryItemMenu("Inventory Item Menu"));
+		menu.addMenu(new SubMenu("Inventory Item Menu"));
 		menu.printMenu(new PrintStream(baos));
 		String output = baos.toString();
-		String expected = "====== RootMenu ======\n1) Inventory Item Menu\n2) Exit Menu\n";
+		String expected = String.format("====== RootMenu ======%n1) Inventory Item Menu%n2) Exit Menu%n");
 		assertEquals(expected, output);
 	}
 
@@ -117,29 +119,29 @@ class RootMenuTest {
 	@Test
 	@DisplayName("Active menu receives input")
 	void active_menu_test() {
-		final boolean[] handled = new boolean[1];
-		ConsoleMenu menu1 = new RootMenu("Root Menu 1") {
+		ConsoleMenu menu1 = new RootMenu("Root Menu 1");
+		menu1.setInputHandler(this::handleInput);
 
-			@Override
-			public void handleInput(String input) {
-				handled[0] = true;
-			}
-		};
+		menu1.readInput(null);
+		assertTrue(inputHandled);
+	}
 
-		Scanner in = new Scanner(new InputStream() {
-			int idx = 0;
-			char[] results = {'1','\n'};
-			@Override
-			public int read() throws IOException {
-				if (idx < results.length) {
-					return results[idx++];
-				} else {
-					return -1;
-				}
-			}
-		});
+	@Test
+	@DisplayName("Submenu receives input when active")
+	void active_menu_test1() {
+		ConsoleMenu menu1 = new RootMenu("Root Menu 1");
+		ConsoleMenu menu2 = new SubMenu("Sub Menu");
+		menu2.setInputHandler(this);
 
-		menu1.readInput(in);
-		assertTrue(handled[0]);
+		menu1.addMenu(menu2);
+		menu1.setActiveMenu(1);
+
+		menu1.readInput(null);
+		assertTrue(inputHandled);
+	}
+
+	@Override
+	public void handleInput(Scanner input, PrintStream out) {
+		this.inputHandled = true;
 	}
 }

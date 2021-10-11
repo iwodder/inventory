@@ -2,7 +2,7 @@ package com.wodder.inventory.console;
 
 public class SubMenu extends ConsoleMenu {
 
-	SubMenu(String name) {
+	public SubMenu(String name) {
 		super(name);
 	}
 
