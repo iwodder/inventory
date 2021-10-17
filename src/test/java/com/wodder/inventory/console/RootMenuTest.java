@@ -119,7 +119,7 @@ class RootMenuTest implements InputHandler {
 	@DisplayName("Active menu receives input")
 	void active_menu_test() {
 		ConsoleMenu menu1 = new RootMenu("Root Menu 1");
-		menu1.setInputHandler(this::handleInput);
+		menu1.setInputHandler(this);
 
 		menu1.readInput(null);
 		assertTrue(inputHandled);
@@ -147,8 +147,19 @@ class RootMenuTest implements InputHandler {
 		assertTrue(menu.exitMenu());
 	}
 
+	@Test
+	@DisplayName("Trying to set non-active menu causes exception")
+	void active_menu_exception() {
+		try {
+			ConsoleMenu menu = new RootMenu("Root Menu");
+			menu.setActiveMenu(1);
+		} catch (UnknownMenuException e) {
+			assertEquals("Unknown menu for choice 1", e.getMessage());
+		}
+	}
+
 	@Override
-	public void handleInput(Scanner input, PrintStream out) {
+	public void handleInput(Scanner input, PrintStream out, PrintStream err) {
 		this.inputHandled = true;
 	}
 }

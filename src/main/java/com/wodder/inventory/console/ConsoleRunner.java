@@ -13,7 +13,7 @@ public class ConsoleRunner {
 		this(null, null);
 	}
 
-	ConsoleRunner(InputStream in, PrintStream out) {
+	public ConsoleRunner(InputStream in, PrintStream out) {
 		this.in = in;
 		this.out = out;
 	}
@@ -23,7 +23,7 @@ public class ConsoleRunner {
 		if (out != null) {
 			while (notDone()) {
 				rootMenu.printMenu(out);
-				rootMenu.handleInput(new Scanner(in), out);
+				rootMenu.handleInput(new Scanner(in), out, null);
 			}
 		}
 	}

@@ -33,7 +33,7 @@ public class RootMenu extends ConsoleMenu {
 
 	@Override
 	public void readInput(Scanner input) {
-		activeMenu.handleInput(input, null);
+		activeMenu.handleInput(input, null, null);
 	}
 
 	@Override
@@ -49,7 +49,11 @@ public class RootMenu extends ConsoleMenu {
 
 	@Override
 	public void setActiveMenu(int menuId) {
-		activeMenu = subMenus.get(--menuId);
+		try {
+			activeMenu = subMenus.get(menuId - 1);
+		} catch (IndexOutOfBoundsException e) {
+			throw new UnknownMenuException(String.format("Unknown menu for choice %d", menuId));
+		}
 	}
 
 	@Override

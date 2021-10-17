@@ -83,7 +83,7 @@ class ConsoleRunnerTest {
 		}
 
 		@Override
-		public void handleInput(Scanner input, PrintStream out) {
+		public void handleInput(Scanner input, PrintStream out, PrintStream err) {
 			invokedHandledInput = true;
 			if (handleInputCnt++ > iterations) {
 				this.setExit(true);

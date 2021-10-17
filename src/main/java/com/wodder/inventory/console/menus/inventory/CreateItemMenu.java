@@ -26,13 +26,19 @@ public class CreateItemMenu extends SubMenu implements InputHandler {
 	}
 
 	@Override
-	public void handleInput(Scanner input, PrintStream out) {
+	public void handleInput(Scanner input, PrintStream out, PrintStream err) {
 		String in = input.nextLine();
 		Map<String, String> valuesMap = MenuUtils.extractKeyValuePairs(in);
 		InventoryItemDto createdDto = InventoryItemDto.builder()
 				.withName(valuesMap.get("NAME"))
 				.withCategory(valuesMap.get("CATEGORY"))
 				.build();
-		model.createItem(createdDto);
+		Result<InventoryItemDto, String> result = model.createItem(createdDto);
+		if (result.isOK()) {
+			InventoryItemDto newItem = result.getOk();
+			out.printf("Successfully created %s with id of %d%n", newItem.getName(), newItem.getId());
+		} else {
+			out.println(result.getErr());
+		}
 	}
 }

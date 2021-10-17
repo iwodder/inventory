@@ -8,42 +8,24 @@ import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class InventoryItemModelImplTest implements Listener {
-	boolean success;
-	boolean error;
-
-	@BeforeEach
-	void setup() {
-		success = false;
-		error = false;
-	}
+class InventoryItemModelImplTest{
 
 	@Test
-	@DisplayName("Create item notifies listeners on completion")
+	@DisplayName("Create item returns ok on success")
 	void createItem() {
 		InventoryItemModelImpl inventoryItemModel = new InventoryItemModelImpl(new TestServiceFactory());
-		inventoryItemModel.registerListener(this);
-		inventoryItemModel.createItem(InventoryItemDto.builder().build());
-		assertTrue(success);
-		assertFalse(error);
+		Result<InventoryItemDto, String> r = inventoryItemModel.createItem(InventoryItemDto.builder().build());
+		assertTrue(r.isOK());
+		assertFalse(r.isErr());
 	}
 
 	@Test
-	@DisplayName("Create item notifies listener on error")
+	@DisplayName("Create item returns error result on failure")
 	void createItem1() {
 		InventoryItemModelImpl inventoryItemModel = new InventoryItemModelImpl(new TestServiceFactory(false));
-		inventoryItemModel.registerListener(this);
-		inventoryItemModel.createItem(InventoryItemDto.builder().build());
-		assertFalse(success);
-		assertTrue(error);
-	}
-
-	public void onSuccess() {
-		success = true;
-	}
-
-	public void onError() {
-		error = true;
+		Result<InventoryItemDto, String> r = inventoryItemModel.createItem(InventoryItemDto.builder().build());
+		assertFalse(r.isOK());
+		assertTrue(r.isErr());
 	}
 
 	private static class TestServiceFactory implements ServiceFactory {

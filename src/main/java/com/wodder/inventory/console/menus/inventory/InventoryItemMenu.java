@@ -7,12 +7,12 @@ import java.util.*;
 
 public class InventoryItemMenu extends RootMenu implements InputHandler {
 
-	InventoryItemMenu() {
+	public InventoryItemMenu() {
 		super("Inventory Item Menu");
 	}
 
 	@Override
-	public void handleInput(Scanner input, PrintStream out) {
+	public void handleInput(Scanner input, PrintStream out, PrintStream err) {
 		Integer selection = Integer.parseInt(input.next());
 		setActiveMenu(selection);
 	}

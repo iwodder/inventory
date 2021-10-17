@@ -66,8 +66,8 @@ public class ConsoleMenu {
 		this.inputHandler = inputHandler;
 	}
 
-	public void handleInput(Scanner in, PrintStream out) {
-		inputHandler.handleInput(in, out);
+	public void handleInput(Scanner in, PrintStream out, PrintStream err) {
+		inputHandler.handleInput(in, out, err);
 	}
 
 	public String getMenuName() {
