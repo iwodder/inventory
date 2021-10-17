@@ -7,6 +7,7 @@ public class ConsoleMenu {
 	private final String menuName;
 	private ConsoleMenu parentMenu;
 	private InputHandler inputHandler;
+	private boolean exit = false;
 
 	public ConsoleMenu(String name) {
 		menuName = name;
@@ -32,6 +33,10 @@ public class ConsoleMenu {
 		throw new UnsupportedOperationException(getUnsupportedOpMsg("setActiveMenu"));
 	}
 
+	public void setActiveMenu(ConsoleMenu menu) {
+		throw new UnsupportedOperationException();
+	}
+
 	public void setParentMenu(ConsoleMenu menu) {
 		parentMenu = menu;
 	}
@@ -44,8 +49,17 @@ public class ConsoleMenu {
 		throw new UnsupportedOperationException(getUnsupportedOpMsg("getActiveMenu"));
 	}
 
-	public void exitMenu() {
-		throw new UnsupportedOperationException(getUnsupportedOpMsg("exitMenu"));
+	public boolean exitMenu() {
+		if (getParentMenu() != null) {
+			getParentMenu().exitMenu();
+		} else {
+			setActiveMenu(this);
+		}
+		return exit;
+	}
+
+	protected void setExit(boolean exit) {
+		this.exit = exit;
 	}
 
 	public void setInputHandler(InputHandler inputHandler) {

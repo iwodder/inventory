@@ -1,6 +1,5 @@
 package com.wodder.inventory.console;
 
-import com.wodder.inventory.console.menus.*;
 import org.junit.jupiter.api.*;
 
 import java.io.*;
@@ -86,7 +85,7 @@ class RootMenuTest implements InputHandler {
 
 		menu.setActiveMenu(1);
 		assertSame(subMenu, menu.getActiveMenu());
-		subMenu.exitMenu();
+		assertFalse(subMenu.exitMenu());
 		assertSame(menu, menu.getActiveMenu());
 	}
 
@@ -112,7 +111,7 @@ class RootMenuTest implements InputHandler {
 		menu1.addMenu(menu2);
 		menu1.setActiveMenu(1);
 
-		menu2.exitMenu();
+		assertFalse(menu2.exitMenu());
 		assertSame(menu1, menu1.getActiveMenu());
 	}
 
@@ -138,6 +137,14 @@ class RootMenuTest implements InputHandler {
 
 		menu1.readInput(null);
 		assertTrue(inputHandled);
+	}
+
+	@Test
+	@DisplayName("Root menu without parent returns true for exit")
+	void exit_root_menu_test() {
+		ConsoleMenu menu = new RootMenu("Root Menu");
+		menu.setExit(true);
+		assertTrue(menu.exitMenu());
 	}
 
 	@Override

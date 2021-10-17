@@ -58,11 +58,7 @@ public class RootMenu extends ConsoleMenu {
 	}
 
 	@Override
-	public void exitMenu() {
-		if (getParentMenu() != null) {
-			getParentMenu().exitMenu();
-		} else {
-			activeMenu = this;
-		}
+	public void setActiveMenu(ConsoleMenu menu) {
+		this.activeMenu = menu;
 	}
 }
