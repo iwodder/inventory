@@ -1,7 +1,6 @@
 package com.wodder.inventory.console.menus.inventory;
 
 import com.wodder.inventory.console.*;
-import com.wodder.inventory.console.menus.inventory.*;
 import org.junit.jupiter.api.*;
 
 import java.io.*;
@@ -46,7 +45,7 @@ class InventoryItemMenuTest {
 		ConsoleMenu menu1 = new SubMenu("Sub Menu");
 		menu.addMenu(menu1);
 
-		menu.readInput(new Scanner(is));
+		menu.process(new Scanner(is), null, null);
 		assertSame(menu1, menu.getActiveMenu());
 	}
 }

@@ -5,4 +5,9 @@ public class SubMenu extends ConsoleMenu {
 	public SubMenu(String name) {
 		super(name);
 	}
+
+	@Override
+	public void exitMenu() {
+		getParentMenu().exitMenu();
+	}
 }

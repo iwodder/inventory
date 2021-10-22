@@ -32,8 +32,8 @@ public class RootMenu extends ConsoleMenu {
 	}
 
 	@Override
-	public void readInput(Scanner input) {
-		activeMenu.handleInput(input, null, null);
+	public void process(Scanner in, PrintStream out, PrintStream err) {
+		activeMenu.getInputHandler().handleInput(in, out, err);
 	}
 
 	@Override
@@ -49,11 +49,27 @@ public class RootMenu extends ConsoleMenu {
 
 	@Override
 	public void setActiveMenu(int menuId) {
-		try {
-			activeMenu = subMenus.get(menuId - 1);
-		} catch (IndexOutOfBoundsException e) {
+		int idx = menuId - 1;
+		if (idx >= 0 && idx < subMenuCnt()) {
+			activeMenu = subMenus.get(idx);
+		} else {
 			throw new UnknownMenuException(String.format("Unknown menu for choice %d", menuId));
 		}
+	}
+
+	@Override
+	public void exitMenu() {
+
+		if (getParentMenu() != null) {
+			activateParentMenu();
+		} else {
+			activeMenu = this;
+			setExit(true);
+		}
+	}
+
+	private void activateParentMenu() {
+		getParentMenu().setActiveMenu(getParentMenu());
 	}
 
 	@Override

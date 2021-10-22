@@ -10,6 +10,6 @@ class SubMenuTest {
 	@DisplayName("Submenu should always return false")
 	void exitMenu() {
 		ConsoleMenu menu = new SubMenu("Sub Menu");
-		assertFalse(menu.exitMenu());
+		assertFalse(menu.getExit());
 	}
 }

@@ -9,7 +9,7 @@ import static org.junit.jupiter.api.Assertions.*;
 class CreateItemTest extends BaseMenuTest {
 
 	@BeforeEach
-	void setup() {
+	protected void setup() {
 		super.setup();
 		success = true;
 	}
@@ -20,7 +20,7 @@ class CreateItemTest extends BaseMenuTest {
 		chars = String.format("name=\"2%% Milk\"%n").chars().iterator();
 		TestInventoryItemModel model = new TestInventoryItemModel();
 		CreateItemMenu menu = new CreateItemMenu(model);
-		menu.handleInput(in, out, null);
+		menu.process(in, out, null);
 		assertNotNull(model.dto);
 		assertEquals("2% Milk", model.dto.getName());
 	}
@@ -31,7 +31,7 @@ class CreateItemTest extends BaseMenuTest {
 		chars = String.format("name=\"2%% Milk\" category=refridgerated%n").chars().iterator();
 		TestInventoryItemModel model = new TestInventoryItemModel();
 		CreateItemMenu menu = new CreateItemMenu(model);
-		menu.handleInput(in, out, null);
+		menu.process(in, out, null);
 		assertEquals("2% Milk", model.dto.getName());
 		assertEquals("refridgerated", model.dto.getCategory());
 		assertNotNull(model.dto.getId());
@@ -42,7 +42,7 @@ class CreateItemTest extends BaseMenuTest {
 	void on_success() {
 		chars = String.format("name=\"2%% Milk\" category=refridgerated%n").chars().iterator();
 		CreateItemMenu menu = new CreateItemMenu(new TestInventoryItemModel());
-		menu.handleInput(in, out, null);
+		menu.process(in, out, null);
 		String result = baosOut.toString();
 		assertEquals("Successfully created 2% Milk with id of 1"+System.lineSeparator(), result);
 	}
@@ -53,7 +53,7 @@ class CreateItemTest extends BaseMenuTest {
 		success = false;
 		chars = String.format("name=\"2%% Milk\" category=refridgerated%n").chars().iterator();
 		CreateItemMenu menu = new CreateItemMenu(new TestInventoryItemModel());
-		menu.handleInput(in, out, err);
+		menu.process(in, out, err);
 		String result = baosOut.toString();
 		assertEquals("Error"+System.lineSeparator(), result);
 	}

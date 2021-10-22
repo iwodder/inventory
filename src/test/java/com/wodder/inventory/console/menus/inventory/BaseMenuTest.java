@@ -12,15 +12,17 @@ public abstract class BaseMenuTest {
 	protected ByteArrayOutputStream baosOut;
 	protected ByteArrayOutputStream baosErr;
 	protected Scanner in;
+	protected InputStream inputStream;
 	protected boolean success;
 
 	@BeforeEach
-	void setup() {
+	protected void setup() {
 		baosOut = new ByteArrayOutputStream();
 		baosErr = new ByteArrayOutputStream();
 		out = new PrintStream(baosOut);
 		err = new PrintStream(baosErr);
-		in = new Scanner(new TestInputStream());
+		inputStream = new TestInputStream();
+		in = new Scanner(inputStream);
 	}
 
 	public void setChars(String userInput) {

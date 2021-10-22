@@ -7,6 +7,7 @@ public class ConsoleRunner {
 	private RootMenu rootMenu;
 	private final InputStream in;
 	private final PrintStream out;
+	private final PrintStream err;
 	boolean running;
 
 	ConsoleRunner() {
@@ -14,8 +15,13 @@ public class ConsoleRunner {
 	}
 
 	public ConsoleRunner(InputStream in, PrintStream out) {
+		this(in, out, null);
+	}
+
+	public ConsoleRunner(InputStream in, PrintStream out, PrintStream err) {
 		this.in = in;
 		this.out = out;
+		this.err = err;
 	}
 
 	public void start() {
@@ -23,13 +29,13 @@ public class ConsoleRunner {
 		if (out != null) {
 			while (notDone()) {
 				rootMenu.printMenu(out);
-				rootMenu.handleInput(new Scanner(in), out, null);
+				rootMenu.process(new Scanner(in), out, err);
 			}
 		}
 	}
 
 	private boolean notDone() {
-		return !rootMenu.exitMenu();
+		return !rootMenu.getExit();
 	}
 
 	public RootMenu getRootMenu() {

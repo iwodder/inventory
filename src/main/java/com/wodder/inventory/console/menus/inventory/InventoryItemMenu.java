@@ -9,6 +9,7 @@ public class InventoryItemMenu extends RootMenu implements InputHandler {
 
 	public InventoryItemMenu() {
 		super("Inventory Item Menu");
+		setInputHandler(this);
 	}
 
 	@Override

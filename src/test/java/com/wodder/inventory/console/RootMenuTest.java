@@ -85,7 +85,7 @@ class RootMenuTest implements InputHandler {
 
 		menu.setActiveMenu(1);
 		assertSame(subMenu, menu.getActiveMenu());
-		assertFalse(subMenu.exitMenu());
+		subMenu.exitMenu();
 		assertSame(menu, menu.getActiveMenu());
 	}
 
@@ -111,7 +111,8 @@ class RootMenuTest implements InputHandler {
 		menu1.addMenu(menu2);
 		menu1.setActiveMenu(1);
 
-		assertFalse(menu2.exitMenu());
+		menu2.exitMenu();
+		assertFalse(menu2.getExit());
 		assertSame(menu1, menu1.getActiveMenu());
 	}
 
@@ -121,7 +122,7 @@ class RootMenuTest implements InputHandler {
 		ConsoleMenu menu1 = new RootMenu("Root Menu 1");
 		menu1.setInputHandler(this);
 
-		menu1.readInput(null);
+		menu1.process(null, null, null);
 		assertTrue(inputHandled);
 	}
 
@@ -135,7 +136,7 @@ class RootMenuTest implements InputHandler {
 		menu1.addMenu(menu2);
 		menu1.setActiveMenu(1);
 
-		menu1.readInput(null);
+		menu1.process(null, null,null);
 		assertTrue(inputHandled);
 	}
 
@@ -144,7 +145,7 @@ class RootMenuTest implements InputHandler {
 	void exit_root_menu_test() {
 		ConsoleMenu menu = new RootMenu("Root Menu");
 		menu.setExit(true);
-		assertTrue(menu.exitMenu());
+		assertTrue(menu.getExit());
 	}
 
 	@Test
