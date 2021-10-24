@@ -1,4 +1,4 @@
-package com.wodder.inventory.console;
+package com.wodder.inventory.console.exceptions;
 
 public class UnknownMenuException extends RuntimeException {
 

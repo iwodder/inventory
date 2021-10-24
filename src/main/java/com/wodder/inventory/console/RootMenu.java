@@ -1,5 +1,7 @@
 package com.wodder.inventory.console;
 
+import com.wodder.inventory.console.exceptions.*;
+
 import java.io.*;
 import java.util.*;
 
@@ -10,7 +12,8 @@ public class RootMenu extends ConsoleMenu {
 	public RootMenu(String name) {
 		super(name);
 		subMenus = new ArrayList<>();
-		activeMenu = this;
+		addMenu(new ExitMenu());
+		setActiveMenu(this);
 	}
 
 	@Override
@@ -28,7 +31,6 @@ public class RootMenu extends ConsoleMenu {
 		for (ConsoleMenu menu : subMenus) {
 			out.printf("%d) %s%n", menuCnt++, menu.getMenuName());
 		}
-		out.printf("%d) Exit Menu%n", menuCnt);
 	}
 
 	@Override
@@ -39,7 +41,11 @@ public class RootMenu extends ConsoleMenu {
 	@Override
 	public void addMenu(ConsoleMenu menu) {
 		menu.setParentMenu(this);
-		subMenus.add(menu);
+		if (subMenus.isEmpty()) {
+			subMenus.add(menu);
+		} else {
+			subMenus.add(subMenus.size() - 1, menu);
+		}
 	}
 
 	@Override
@@ -59,7 +65,6 @@ public class RootMenu extends ConsoleMenu {
 
 	@Override
 	public void exitMenu() {
-
 		if (getParentMenu() != null) {
 			activateParentMenu();
 		} else {

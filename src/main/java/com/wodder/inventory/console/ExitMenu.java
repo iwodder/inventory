@@ -7,15 +7,16 @@ public class ExitMenu extends SubMenu implements InputHandler {
 
 	public ExitMenu() {
 		super("Exit");
+		setInputHandler(this);
 	}
 
 	@Override
 	public void printMenu(PrintStream out) {
-		out.println("Exiting...");
+		out.print("Exiting...");
 	}
 
 	@Override
 	public void handleInput(Scanner in, PrintStream out, PrintStream err) {
-		exitMenu();
+		getParentMenu().exitMenu();
 	}
 }

@@ -1,5 +1,6 @@
 package com.wodder.inventory.console;
 
+import com.wodder.inventory.console.exceptions.*;
 import org.junit.jupiter.api.*;
 
 import java.io.*;
@@ -22,7 +23,7 @@ class RootMenuTest implements InputHandler {
 	@DisplayName("RootMenu accepts all other menus")
 	void add_menu() {
 		menu.addMenu(new SubMenu("Sub menu"));
-		assertEquals(1, menu.subMenuCnt());
+		assertEquals(2, menu.subMenuCnt());
 	}
 
 	@Test
@@ -38,7 +39,7 @@ class RootMenuTest implements InputHandler {
 	void print_menu() {
 		menu.printMenu(new PrintStream(baos));
 		String output = baos.toString();
-		String expected = String.format("====== RootMenu ======%n1) Exit Menu%n");
+		String expected = String.format("====== RootMenu ======%n1) Exit%n");
 		assertEquals(expected, output);
 	}
 
@@ -48,7 +49,7 @@ class RootMenuTest implements InputHandler {
 		menu.addMenu(new SubMenu("Inventory Item Menu"));
 		menu.printMenu(new PrintStream(baos));
 		String output = baos.toString();
-		String expected = String.format("====== RootMenu ======%n1) Inventory Item Menu%n2) Exit Menu%n");
+		String expected = String.format("====== RootMenu ======%n1) Inventory Item Menu%n2) Exit%n");
 		assertEquals(expected, output);
 	}
 
@@ -67,26 +68,6 @@ class RootMenuTest implements InputHandler {
 		String output = baos.toString();
 		String expected = "====== Test Menu ======";
 		assertEquals(expected, output);
-	}
-
-	@Test
-	@DisplayName("Exiting submenu returns to root menu")
-	void exit_submenu() {
-		ConsoleMenu menu = new RootMenu("Root Menu");
-		ConsoleMenu subMenu = new SubMenu("Inv. Item Menu") {
-			ConsoleMenu parent;
-			@Override
-			public void printMenu(PrintStream out) {
-				out.print("====== Test Menu ======");
-			}
-		};
-
-		menu.addMenu(subMenu);
-
-		menu.setActiveMenu(1);
-		assertSame(subMenu, menu.getActiveMenu());
-		subMenu.exitMenu();
-		assertSame(menu, menu.getActiveMenu());
 	}
 
 	@Test
@@ -144,7 +125,8 @@ class RootMenuTest implements InputHandler {
 	@DisplayName("Root menu without parent returns true for exit")
 	void exit_root_menu_test() {
 		ConsoleMenu menu = new RootMenu("Root Menu");
-		menu.setExit(true);
+		menu.setActiveMenu(1);
+		menu.process(null,null,null);
 		assertTrue(menu.getExit());
 	}
 
