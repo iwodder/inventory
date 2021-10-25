@@ -1,5 +1,6 @@
 package com.wodder.inventory.console.menus.inventory;
 
+import com.wodder.inventory.console.handlers.*;
 import com.wodder.inventory.console.models.*;
 import com.wodder.inventory.dtos.*;
 import org.junit.jupiter.api.*;
@@ -7,19 +8,24 @@ import org.junit.jupiter.api.*;
 import static org.junit.jupiter.api.Assertions.*;
 
 class CreateItemTest extends BaseMenuTest {
+	private CreateItemMenu menu;
+	private CreateItemHandler createItemHandler;
+	private TestInventoryItemModel model;
 
 	@BeforeEach
 	protected void setup() {
 		super.setup();
 		success = true;
+
+		model = new TestInventoryItemModel();
+		createItemHandler = new CreateItemHandler(model);
+		menu = new CreateItemMenu(createItemHandler, model);
 	}
 
 	@Test
 	@DisplayName("Handles new item input")
 	void handleInput() {
 		chars = String.format("name=\"2%% Milk\"%n").chars().iterator();
-		TestInventoryItemModel model = new TestInventoryItemModel();
-		CreateItemMenu menu = new CreateItemMenu(model);
 		menu.process(in, out, null);
 		assertNotNull(model.dto);
 		assertEquals("2% Milk", model.dto.getName());
@@ -29,8 +35,6 @@ class CreateItemTest extends BaseMenuTest {
 	@DisplayName("Creates InventoryItemDTO")
 	void handle_input1() {
 		chars = String.format("name=\"2%% Milk\" category=refridgerated%n").chars().iterator();
-		TestInventoryItemModel model = new TestInventoryItemModel();
-		CreateItemMenu menu = new CreateItemMenu(model);
 		menu.process(in, out, null);
 		assertEquals("2% Milk", model.dto.getName());
 		assertEquals("refridgerated", model.dto.getCategory());
@@ -41,7 +45,6 @@ class CreateItemTest extends BaseMenuTest {
 	@DisplayName("On success menu prints id and name of created item")
 	void on_success() {
 		chars = String.format("name=\"2%% Milk\" category=refridgerated%n").chars().iterator();
-		CreateItemMenu menu = new CreateItemMenu(new TestInventoryItemModel());
 		menu.process(in, out, null);
 		String result = baosOut.toString();
 		assertEquals("Successfully created 2% Milk with id of 1"+System.lineSeparator(), result);
@@ -52,7 +55,6 @@ class CreateItemTest extends BaseMenuTest {
 	void on_error() {
 		success = false;
 		chars = String.format("name=\"2%% Milk\" category=refridgerated%n").chars().iterator();
-		CreateItemMenu menu = new CreateItemMenu(new TestInventoryItemModel());
 		menu.process(in, out, err);
 		String result = baosOut.toString();
 		assertEquals("Error"+System.lineSeparator(), result);
@@ -61,7 +63,6 @@ class CreateItemTest extends BaseMenuTest {
 	@Test
 	@DisplayName("Prints menu")
 	void prints_menu() {
-		CreateItemMenu menu = new CreateItemMenu(new TestInventoryItemModel());
 		menu.printMenu(out);
 		String result = baosOut.toString();
 		assertEquals(String.format("====== Create New Item ======%n"), result);
@@ -80,5 +81,4 @@ class CreateItemTest extends BaseMenuTest {
 			}
 		}
 	}
-
 }

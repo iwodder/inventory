@@ -1,22 +1,21 @@
 package com.wodder.inventory.console;
 
-import java.io.*;
-import java.util.*;
+import com.wodder.inventory.console.handlers.*;
 
-public class ExitMenu extends SubMenu implements InputHandler {
+import java.io.*;
+
+public class ExitMenu extends SubMenu {
+
+	public ExitMenu(InputHandler handler) {
+		super("Exit", handler);
+	}
 
 	public ExitMenu() {
-		super("Exit");
-		setInputHandler(this);
+		this(null);
 	}
 
 	@Override
 	public void printMenu(PrintStream out) {
 		out.print("Exiting...");
-	}
-
-	@Override
-	public void handleInput(Scanner in, PrintStream out, PrintStream err) {
-		getParentMenu().exitMenu();
 	}
 }

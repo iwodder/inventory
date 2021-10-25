@@ -1,20 +1,20 @@
 package com.wodder.inventory.console.menus.inventory;
 
 import com.wodder.inventory.console.*;
+import com.wodder.inventory.console.handlers.*;
 
-import java.io.*;
-import java.util.*;
-
-public class InventoryItemMenu extends RootMenu implements InputHandler {
+public class InventoryItemMenu extends RootMenu {
 
 	public InventoryItemMenu() {
-		super("Inventory Item Menu");
-		setInputHandler(this);
+		this("Inventory Item Menu", null);
 	}
 
-	@Override
-	public void handleInput(Scanner input, PrintStream out, PrintStream err) {
-		Integer selection = Integer.parseInt(input.next());
-		setActiveMenu(selection);
+	public InventoryItemMenu(InputHandler handler) {
+		this("Inventory Item Menu", handler);
+		handler.setMenu(this);
+	}
+
+	private InventoryItemMenu(String name, InputHandler inputHandler) {
+		super(name, inputHandler);
 	}
 }

@@ -1,5 +1,7 @@
 package com.wodder.inventory.console;
 
+import com.wodder.inventory.console.handlers.*;
+
 import java.io.*;
 import java.util.*;
 
@@ -10,7 +12,12 @@ public class ConsoleMenu {
 	private boolean exit = false;
 
 	public ConsoleMenu(String name) {
-		menuName = name;
+		this(name, null);
+	}
+
+	public ConsoleMenu(String name, InputHandler inputHandler) {
+		this.menuName = name;
+		this.inputHandler = inputHandler;
 	}
 
 	public void printMenu(PrintStream out) {

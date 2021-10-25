@@ -1,6 +1,7 @@
 package com.wodder.inventory.console;
 
 import com.wodder.inventory.console.exceptions.*;
+import com.wodder.inventory.console.handlers.*;
 import org.junit.jupiter.api.*;
 
 import java.io.*;
@@ -8,7 +9,7 @@ import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class RootMenuTest implements InputHandler {
+class RootMenuTest extends InputHandler {
 	private ByteArrayOutputStream baos;
 	private ConsoleMenu menu;
 	private boolean inputHandled = false;
@@ -16,14 +17,14 @@ class RootMenuTest implements InputHandler {
 	@BeforeEach
 	void setup() {
 		baos = new ByteArrayOutputStream();
-		menu = new RootMenu("RootMenu");
+		menu = new RootMenu("RootMenu", this);
 	}
 
 	@Test
 	@DisplayName("RootMenu accepts all other menus")
 	void add_menu() {
 		menu.addMenu(new SubMenu("Sub menu"));
-		assertEquals(2, menu.subMenuCnt());
+		assertEquals(1, menu.subMenuCnt());
 	}
 
 	@Test
@@ -37,6 +38,7 @@ class RootMenuTest implements InputHandler {
 	@Test
 	@DisplayName("Empty RootMenu prints name and exit command as 1")
 	void print_menu() {
+		menu.addMenu(new ExitMenu());
 		menu.printMenu(new PrintStream(baos));
 		String output = baos.toString();
 		String expected = String.format("====== RootMenu ======%n1) Exit%n");
@@ -47,6 +49,7 @@ class RootMenuTest implements InputHandler {
 	@DisplayName("RootMenu prints name, SubMenu title, and exit command")
 	void print_menu_1() {
 		menu.addMenu(new SubMenu("Inventory Item Menu"));
+		menu.addMenu(new ExitMenu());
 		menu.printMenu(new PrintStream(baos));
 		String output = baos.toString();
 		String expected = String.format("====== RootMenu ======%n1) Inventory Item Menu%n2) Exit%n");
@@ -73,8 +76,8 @@ class RootMenuTest implements InputHandler {
 	@Test
 	@DisplayName("Can add RootMenu to RootMenu")
 	void root_menu_test() {
-		ConsoleMenu menu1 = new RootMenu("Root Menu 1");
-		ConsoleMenu menu2 = new RootMenu("Root Menu 2");
+		ConsoleMenu menu1 = new RootMenu("Root Menu 1", null);
+		ConsoleMenu menu2 = new RootMenu("Root Menu 2", null);
 
 		menu1.addMenu(menu2);
 
@@ -86,8 +89,8 @@ class RootMenuTest implements InputHandler {
 	@Test
 	@DisplayName("RootMenu can exit to another RootMenu")
 	void root_menu_test1() {
-		ConsoleMenu menu1 = new RootMenu("Root Menu 1");
-		ConsoleMenu menu2 = new RootMenu("Root Menu 2");
+		ConsoleMenu menu1 = new RootMenu("Root Menu 1", null);
+		ConsoleMenu menu2 = new RootMenu("Root Menu 2", null);
 
 		menu1.addMenu(menu2);
 		menu1.setActiveMenu(1);
@@ -100,7 +103,7 @@ class RootMenuTest implements InputHandler {
 	@Test
 	@DisplayName("Active menu receives input")
 	void active_menu_test() {
-		ConsoleMenu menu1 = new RootMenu("Root Menu 1");
+		ConsoleMenu menu1 = new RootMenu("Root Menu 1", null);
 		menu1.setInputHandler(this);
 
 		menu1.process(null, null, null);
@@ -110,7 +113,7 @@ class RootMenuTest implements InputHandler {
 	@Test
 	@DisplayName("Submenu receives input when active")
 	void active_menu_test1() {
-		ConsoleMenu menu1 = new RootMenu("Root Menu 1");
+		ConsoleMenu menu1 = new RootMenu("Root Menu 1", null);
 		ConsoleMenu menu2 = new SubMenu("Sub Menu");
 		menu2.setInputHandler(this);
 
@@ -124,7 +127,9 @@ class RootMenuTest implements InputHandler {
 	@Test
 	@DisplayName("Root menu without parent returns true for exit")
 	void exit_root_menu_test() {
-		ConsoleMenu menu = new RootMenu("Root Menu");
+		ConsoleMenu menu = new RootMenu("Root Menu", null);
+
+		menu.addMenu(new ExitMenu(new ExitHandler()));
 		menu.setActiveMenu(1);
 		menu.process(null,null,null);
 		assertTrue(menu.getExit());
@@ -134,7 +139,7 @@ class RootMenuTest implements InputHandler {
 	@DisplayName("Trying to set non-active menu causes exception")
 	void active_menu_exception() {
 		try {
-			ConsoleMenu menu = new RootMenu("Root Menu");
+			ConsoleMenu menu = new RootMenu("Root Menu", null);
 			menu.setActiveMenu(1);
 		} catch (UnknownMenuException e) {
 			assertEquals("Unknown menu for choice 1", e.getMessage());

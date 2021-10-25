@@ -1,5 +1,6 @@
 package com.wodder.inventory.console;
 
+import com.wodder.inventory.console.handlers.*;
 import com.wodder.inventory.console.menus.inventory.*;
 import org.junit.jupiter.api.*;
 
@@ -7,11 +8,17 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class ExitMenuTest extends BaseMenuTest {
 	private boolean ran = false;
+	private ExitMenu exitMenu;
+
+	@BeforeEach
+	public void setup() {
+		super.setup();
+		exitMenu = new ExitMenu(new ExitHandler());
+	}
 
 	@Test
 	@DisplayName("Exit menu prints Exiting...")
 	void printMenu() {
-		ExitMenu exitMenu = new ExitMenu();
 		exitMenu.printMenu(out);
 		assertEquals("Exiting...", baosOut.toString());
 	}
@@ -20,16 +27,15 @@ class ExitMenuTest extends BaseMenuTest {
 	@DisplayName("Exit menu invokes parent menu exit function")
 	void handleInput() {
 		ConsoleMenu testMenu = new TestMenu();
-		ExitMenu exitMenu = new ExitMenu();
 		testMenu.addMenu(exitMenu);
-		exitMenu.handleInput(null, null,null);
+		exitMenu.process(null, null,null);
 		assertTrue(ran);
 	}
 
 	class TestMenu extends RootMenu {
 
 		public TestMenu() {
-			super("Test");
+			super("Test", null);
 		}
 
 		@Override

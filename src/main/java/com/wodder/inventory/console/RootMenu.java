@@ -1,6 +1,7 @@
 package com.wodder.inventory.console;
 
 import com.wodder.inventory.console.exceptions.*;
+import com.wodder.inventory.console.handlers.*;
 
 import java.io.*;
 import java.util.*;
@@ -9,10 +10,9 @@ public class RootMenu extends ConsoleMenu {
 	private final List<ConsoleMenu> subMenus;
 	private ConsoleMenu activeMenu;
 
-	public RootMenu(String name) {
-		super(name);
+	public RootMenu(String name, InputHandler handler) {
+		super(name, handler);
 		subMenus = new ArrayList<>();
-		addMenu(new ExitMenu());
 		setActiveMenu(this);
 	}
 
@@ -41,11 +41,7 @@ public class RootMenu extends ConsoleMenu {
 	@Override
 	public void addMenu(ConsoleMenu menu) {
 		menu.setParentMenu(this);
-		if (subMenus.isEmpty()) {
-			subMenus.add(menu);
-		} else {
-			subMenus.add(subMenus.size() - 1, menu);
-		}
+		subMenus.add(menu);
 	}
 
 	@Override
