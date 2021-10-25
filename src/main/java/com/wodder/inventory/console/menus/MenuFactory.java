@@ -14,11 +14,12 @@ public class MenuFactory {
 
 	public RootMenu createMainMenu() {
 		RootMenu main = new MainMenu(new DefaultRootMenuHandler());
-		InventoryItemMenu inventoryItemMenu = new InventoryItemMenu();
+		InventoryItemMenu inventoryItemMenu = new InventoryItemMenu(new DefaultRootMenuHandler());
 		InventoryItemModel model = new InventoryItemModelImpl(new ServiceFactoryImpl());
 		inventoryItemMenu.addMenu(new CreateItemMenu(new CreateItemHandler(model), model));
+		inventoryItemMenu.addMenu(new ExitMenu(new ExitHandler()));
 		main.addMenu(inventoryItemMenu);
-		main.addMenu(new ExitMenu());
+		main.addMenu(new ExitMenu(new ExitHandler()));
 		return main;
 	}
 }

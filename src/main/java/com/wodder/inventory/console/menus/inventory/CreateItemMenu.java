@@ -21,6 +21,7 @@ public class CreateItemMenu extends SubMenu {
 
 	@Override
 	public void printMenu(PrintStream out) {
-		out.printf("====== %s ======%n", getMenuName());
+		super.printMenu(out);
+		out.println("Enter new item as key=value pairs, e.g. name=bread");
 	}
 }

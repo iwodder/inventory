@@ -2,6 +2,8 @@ package com.wodder.inventory.console;
 
 import com.wodder.inventory.console.handlers.*;
 
+import java.io.*;
+
 public class SubMenu extends ConsoleMenu {
 
 	public SubMenu(String name) {
@@ -13,5 +15,10 @@ public class SubMenu extends ConsoleMenu {
 		if (handler != null) {
 			handler.setMenu(this);
 		}
+	}
+
+	@Override
+	public void printMenu(PrintStream out) {
+		out.printf("====== %s ======%n", getMenuName());
 	}
 }

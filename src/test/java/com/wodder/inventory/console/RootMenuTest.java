@@ -146,6 +146,19 @@ class RootMenuTest extends InputHandler {
 		}
 	}
 
+	@Test
+	@DisplayName("Root Menu passes control to Root Menu")
+	void root_menu_control() {
+		ConsoleMenu menu = new RootMenu("Root 1", new DefaultRootMenuHandler());
+		ConsoleMenu menu1 = new RootMenu("Root 2", new DefaultRootMenuHandler());
+		menu1.addMenu(new SubMenu("Sub Menu 1", this));
+		menu.addMenu(menu1);
+		menu.setActiveMenu(1);
+		menu1.setActiveMenu(1);
+		menu.process(null, null,null);
+		assertTrue(inputHandled);
+	}
+
 	@Override
 	public void handleInput(Scanner input, PrintStream out, PrintStream err) {
 		this.inputHandled = true;

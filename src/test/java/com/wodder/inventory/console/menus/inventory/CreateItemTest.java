@@ -65,7 +65,7 @@ class CreateItemTest extends BaseMenuTest {
 	void prints_menu() {
 		menu.printMenu(out);
 		String result = baosOut.toString();
-		assertEquals(String.format("====== Create New Item ======%n"), result);
+		assertEquals(String.format("====== Create New Item ======%nEnter new item as key=value pairs, e.g. name=bread%n"), result);
 	}
 
 	class TestInventoryItemModel implements InventoryItemModel {

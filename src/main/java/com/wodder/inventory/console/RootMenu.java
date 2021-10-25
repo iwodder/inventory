@@ -35,7 +35,11 @@ public class RootMenu extends ConsoleMenu {
 
 	@Override
 	public void process(Scanner in, PrintStream out, PrintStream err) {
-		activeMenu.getInputHandler().handleInput(in, out, err);
+		if (activeMenu == this) {
+			getInputHandler().handleInput(in,out,err);
+		} else {
+			activeMenu.process(in, out, err);
+		}
 	}
 
 	@Override
