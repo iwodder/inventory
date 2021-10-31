@@ -18,4 +18,9 @@ public class InventoryItemModelImpl implements InventoryItemModel {
 		return result.<Result<InventoryItemDto, String>>map(inventoryItemDto -> new Result<>(inventoryItemDto, null))
 				.orElseGet(() -> new Result<>(null, "Unable to create new item"));
 	}
+
+	@Override
+	public Result<Boolean, String> deleteItem(InventoryItemDto itemDto) {
+		return null;
+	}
 }

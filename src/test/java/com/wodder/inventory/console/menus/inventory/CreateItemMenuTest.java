@@ -7,7 +7,7 @@ import org.junit.jupiter.api.*;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class CreateItemTest extends BaseMenuTest {
+class CreateItemMenuTest extends BaseMenuTest {
 	private CreateItemMenu menu;
 	private CreateItemHandler createItemHandler;
 	private TestInventoryItemModel model;
@@ -86,6 +86,11 @@ class CreateItemTest extends BaseMenuTest {
 			} else {
 				return new Result<>(null, "Error");
 			}
+		}
+
+		@Override
+		public Result<Boolean, String> deleteItem(InventoryItemDto itemDto) {
+			return null;
 		}
 	}
 }

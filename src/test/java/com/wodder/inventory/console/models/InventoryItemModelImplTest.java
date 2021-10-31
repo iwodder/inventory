@@ -3,18 +3,30 @@ package com.wodder.inventory.console.models;
 import com.wodder.inventory.domain.*;
 import com.wodder.inventory.dtos.*;
 import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.extension.*;
+import org.mockito.*;
+import org.mockito.junit.jupiter.*;
 
 import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
 
-class InventoryItemModelImplTest{
+@ExtendWith(MockitoExtension.class)
+class InventoryItemModelImplTest {
+
+	@Mock
+	ItemStorage itemStorage;
+
+	@BeforeEach
+	void setup() {
+	}
 
 	@Test
 	@DisplayName("Create item returns ok on success")
 	void createItem() {
-		TestServiceFactory testServiceFactory = new TestServiceFactory();
-		InventoryItemModelImpl inventoryItemModel = new InventoryItemModelImpl(testServiceFactory.getService(ItemStorage.class));
+		when(itemStorage.addItem(any(InventoryItemDto.class))).thenReturn(Optional.of(InventoryItemDto.builder().build()));
+		InventoryItemModelImpl inventoryItemModel = new InventoryItemModelImpl(itemStorage);
 		Result<InventoryItemDto, String> r = inventoryItemModel.createItem(InventoryItemDto.builder().build());
 		assertTrue(r.isOK());
 		assertFalse(r.isErr());
@@ -23,57 +35,10 @@ class InventoryItemModelImplTest{
 	@Test
 	@DisplayName("Create item returns error result on failure")
 	void createItem1() {
-		TestServiceFactory testServiceFactory = new TestServiceFactory(false);
-		InventoryItemModelImpl inventoryItemModel = new InventoryItemModelImpl(testServiceFactory.getService(ItemStorage.class));
+		when(itemStorage.addItem(any(InventoryItemDto.class))).thenReturn(Optional.empty());
+		InventoryItemModelImpl inventoryItemModel = new InventoryItemModelImpl(itemStorage);
 		Result<InventoryItemDto, String> r = inventoryItemModel.createItem(InventoryItemDto.builder().build());
 		assertFalse(r.isOK());
 		assertTrue(r.isErr());
-	}
-
-	private static class TestServiceFactory implements ServiceFactory {
-		boolean present;
-
-		TestServiceFactory() {
-			this(true);
-		}
-
-		TestServiceFactory(boolean onOff) {
-			present = onOff;
-		}
-
-		@Override
-		public <T> T getService(Class<T> service) {
-			return (T) new ItemStorage() {
-
-				@Override
-				public Optional<InventoryItemDto> addItem(InventoryItemDto newItem) {
-					if (present) {
-						return Optional.of(newItem);
-					} else {
-						return Optional.empty();
-					}
-				}
-
-				@Override
-				public Boolean deleteItem(InventoryItemDto itemToDelete) {
-					return null;
-				}
-
-				@Override
-				public Optional<InventoryItemDto> updateItem(InventoryItemDto updatedItem) {
-					return Optional.empty();
-				}
-
-				@Override
-				public Optional<InventoryItemDto> readItem(Long itemId) {
-					return Optional.empty();
-				}
-
-				@Override
-				public List<InventoryItemDto> readAllItems() {
-					return null;
-				}
-			};
-		}
 	}
 }

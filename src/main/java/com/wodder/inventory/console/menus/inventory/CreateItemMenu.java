@@ -23,5 +23,6 @@ public class CreateItemMenu extends SubMenu {
 	public void printMenu(PrintStream out) {
 		super.printMenu(out);
 		out.println("Enter new item as key=value pairs, e.g. name=bread");
+		out.println("Enter 'exit' to return to the previous menu");
 	}
 }
