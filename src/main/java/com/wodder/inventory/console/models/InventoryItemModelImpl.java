@@ -8,8 +8,8 @@ import java.util.*;
 public class InventoryItemModelImpl implements InventoryItemModel {
 	private final ItemStorage storage;
 
-	public InventoryItemModelImpl(ServiceFactory factory) {
-		storage = factory.getService(ItemStorage.class);
+	public InventoryItemModelImpl(ItemStorage itemStorage) {
+		this.storage = itemStorage;
 	}
 
 	@Override

@@ -13,7 +13,8 @@ class InventoryItemModelImplTest{
 	@Test
 	@DisplayName("Create item returns ok on success")
 	void createItem() {
-		InventoryItemModelImpl inventoryItemModel = new InventoryItemModelImpl(new TestServiceFactory());
+		TestServiceFactory testServiceFactory = new TestServiceFactory();
+		InventoryItemModelImpl inventoryItemModel = new InventoryItemModelImpl(testServiceFactory.getService(ItemStorage.class));
 		Result<InventoryItemDto, String> r = inventoryItemModel.createItem(InventoryItemDto.builder().build());
 		assertTrue(r.isOK());
 		assertFalse(r.isErr());
@@ -22,7 +23,8 @@ class InventoryItemModelImplTest{
 	@Test
 	@DisplayName("Create item returns error result on failure")
 	void createItem1() {
-		InventoryItemModelImpl inventoryItemModel = new InventoryItemModelImpl(new TestServiceFactory(false));
+		TestServiceFactory testServiceFactory = new TestServiceFactory(false);
+		InventoryItemModelImpl inventoryItemModel = new InventoryItemModelImpl(testServiceFactory.getService(ItemStorage.class));
 		Result<InventoryItemDto, String> r = inventoryItemModel.createItem(InventoryItemDto.builder().build());
 		assertFalse(r.isOK());
 		assertTrue(r.isErr());

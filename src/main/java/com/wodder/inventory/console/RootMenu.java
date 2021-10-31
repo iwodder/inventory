@@ -86,4 +86,16 @@ public class RootMenu extends ConsoleMenu {
 	public void setActiveMenu(ConsoleMenu menu) {
 		this.activeMenu = menu;
 	}
+
+	@Override
+	public boolean containsMenu(Class<? extends ConsoleMenu> menu) {
+		boolean contained = false;
+		for (ConsoleMenu m : subMenus) {
+			if (m.getClass().equals(menu)) {
+				contained = true;
+				break;
+			}
+		}
+		return contained;
+	}
 }

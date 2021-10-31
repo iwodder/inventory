@@ -7,19 +7,26 @@ import com.wodder.inventory.console.models.*;
 import com.wodder.inventory.domain.*;
 
 public class MenuFactory {
+	private final ServiceFactory serviceFactory;
 
-	public MenuFactory() {
-
+	public MenuFactory(ServiceFactory serviceFactory) {
+		this.serviceFactory = serviceFactory;
 	}
 
-	public RootMenu createMainMenu() {
+	public ConsoleMenu createMainMenu() {
 		RootMenu main = new MainMenu(new DefaultRootMenuHandler());
-		InventoryItemMenu inventoryItemMenu = new InventoryItemMenu(new DefaultRootMenuHandler());
-		InventoryItemModel model = new InventoryItemModelImpl(new ServiceFactoryImpl());
-		inventoryItemMenu.addMenu(new CreateItemMenu(new CreateItemHandler(model), model));
-		inventoryItemMenu.addMenu(new ExitMenu(new ExitHandler()));
+		InventoryItemMenu inventoryItemMenu = createInventoryMenu();
 		main.addMenu(inventoryItemMenu);
 		main.addMenu(new ExitMenu(new ExitHandler()));
 		return main;
 	}
+
+	private InventoryItemMenu createInventoryMenu() {
+		InventoryItemMenu inventoryItemMenu = new InventoryItemMenu(new DefaultRootMenuHandler());
+		InventoryItemModel model = new InventoryItemModelImpl(serviceFactory.getService(ItemStorage.class));
+		inventoryItemMenu.addMenu(new CreateItemMenu(new CreateItemHandler(model), model));
+		inventoryItemMenu.addMenu(new ExitMenu(new ExitHandler()));
+		return inventoryItemMenu;
+	}
+
 }

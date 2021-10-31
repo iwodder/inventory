@@ -68,6 +68,13 @@ class CreateItemTest extends BaseMenuTest {
 		assertEquals(String.format("====== Create New Item ======%nEnter new item as key=value pairs, e.g. name=bread%n"), result);
 	}
 
+	@Test
+	@DisplayName("Entering exit leaves this menu")
+	void exit_menu() {
+		setChars("exit");
+		menu.process(in,out,err);
+	}
+
 	class TestInventoryItemModel implements InventoryItemModel {
 		public InventoryItemDto dto;
 

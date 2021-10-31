@@ -17,6 +17,14 @@ public class CreateItemHandler extends InputHandler {
 	@Override
 	public void handleInput(Scanner input, PrintStream out, PrintStream err) {
 		String in = input.nextLine();
+		if ("exit".equalsIgnoreCase(in)) {
+			menu.exitMenu();
+		} else {
+			processNewItem(in, out);
+		}
+	}
+
+	private void processNewItem(String in, PrintStream out) {
 		Map<String, String> valuesMap = MenuUtils.extractKeyValuePairs(in);
 		InventoryItemDto createdDto = InventoryItemDto.builder()
 				.withName(valuesMap.get("NAME"))

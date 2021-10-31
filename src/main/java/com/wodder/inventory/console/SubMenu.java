@@ -21,4 +21,11 @@ public class SubMenu extends ConsoleMenu {
 	public void printMenu(PrintStream out) {
 		out.printf("====== %s ======%n", getMenuName());
 	}
+
+	@Override
+	public void exitMenu() {
+		if (getParentMenu() != null) {
+			getParentMenu().setActiveMenu(getParentMenu());
+		}
+	}
 }

@@ -31,8 +31,8 @@ class ConsoleRunnerTest {
 	@DisplayName("Console runner accepts a rootmenu")
 	void console_runner_1() {
 		ConsoleRunner runner = new ConsoleRunner();
-		runner.setRootMenu(new RootMenu("Root Menu", handler));
-		assertNotNull(runner.getRootMenu());
+		runner.setMenu(new RootMenu("Root Menu", handler));
+		assertNotNull(runner.getMenu());
 	}
 
 	@Test
@@ -49,7 +49,7 @@ class ConsoleRunnerTest {
 		ByteArrayOutputStream baos = new ByteArrayOutputStream();
 		ConsoleRunner runner = new ConsoleRunner(new TestInputStream(), new PrintStream(baos));
 		handler.iterations = 1;
-		runner.setRootMenu(rootMenu);
+		runner.setMenu(rootMenu);
 		runner.start();
 		assertNotEquals("", baos.toString());
 	}
@@ -59,7 +59,7 @@ class ConsoleRunnerTest {
 	void console_runner_4() {
 		ByteArrayOutputStream baos = new ByteArrayOutputStream();
 		ConsoleRunner runner = new ConsoleRunner(new TestInputStream(), new PrintStream(baos));
-		runner.setRootMenu(rootMenu);
+		runner.setMenu(rootMenu);
 		runner.start();
 		handler.iterations = 1;
 		assertTrue(handler.invokedHandledInput);
@@ -70,7 +70,7 @@ class ConsoleRunnerTest {
 	void console_runner_5() {
 		ByteArrayOutputStream baos = new ByteArrayOutputStream();
 		ConsoleRunner runner = new ConsoleRunner(new TestInputStream(), new PrintStream(baos));
-		runner.setRootMenu(rootMenu);
+		runner.setMenu(rootMenu);
 		runner.start();
 		handler.iterations = 3;
 		assertEquals(3, handler.handleInputCnt);

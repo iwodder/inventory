@@ -76,6 +76,10 @@ public class ConsoleMenu {
 		inputHandler.handleInput(in, out, err);
 	}
 
+	public boolean containsMenu(Class<? extends ConsoleMenu> menu) {
+		throw new UnsupportedOperationException(getUnsupportedOpMsg("containsMenu"));
+	}
+
 	public String getMenuName() {
 		return menuName;
 	}

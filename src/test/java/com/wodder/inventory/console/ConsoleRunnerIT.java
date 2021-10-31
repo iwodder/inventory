@@ -15,7 +15,7 @@ class ConsoleRunnerIT extends BaseMenuTest {
 		MainMenu mainMenu = new MainMenu(null);
 		mainMenu.addMenu(new ExitMenu());
 		ConsoleRunner runner = new ConsoleRunner(inputStream, out, err);
-		runner.setRootMenu(mainMenu);
+		runner.setMenu(mainMenu);
 		runner.start();
 		assertTrue(true, "Error occurred trying to exit.");
 	}

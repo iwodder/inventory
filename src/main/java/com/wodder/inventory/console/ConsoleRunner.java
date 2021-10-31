@@ -4,7 +4,7 @@ import java.io.*;
 import java.util.*;
 
 public class ConsoleRunner {
-	private RootMenu rootMenu;
+	private ConsoleMenu rootMenu;
 	private final InputStream in;
 	private final PrintStream out;
 	private final PrintStream err;
@@ -38,11 +38,11 @@ public class ConsoleRunner {
 		return !rootMenu.getExit();
 	}
 
-	public RootMenu getRootMenu() {
+	public ConsoleMenu getMenu() {
 		return rootMenu;
 	}
 
-	public void setRootMenu(RootMenu menu) {
+	public void setMenu(ConsoleMenu menu) {
 		this.rootMenu = menu;
 	}
 
