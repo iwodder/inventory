@@ -3,6 +3,7 @@ package com.wodder.inventory.console;
 import java.io.*;
 import java.util.*;
 
+//TODO handle root exception so loop keeps running
 public class ConsoleRunner {
 	private ConsoleMenu rootMenu;
 	private final InputStream in;

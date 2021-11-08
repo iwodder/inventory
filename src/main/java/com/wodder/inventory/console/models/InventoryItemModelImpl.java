@@ -21,6 +21,18 @@ public class InventoryItemModelImpl implements InventoryItemModel {
 
 	@Override
 	public Result<Boolean, String> deleteItem(InventoryItemDto itemDto) {
-		return null;
+		boolean result = storage.deleteItem(itemDto);
+		if (result) {
+			return new Result<>(Boolean.TRUE, null);
+		} else {
+			return new Result<>(null, "Unable to delete item");
+		}
+	}
+
+	@Override
+	public Result<InventoryItemDto, String> updateItem(InventoryItemDto itemDto) {
+		Optional<InventoryItemDto> result = storage.updateItem(itemDto);
+		return result.<Result<InventoryItemDto, String>>map(i -> new Result<>(i, null))
+				.orElseGet(() -> new Result<>(null, "Unable to update item"));
 	}
 }

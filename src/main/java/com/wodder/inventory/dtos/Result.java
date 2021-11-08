@@ -1,5 +1,6 @@
 package com.wodder.inventory.dtos;
 
+//TODO Update class with static creators
 public class Result<T, E> {
 	private final T ok;
 	private final E err;

@@ -12,7 +12,7 @@ public abstract class InputHandler {
 
 	public abstract void handleInput(Scanner input, PrintStream out, PrintStream err);
 
-	public void setMenu(ConsoleMenu menu) {
+	public final void setMenu(ConsoleMenu menu) {
 		this.menu = menu;
 	}
 }

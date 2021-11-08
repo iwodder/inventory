@@ -1,13 +1,19 @@
 package com.wodder.inventory.console.menus.inventory;
 
 import com.wodder.inventory.console.*;
+import com.wodder.inventory.console.handlers.*;
 
 import java.io.*;
 
 public class DeleteItemMenu extends SubMenu {
 
-	public DeleteItemMenu() {
-		super("Delete Item");
+	public DeleteItemMenu(DeleteItemHandler itemHandler) {
+		this("Delete Item", itemHandler);
+	}
+
+	private DeleteItemMenu(String name, DeleteItemHandler handler) {
+		super(name, handler);
+		handler.setMenu(this);
 	}
 
 	@Override

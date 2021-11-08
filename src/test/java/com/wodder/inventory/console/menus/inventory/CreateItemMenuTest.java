@@ -7,6 +7,7 @@ import org.junit.jupiter.api.*;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+//TODO Update class to use mockito
 class CreateItemMenuTest extends BaseMenuTest {
 	private CreateItemMenu menu;
 	private CreateItemHandler createItemHandler;
@@ -65,7 +66,7 @@ class CreateItemMenuTest extends BaseMenuTest {
 	void prints_menu() {
 		menu.printMenu(out);
 		String result = baosOut.toString();
-		assertEquals(String.format("====== Create New Item ======%nEnter new item as key=value pairs, e.g. name=bread%n"), result);
+		assertEquals(String.format("====== Create New Item ======%nEnter new item as key=value pairs, e.g. name=bread%nEnter 'exit' to return to the previous menu%n"), result);
 	}
 
 	@Test
@@ -90,6 +91,11 @@ class CreateItemMenuTest extends BaseMenuTest {
 
 		@Override
 		public Result<Boolean, String> deleteItem(InventoryItemDto itemDto) {
+			return null;
+		}
+
+		@Override
+		public Result<InventoryItemDto, String> updateItem(InventoryItemDto itemDto) {
 			return null;
 		}
 	}

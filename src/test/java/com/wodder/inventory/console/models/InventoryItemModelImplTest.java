@@ -18,15 +18,13 @@ class InventoryItemModelImplTest {
 	@Mock
 	ItemStorage itemStorage;
 
-	@BeforeEach
-	void setup() {
-	}
+	@InjectMocks
+	InventoryItemModelImpl inventoryItemModel;
 
 	@Test
 	@DisplayName("Create item returns ok on success")
-	void createItem() {
+	void createItemSuccess() {
 		when(itemStorage.addItem(any(InventoryItemDto.class))).thenReturn(Optional.of(InventoryItemDto.builder().build()));
-		InventoryItemModelImpl inventoryItemModel = new InventoryItemModelImpl(itemStorage);
 		Result<InventoryItemDto, String> r = inventoryItemModel.createItem(InventoryItemDto.builder().build());
 		assertTrue(r.isOK());
 		assertFalse(r.isErr());
@@ -34,11 +32,44 @@ class InventoryItemModelImplTest {
 
 	@Test
 	@DisplayName("Create item returns error result on failure")
-	void createItem1() {
+	void createItemFailure() {
 		when(itemStorage.addItem(any(InventoryItemDto.class))).thenReturn(Optional.empty());
-		InventoryItemModelImpl inventoryItemModel = new InventoryItemModelImpl(itemStorage);
 		Result<InventoryItemDto, String> r = inventoryItemModel.createItem(InventoryItemDto.builder().build());
 		assertFalse(r.isOK());
 		assertTrue(r.isErr());
+	}
+
+	@Test
+	@DisplayName("Delete item returns ok on success")
+	void deleteItemSuccess() {
+		when(itemStorage.deleteItem(any(InventoryItemDto.class))).thenReturn(Boolean.TRUE);
+		Result<Boolean, String> result = inventoryItemModel.deleteItem(InventoryItemDto.builder().build());
+		assertTrue(result.isOK());
+		assertFalse(result.isErr());
+	}
+
+	@Test
+	@DisplayName("Delete item returns err on failure")
+	void deleteItemFailure() {
+		Result<Boolean, String> result = inventoryItemModel.deleteItem(InventoryItemDto.builder().build());
+		assertTrue(result.isErr());
+		assertFalse(result.isOK());
+	}
+
+	@Test
+	@DisplayName("Update item returns ok on success")
+	void updateItemSuccess() {
+		when(itemStorage.updateItem(any(InventoryItemDto.class))).thenReturn(Optional.of(InventoryItemDto.builder().build()));
+		Result<InventoryItemDto, String> result = inventoryItemModel.updateItem(InventoryItemDto.builder().build());
+		assertTrue(result.isOK());
+		assertFalse(result.isErr());
+	}
+
+	@Test
+	@DisplayName("Update item returns err on failure")
+	void updateItemFailure() {
+		Result<InventoryItemDto, String> result = inventoryItemModel.updateItem(InventoryItemDto.builder().build());
+		assertTrue(result.isErr());
+		assertFalse(result.isOK());
 	}
 }
