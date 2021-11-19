@@ -14,6 +14,14 @@ public class Result<T, E> {
 		this.err = err;
 	}
 
+	public static <E> Result<Object, E> err(E msg) {
+		return new Result<>(null, msg);
+	}
+
+	public static <T> Result<T, Object> ok(T ok) {
+		return new Result<>(ok, null);
+	}
+
 	public boolean isOK() {
 		return ok != null;
 	}
