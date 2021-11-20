@@ -1,5 +1,7 @@
 package com.wodder.inventory.dtos;
 
+import java.util.*;
+
 public class InventoryItemDto {
 	private Long id;
 	private String name;
@@ -10,6 +12,8 @@ public class InventoryItemDto {
 		this.name = b.name;
 		this.category = b.category;
 	}
+
+	private InventoryItemDto() {}
 
 	public Long getId() {
 		return id;
@@ -31,8 +35,16 @@ public class InventoryItemDto {
 		return category;
 	}
 
-	public void setCategory(String category) {
-		this.category = category;
+	public static InventoryItemDto fromMap(Map<String, String> values) {
+		InventoryItemDto result = new InventoryItemDto();
+		if (values != null && !values.isEmpty()) {
+			if (values.get("ID") != null) {
+				result.id = Long.parseLong(values.get("ID"));
+			}
+			result.name = values.get("NAME");
+			result.category = values.get("CATEGORY");
+		}
+		return result;
 	}
 
 	public static InventoryItemDtoBuilder builder() {

@@ -7,7 +7,6 @@ import com.wodder.inventory.persistence.*;
 
 public class Main {
 
-
 	public static void main(String[] args) {
 		System.out.println("Welcome to your inventory");
 		MenuFactory menus = new MenuFactory(new ServiceFactoryImpl(new PersistenceFactoryImpl()));

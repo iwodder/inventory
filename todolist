@@ -1,0 +1,6 @@
+TODO Implement clear screen function for console menu
+TODO Handle all exceptions from console menus inside ConsoleRunner
+TODO Implement get/list all inventory items
+TODO Document basic architecture for console menus
+TODO Implement domain logic for creating weekly usage report
+TODO Create perform inventory count menu

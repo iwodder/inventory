@@ -1,17 +1,18 @@
 package com.wodder.inventory.console.menus.inventory;
 
 import com.wodder.inventory.console.*;
+import com.wodder.inventory.console.handlers.*;
 
 import java.io.*;
 
 public class UpdateItemMenu extends SubMenu {
 
-	public UpdateItemMenu() {
-		this("Update Item");
+	public UpdateItemMenu(UpdateItemHandler handler) {
+		this("Update Item", handler);
 	}
 
-	private UpdateItemMenu(String name) {
-		super(name);
+	private UpdateItemMenu(String name, UpdateItemHandler handler) {
+		super(name, handler);
 	}
 
 	@Override

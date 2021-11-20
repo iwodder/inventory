@@ -15,7 +15,6 @@ public class CreateItemMenu extends SubMenu {
 
 	private CreateItemMenu(String name, CreateItemHandler itemHandler, InventoryItemModel model) {
 		super(name, itemHandler);
-		itemHandler.setMenu(this);
 		this.model = model;
 	}
 

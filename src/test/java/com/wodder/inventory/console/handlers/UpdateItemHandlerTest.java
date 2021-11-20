@@ -1,5 +1,6 @@
 package com.wodder.inventory.console.handlers;
 
+import com.wodder.inventory.console.*;
 import com.wodder.inventory.console.menus.inventory.*;
 import com.wodder.inventory.console.models.*;
 import com.wodder.inventory.dtos.*;
@@ -20,8 +21,11 @@ class UpdateItemHandlerTest extends BaseMenuTest {
 	@Mock
 	InventoryItemModel model;
 
+	@Mock
+	ConsoleMenu menu;
+
 	@Test
-	@DisplayName("Can update an item")
+	@DisplayName("Can update an item with only id and name")
 	void updateItem() {
 		when(model.updateItem(any())).thenReturn(new Result<>(InventoryItemDto.builder().build(), null));
 		setChars("id=1 name=milk");
@@ -37,15 +41,39 @@ class UpdateItemHandlerTest extends BaseMenuTest {
 	}
 
 	@Test
+	@DisplayName("Can update an item with only id and category")
+	void updateItem1() {
+		when(model.updateItem(any())).thenReturn(new Result<>(InventoryItemDto.builder().build(), null));
+		setChars("id=1 category=refrigerated");
+		UpdateItemHandler handler = new UpdateItemHandler(model);
+		handler.handleInput(in, out, err);
+		verify(model).updateItem(captor.capture());
+
+		InventoryItemDto dto = captor.getValue();
+		assertNotNull(dto);
+		assertEquals(1L, dto.getId());
+		assertEquals("refrigerated", dto.getCategory());
+		assertEquals(String.format("Item updated successfully%n"), baosOut.toString());
+	}
+
+	@Test
 	@DisplayName("Displays a failure message when item cannot be updated")
 	void updateItemFailure() {
 		when(model.updateItem(any())).thenReturn(new Result<>(null, "Exception during creation"));
 		setChars("id=1 name=milk");
 		UpdateItemHandler handler = new UpdateItemHandler(model);
 		handler.handleInput(in, out, err);
-		String expected = String.format("Unable to update item%n");
+		String expected = String.format("Unable to update item%nException during creation%n");
 		assertEquals(expected, baosErr.toString());
 	}
 
-
+	@Test
+	@DisplayName("When user enters exit menu is exited")
+	void exitMenu() {
+		setChars("exit");
+		UpdateItemHandler handler = new UpdateItemHandler(model);
+		handler.setMenu(menu);
+		handler.handleInput(in, out, err);
+		verify(menu).exitMenu();
+	}
 }
