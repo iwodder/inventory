@@ -5,6 +5,8 @@ import com.wodder.inventory.console.models.*;
 import com.wodder.inventory.dtos.*;
 import org.junit.jupiter.api.*;
 
+import java.util.*;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 //TODO Update class to use mockito
@@ -96,6 +98,11 @@ class CreateItemMenuTest extends BaseMenuTest {
 
 		@Override
 		public Result<InventoryItemDto, String> updateItem(InventoryItemDto itemDto) {
+			return null;
+		}
+
+		@Override
+		public Result<List<InventoryItemDto>, String> getItems() {
 			return null;
 		}
 	}

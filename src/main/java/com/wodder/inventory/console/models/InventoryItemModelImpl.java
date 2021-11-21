@@ -35,4 +35,12 @@ public class InventoryItemModelImpl implements InventoryItemModel {
 		return result.<Result<InventoryItemDto, String>>map(i -> new Result<>(i, null))
 				.orElseGet(() -> new Result<>(null, "Unable to update item"));
 	}
+
+	@Override
+	public Result<List<InventoryItemDto>, String> getItems() {
+		List<InventoryItemDto> items = storage.readAllItems();
+		return items.isEmpty() ?
+				new Result<>(null, "Unable to access items") :
+				new Result<>(items, null);
+	}
 }

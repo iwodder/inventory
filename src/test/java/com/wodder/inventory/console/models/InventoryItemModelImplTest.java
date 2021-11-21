@@ -72,4 +72,33 @@ class InventoryItemModelImplTest {
 		assertTrue(result.isErr());
 		assertFalse(result.isOK());
 	}
+
+	@Test
+	@DisplayName("Get items returns err on failure")
+	void getItemsFailure() {
+		Result<List<InventoryItemDto>, String> result = inventoryItemModel.getItems();
+		assertFalse(result.isOK());
+		assertTrue(result.isErr());
+	}
+
+	@Test
+	@DisplayName("Get items returns err on empty items list")
+	void getItemsFailure1() {
+		when(itemStorage.readAllItems()).thenReturn(Collections.emptyList());
+		Result<List<InventoryItemDto>, String> result = inventoryItemModel.getItems();
+		assertFalse(result.isOK());
+		assertTrue(result.isErr());
+	}
+
+	@Test
+	@DisplayName("Get items returns ok on success")
+	void getItemsSuccess() {
+		List<InventoryItemDto> items = new ArrayList<>();
+		items.add(InventoryItemDto.builder().build());
+		when(itemStorage.readAllItems()).thenReturn(items);
+		Result<List<InventoryItemDto>, String> result = inventoryItemModel.getItems();
+		assertFalse(result.isErr());
+		assertTrue(result.isOK());
+	}
+
 }
