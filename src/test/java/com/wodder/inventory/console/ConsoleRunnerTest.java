@@ -1,19 +1,32 @@
 package com.wodder.inventory.console;
 
 import com.wodder.inventory.console.handlers.*;
+import com.wodder.inventory.console.menus.inventory.*;
 import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.extension.*;
+import org.mockito.*;
+import org.mockito.junit.jupiter.*;
 
 import java.io.*;
 import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.*;
+import static org.mockito.Mockito.*;
 
-class ConsoleRunnerTest {
+//TODO Update this test to use mockito
+@ExtendWith(MockitoExtension.class)
+class ConsoleRunnerTest extends BaseMenuTest {
 	private TestHandler handler;
 	private RootMenu rootMenu;
 
+	@Mock
+	ConsoleMenu menu;
+
+
 	@BeforeEach
-	void setup() {
+	protected void setup() {
+		super.setup();
 		handler = new TestHandler();
 		rootMenu = new RootMenu("Root Menu", handler);
 		handler.setMenu(rootMenu);
@@ -74,6 +87,30 @@ class ConsoleRunnerTest {
 		runner.start();
 		handler.iterations = 3;
 		assertEquals(3, handler.handleInputCnt);
+	}
+
+	@Test
+	@DisplayName("Console runner handles all exceptions from within the main loop")
+	void consoleRunnerException() {
+		when(menu.getExit()).thenReturn(false, true);
+		doThrow(new RuntimeException("oops")).when(menu).process(any(), any(), any());
+		ConsoleRunner runner = new ConsoleRunner(inputStream, out, err);
+		runner.setMenu(menu);
+		runner.start();
+		assertTrue(true);
+		assertEquals(String.format("oops%n"), baosErr.toString());
+	}
+
+	@Test
+	@DisplayName("Console runner prints unknown error message when exception message is empty")
+	void consoleRunnerException2() {
+		when(menu.getExit()).thenReturn(false, true);
+		doThrow(new RuntimeException()).when(menu).process(any(), any(), any());
+		ConsoleRunner runner = new ConsoleRunner(inputStream, out, err);
+		runner.setMenu(menu);
+		runner.start();
+		assertTrue(true);
+		assertEquals(String.format("Unknown problem occurred during processing.%n"), baosErr.toString());
 	}
 
 	private static class TestHandler extends InputHandler {

@@ -3,7 +3,6 @@ package com.wodder.inventory.console;
 import java.io.*;
 import java.util.*;
 
-//TODO handle root exception so loop keeps running
 public class ConsoleRunner {
 	private ConsoleMenu rootMenu;
 	private final InputStream in;
@@ -29,9 +28,22 @@ public class ConsoleRunner {
 		running = true;
 		if (out != null) {
 			while (notDone()) {
-				rootMenu.printMenu(out);
-				rootMenu.process(new Scanner(in), out, err);
+				try {
+					rootMenu.printMenu(out);
+					rootMenu.process(new Scanner(in), out, err);
+				} catch (Exception e) {
+					printErrorMsg(e);
+				}
 			}
+		}
+	}
+
+	private void printErrorMsg(Exception e) {
+		String msg = e.getMessage();
+		if (msg != null && !msg.isEmpty()) {
+			err.println(msg);
+		} else {
+			err.println("Unknown problem occurred during processing.");
 		}
 	}
 
