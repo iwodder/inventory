@@ -27,6 +27,7 @@ public class MenuFactory {
 		inventoryItemMenu.addMenu(new CreateItemMenu(new CreateItemHandler(model), model));
 		inventoryItemMenu.addMenu(new DeleteItemMenu(new DeleteItemHandler(model)));
 		inventoryItemMenu.addMenu(new UpdateItemMenu(new UpdateItemHandler(model)));
+		inventoryItemMenu.addMenu(new ViewItemsMenu(new ViewItemHandler(model)));
 		inventoryItemMenu.addMenu(new ExitMenu(new ExitHandler()));
 		return inventoryItemMenu;
 	}

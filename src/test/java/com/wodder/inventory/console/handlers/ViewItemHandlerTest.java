@@ -34,14 +34,6 @@ class ViewItemHandlerTest extends BaseMenuTest {
 	}
 
 	@Test
-	@DisplayName("User is prompted with '>' for input")
-	void handleInput() {
-		setChars("");
-		viewItemHandler.handleInput(in, out, err);
-		assertTrue(baosOut.toString().startsWith("> "));
-	}
-
-	@Test
 	@DisplayName("All items are returned when \"all\" is input.")
 	void handleAll() {
 		setChars("all");
@@ -69,25 +61,33 @@ class ViewItemHandlerTest extends BaseMenuTest {
 
 	@Test
 	@DisplayName("Displays items when returned")
-	void displaysItems() throws Exception {
-		InputStream is = this.getClass().getResourceAsStream("expectedItemOutput");
-		BufferedReader br = new BufferedReader(new InputStreamReader(is));
-		StringBuilder sb = new StringBuilder();
-		String s;
-		while ((s = br.readLine()) != null) {
-			sb.append(s);
-			sb.append("\n");
-		}
+	void displaysItems() {
 		setChars("all");
 		mockSuccessfulReturn();
 		viewItemHandler.handleInput(in, out, err);
-		assertEquals(sb.toString(), "");
+		assertEquals(expectedDisplayText(), baosOut.toString());
+	}
+
+	private String expectedDisplayText() {
+		StringBuilder sb = new StringBuilder();
+		try {
+			InputStream is = this.getClass().getResourceAsStream("expectedItemOutput");
+			BufferedReader br = new BufferedReader(new InputStreamReader(is));
+			String s;
+			while ((s = br.readLine()) != null) {
+				sb.append(s);
+				sb.append(System.lineSeparator());
+			}
+		} catch (IOException e) {
+			fail(String.format("IOException occurred when processing expected input. %s", e.getMessage()));
+		}
+		return sb.toString();
 	}
 
 	private void mockSuccessfulReturn() {
 		List<InventoryItemDto> items = new ArrayList<>();
-		items.add(InventoryItemDto.builder().withId(1L).withName("bread").build());
-		items.add(InventoryItemDto.builder().withId(2L).withName("milk").build());
+		items.add(InventoryItemDto.builder().withId(1L).withName("bread").withCategory("dry").build());
+		items.add(InventoryItemDto.builder().withId(2L).withName("milk").withCategory("refrigerated").build());
 		when(inventoryItemModel.getItems()).thenReturn(new Result<>(items, null));
 	}
 }

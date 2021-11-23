@@ -1,17 +1,18 @@
 package com.wodder.inventory.console.menus.inventory;
 
 import com.wodder.inventory.console.*;
+import com.wodder.inventory.console.handlers.*;
 
 import java.io.*;
 
-public class ViewInventoryItemsMenu extends SubMenu {
+public class ViewItemsMenu extends SubMenu {
 
-	public ViewInventoryItemsMenu() {
-		this("View Inventory Item(s)");
+	public ViewItemsMenu(ViewItemHandler handler) {
+		this("View Inventory Item(s)", handler);
 	}
 
-	private ViewInventoryItemsMenu(String name) {
-		super(name);
+	private ViewItemsMenu(String name, ViewItemHandler handler) {
+		super(name, handler);
 	}
 
 	@Override

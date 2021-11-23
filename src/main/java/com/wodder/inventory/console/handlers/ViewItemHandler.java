@@ -15,14 +15,15 @@ public class ViewItemHandler extends InputHandler {
 
 	@Override
 	public void handleInput(Scanner input, PrintStream out, PrintStream err) {
-		out.print("> ");
 		String in = input.nextLine();
 		if ("all".equalsIgnoreCase(in)) {
 			Result<List<InventoryItemDto>, String> result = model.getItems();
 			if (result.isErr()) {
 				err.println(result.getErr());
 			} else {
-
+				List<InventoryItemDto> items = result.getOk();
+				ItemTableFormatter formatter = new ItemTableFormatter(items);
+				out.print(formatter.formatToTable());
 			}
 		} else if ("exit".equalsIgnoreCase(in)) {
 			menu.exitMenu();

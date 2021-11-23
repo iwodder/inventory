@@ -87,5 +87,6 @@ class InMemoryInventoryItemsTest {
 		List<InventoryItem> items = inventoryItems.loadAllItems();
 		assertNotNull(items);
 		assertFalse(items.isEmpty());
+		items.forEach(i -> assertNotNull(i.getId()));
 	}
 }

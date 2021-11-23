@@ -36,7 +36,7 @@ final class InMemoryInventoryItems implements InventoryItems {
 	@Override
 	public Long createItem(InventoryItem item) {
 		Long itemId = id.addAndGet(1);
-		InventoryItem newItem = new InventoryItem(item.getId(), item.getName(), item.getCategory());
+		InventoryItem newItem = new InventoryItem(itemId, item.getName(), item.getCategory());
 		db.put(itemId, newItem);
 		return itemId;
 	}
