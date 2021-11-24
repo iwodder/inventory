@@ -19,7 +19,7 @@ class InventoryItemMenuTest extends BaseMenuTest {
 	void prints_name() {
 		ConsoleMenu menu = new InventoryItemMenu();
 		menu.printMenu(out);
-		assertTrue(baosOut.toString().contains("Inventory Item Menu"));
+		assertEquals(String.format("====== Inventory Item Menu ======%nPlease choose a menu entry.%n"), baosOut.toString());
 	}
 
 	@Test

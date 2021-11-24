@@ -31,6 +31,7 @@ public class RootMenu extends ConsoleMenu {
 		for (ConsoleMenu menu : subMenus) {
 			out.printf("%d) %s%n", menuCnt++, menu.getMenuName());
 		}
+		out.println("Please choose a menu entry.");
 	}
 
 	@Override

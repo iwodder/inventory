@@ -9,8 +9,6 @@ public class DefaultRootMenuHandler extends InputHandler {
 
 	@Override
 	public void handleInput(Scanner input, PrintStream out, PrintStream err) {
-		out.println("Please choose a menu");
-		out.print("> ");
 		try {
 			menu.setActiveMenu(input.nextInt());
 		} catch (InputMismatchException ime) {

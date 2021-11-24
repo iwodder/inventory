@@ -4,6 +4,7 @@ import java.io.*;
 import java.util.*;
 
 public class ConsoleRunner {
+	private final static String INPUT_PROMPT = "> ";
 	private ConsoleMenu rootMenu;
 	private final InputStream in;
 	private final PrintStream out;
@@ -30,6 +31,7 @@ public class ConsoleRunner {
 			while (notDone()) {
 				try {
 					rootMenu.printMenu(out);
+					out.print(INPUT_PROMPT);
 					rootMenu.process(new Scanner(in), out, err);
 				} catch (Exception e) {
 					printErrorMsg(e);

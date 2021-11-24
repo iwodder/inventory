@@ -41,7 +41,7 @@ class RootMenuTest extends InputHandler {
 		menu.addMenu(new ExitMenu());
 		menu.printMenu(new PrintStream(baos));
 		String output = baos.toString();
-		String expected = String.format("====== RootMenu ======%n1) Exit%n");
+		String expected = String.format("====== RootMenu ======%n1) Exit%nPlease choose a menu entry.%n");
 		assertEquals(expected, output);
 	}
 
@@ -52,7 +52,7 @@ class RootMenuTest extends InputHandler {
 		menu.addMenu(new ExitMenu());
 		menu.printMenu(new PrintStream(baos));
 		String output = baos.toString();
-		String expected = String.format("====== RootMenu ======%n1) Inventory Item Menu%n2) Exit%n");
+		String expected = String.format("====== RootMenu ======%n1) Inventory Item Menu%n2) Exit%nPlease choose a menu entry.%n");
 		assertEquals(expected, output);
 	}
 
@@ -157,6 +157,20 @@ class RootMenuTest extends InputHandler {
 		menu1.setActiveMenu(1);
 		menu.process(null, null,null);
 		assertTrue(inputHandled);
+	}
+
+	@Test
+	@DisplayName("Root Menu passes control to Root Menu")
+	void root_menu_printing() {
+		ConsoleMenu menu = new RootMenu("Root 1", new DefaultRootMenuHandler());
+		ConsoleMenu menu1 = new RootMenu("Root 2", new DefaultRootMenuHandler());
+		menu1.addMenu(new SubMenu("Sub Menu 1", this));
+		menu.addMenu(menu1);
+		menu.setActiveMenu(1);
+		menu1.setActiveMenu(1);
+		menu.process(null, null,null);
+		menu.printMenu(new PrintStream(baos));
+		assertEquals(String.format("====== Sub Menu 1 ======%n"), baos.toString());
 	}
 
 	@Override

@@ -14,20 +14,20 @@ public class ItemTableFormatter {
 	public String formatToTable() {
 		StringBuilder output = new StringBuilder();
 		items.sort(Comparator.comparing(InventoryItemDto::getId));
-		int maxId = items.stream()
+		int maxId = Math.max(items.stream()
 				.map(InventoryItemDto::getId)
 				.mapToInt(Long::intValue)
-				.max().orElseGet(() -> 20);
-		int maxName = items.stream()
+				.max().orElseGet(() -> 20), "ID".length());
+		int maxName = Math.max(items.stream()
 				.map(InventoryItemDto::getName)
 				.max(Comparator.comparing(String::length))
 				.map(String::length)
-				.orElseGet(() -> 20);
-		int maxCategory = items.stream()
+				.orElseGet(() -> 20), "NAME".length());
+		int maxCategory = Math.max(items.stream()
 				.map(InventoryItemDto::getCategory)
 				.max(Comparator.comparing(String::length))
 				.map(String::length)
-				.orElseGet(() -> 20);
+				.orElseGet(() -> 20), "CATEGORY".length());
 
 		int lineLength = maxId + 4 + maxName + 4 + maxCategory + 4 + 4;
 		String rowSep = "-".repeat(lineLength);

@@ -23,6 +23,9 @@ class ConsoleRunnerTest extends BaseMenuTest {
 	@Mock
 	ConsoleMenu menu;
 
+	@Mock
+	InputHandler mockHandler;
+
 
 	@BeforeEach
 	protected void setup() {
@@ -111,6 +114,18 @@ class ConsoleRunnerTest extends BaseMenuTest {
 		runner.start();
 		assertTrue(true);
 		assertEquals(String.format("Unknown problem occurred during processing.%n"), baosErr.toString());
+	}
+
+	@Test
+	@DisplayName("Console runner prints input prompt character '>'")
+	void input_prompt() {
+		setChars("");
+		when(menu.getExit()).thenReturn(false, true);
+		ConsoleRunner runner = new ConsoleRunner(inputStream, out, err);
+		menu.setInputHandler(mockHandler);
+		runner.setMenu(menu);
+		runner.start();
+		assertEquals("> ", baosOut.toString());
 	}
 
 	private static class TestHandler extends InputHandler {
