@@ -1,7 +1,7 @@
 package com.wodder.inventory.domain;
 
-import com.wodder.inventory.persistence.*;
 import com.wodder.inventory.dtos.*;
+import com.wodder.inventory.persistence.*;
 import org.junit.jupiter.api.*;
 
 import java.util.*;
@@ -22,7 +22,7 @@ class StorageTest {
 	@DisplayName("Can add new item")
 	void adds_new_item() {
 		InventoryItemDto itemData = InventoryItemDto.builder()
-										.withName("2% Milk").build();
+				.withName("2% Milk").build();
 
 		Optional<InventoryItemDto> result = storage.addItem(itemData);
 
@@ -51,7 +51,7 @@ class StorageTest {
 	@Test
 	@DisplayName("Can delete an item")
 	void delete_item() {
-		InventoryItemDto itemDTO = InventoryItemDto.builder().withId(1L).withName( "2% Milk").build();
+		InventoryItemDto itemDTO = InventoryItemDto.builder().withId(1L).withName("2% Milk").build();
 		assertTrue(storage.deleteItem(itemDTO));
 	}
 
@@ -108,6 +108,20 @@ class StorageTest {
 		assertEquals(3, result.size());
 	}
 
+	@Test
+	@DisplayName("Newly added items are active by default")
+	void active_by_default() {
+		InventoryItemDto itemData = InventoryItemDto.builder()
+				.withName("2% Milk").build();
+
+		Optional<InventoryItemDto> result = storage.addItem(itemData);
+
+		assertTrue(result.isPresent());
+		InventoryItemDto returned = result.get();
+		assertEquals(1L, returned.getId());
+		assertTrue(returned.isActive());
+	}
+
 	private static class TestDataStore implements InventoryItems {
 		private Map<Long, InventoryItem> db = new HashMap<>();
 
@@ -146,6 +160,11 @@ class StorageTest {
 		@Override
 		public List<InventoryItem> loadAllItems() {
 			return Collections.unmodifiableList(new ArrayList<>(db.values()));
+		}
+
+		@Override
+		public List<InventoryItem> loadActiveItems() {
+			return null;
 		}
 	}
 }

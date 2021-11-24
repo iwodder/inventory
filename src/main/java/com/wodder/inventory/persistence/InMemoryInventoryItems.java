@@ -4,6 +4,7 @@ import com.wodder.inventory.domain.*;
 
 import java.util.*;
 import java.util.concurrent.atomic.*;
+import java.util.stream.*;
 
 final class InMemoryInventoryItems implements InventoryItems {
 	private static final AtomicLong id = new AtomicLong(0);
@@ -24,8 +25,8 @@ final class InMemoryInventoryItems implements InventoryItems {
 
 	@Override
 	public Optional<InventoryItem> updateItem(InventoryItem item) {
-		if (db.containsKey(1L)) {
-			InventoryItem updatedItem = new InventoryItem(item.getId(), item.getName(), null);
+		if (db.containsKey(item.getId())) {
+			InventoryItem updatedItem = new InventoryItem(item);
 			db.replace(item.getId(), updatedItem);
 			return Optional.of(db.get(item.getId()));
 		} else {
@@ -36,7 +37,8 @@ final class InMemoryInventoryItems implements InventoryItems {
 	@Override
 	public Long createItem(InventoryItem item) {
 		Long itemId = id.addAndGet(1);
-		InventoryItem newItem = new InventoryItem(itemId, item.getName(), item.getCategory());
+		InventoryItem newItem = new InventoryItem(item);
+		newItem.setId(itemId);
 		db.put(itemId, newItem);
 		return itemId;
 	}
@@ -53,6 +55,13 @@ final class InMemoryInventoryItems implements InventoryItems {
 
 	@Override
 	public List<InventoryItem> loadAllItems() {
-		return Collections.unmodifiableList(new ArrayList<>(db.values()));
+		return List.copyOf(db.values());
+	}
+
+	@Override
+	public List<InventoryItem> loadActiveItems() {
+		return db.values().stream()
+				.filter(InventoryItem::isActive)
+				.collect(Collectors.toUnmodifiableList());
 	}
 }

@@ -1,7 +1,7 @@
 package com.wodder.inventory.domain;
 
-import com.wodder.inventory.persistence.*;
 import com.wodder.inventory.dtos.*;
+import com.wodder.inventory.persistence.*;
 
 import java.util.*;
 import java.util.stream.*;
@@ -21,13 +21,12 @@ class ItemStorageService implements ItemStorage {
 	@Override
 	public Optional<InventoryItemDto> addItem(InventoryItemDto newItem) {
 		if (newItem.getId() != null || newItem.getName() == null) return Optional.empty();
+
 		InventoryItem item = new InventoryItem(newItem);
+		item.setActive(true);
+		item.setId(store.createItem(item));
 
-		Long id = store.createItem(item);
-
-		newItem.setId(id);
-
-		return Optional.of(newItem);
+		return Optional.of(item.toDto());
 	}
 
 	@Override

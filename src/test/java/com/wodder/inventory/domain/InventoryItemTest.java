@@ -12,4 +12,11 @@ class InventoryItemTest {
 		InventoryItem inv2 = new InventoryItem(2L,"2% Milk", "Chemicals");
 		assertEquals(inv, inv2);
 	}
+
+	@Test
+	@DisplayName("Setting negative count causes illegal argument exception")
+	void negative_count() {
+		InventoryItem inv = new InventoryItem(null,null,null);
+		assertThrows(IllegalArgumentException.class, () -> inv.setCount(-1));
+	}
 }

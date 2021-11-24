@@ -1,7 +1,7 @@
 package com.wodder.inventory.persistence;
 
 public class PersistenceFactoryImpl implements PersistenceFactory {
-	private InventoryItems inventoryItems = new InMemoryInventoryItems();
+	private final InventoryItems inventoryItems = new InMemoryInventoryItems();
 
 	@Override
 	public InventoryItems getInventoryDataStore() {

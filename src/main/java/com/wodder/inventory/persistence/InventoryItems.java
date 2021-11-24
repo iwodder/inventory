@@ -15,4 +15,6 @@ public interface InventoryItems {
 	boolean deleteItem(Long itemId);
 
 	List<InventoryItem> loadAllItems();
+
+	List<InventoryItem> loadActiveItems();
 }

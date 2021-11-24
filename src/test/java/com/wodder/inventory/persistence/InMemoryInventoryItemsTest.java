@@ -1,6 +1,7 @@
 package com.wodder.inventory.persistence;
 
 import com.wodder.inventory.domain.*;
+import com.wodder.inventory.dtos.*;
 import org.junit.jupiter.api.*;
 
 import java.util.*;
@@ -37,14 +38,15 @@ class InMemoryInventoryItemsTest {
 	@Test
 	@DisplayName("Able to update an item")
 	void updateItem() {
-		InventoryItem item1 = new InventoryItem(null, "2% Milk", null);
-		Long id = inventoryItems.createItem(item1);
+		Long id = inventoryItems.createItem(new InventoryItem(null, "2% Milk", null));
 
-		InventoryItem item2 = new InventoryItem(id,"2% MILK", null);
+		InventoryItem item2 = new InventoryItem(id,"2% MILK", "REFRIGERATED");
 		Optional<InventoryItem> result = inventoryItems.updateItem(item2);
-		InventoryItem updated = result.orElse(null);
+		assertTrue(result.isPresent());
+		InventoryItem updated = result.get();
 		assertNotSame(item2, updated);
 		assertEquals(item2.getName(), updated.getName());
+		assertEquals("REFRIGERATED", updated.getCategory());
 	}
 
 	@Test
@@ -88,5 +90,24 @@ class InMemoryInventoryItemsTest {
 		assertNotNull(items);
 		assertFalse(items.isEmpty());
 		items.forEach(i -> assertNotNull(i.getId()));
+	}
+
+	@Test
+	@DisplayName("Can load all active inventory items")
+	void load_active() {
+		InventoryItem i1 = new InventoryItem(InventoryItemDto.builder().isActive(true).build());
+		InventoryItem i2 = new InventoryItem(InventoryItemDto.builder().isActive(true).build());
+		InventoryItem i3 = new InventoryItem(InventoryItemDto.builder().isActive(false).build());
+		inventoryItems.createItem(i1);
+		inventoryItems.createItem(i2);
+		inventoryItems.createItem(i3);
+		List<InventoryItem> actives = inventoryItems.loadActiveItems();
+		assertEquals(2, actives.size());
+	}
+
+	@Test
+	@DisplayName("Loading all active items on empty store returns empty list")
+	void empty_store() {
+		assertEquals(0, inventoryItems.loadActiveItems().size());
 	}
 }

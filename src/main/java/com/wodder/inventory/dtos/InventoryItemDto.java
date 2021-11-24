@@ -6,11 +6,20 @@ public class InventoryItemDto {
 	private Long id;
 	private String name;
 	private String category;
+	private boolean active;
 
 	private InventoryItemDto(InventoryItemDtoBuilder b) {
 		this.id = b.id;
 		this.name = b.name;
 		this.category = b.category;
+		this.active = b.active;
+	}
+
+	public InventoryItemDto(InventoryItemDto that) {
+		this.id = that.id;
+		this.name = that.name;
+		this.category = that.category;
+		this.active = that.active;
 	}
 
 	private InventoryItemDto() {}
@@ -35,6 +44,14 @@ public class InventoryItemDto {
 		return category;
 	}
 
+	public boolean isActive() {
+		return active;
+	}
+
+	public void setActive(boolean active) {
+		this.active = active;
+	}
+
 	public static InventoryItemDto fromMap(Map<String, String> values) {
 		InventoryItemDto result = new InventoryItemDto();
 		if (values != null && !values.isEmpty()) {
@@ -55,6 +72,7 @@ public class InventoryItemDto {
 		private Long id;
 		private String name;
 		private String category;
+		private boolean active;
 
 		private InventoryItemDtoBuilder() {
 			//no-op
@@ -72,6 +90,11 @@ public class InventoryItemDto {
 
 		public InventoryItemDtoBuilder withCategory(String category) {
 			this.category = category;
+			return this;
+		}
+
+		public InventoryItemDtoBuilder isActive(boolean active) {
+			this.active = active;
 			return this;
 		}
 
