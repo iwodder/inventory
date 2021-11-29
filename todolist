@@ -1,6 +1,9 @@
+TODO Create usage report functionality/Implement domain logic for creating weekly usage report > UsageReport
 TODO Implement clear screen function for console menu
-TODO Implement get/list all inventory items
+
 TODO Document basic architecture for console menus
-TODO Implement domain logic for creating weekly usage report
+
+Domain package contains services which perform the business logic/rules
+
 TODO Create perform inventory count menu
 TODO Determine if DTOs should be continued or eliminated

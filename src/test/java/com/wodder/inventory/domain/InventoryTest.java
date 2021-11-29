@@ -19,7 +19,7 @@ class InventoryTest {
 	@DisplayName("Inventory tracks total items")
 	void total_items() {
 		Inventory inventory = new Inventory();
-		inventory.addInventoryItem(new InventoryItem(1L, "2% Milk", "Refridgerated"));
+		inventory.addInventoryItem(new InventoryItem(1L, "2% Milk", "Refrigerated"));
 		assertEquals(1, inventory.numberOfItems());
 	}
 
@@ -36,7 +36,7 @@ class InventoryTest {
 	void add_items() {
 		Inventory inventory = new Inventory();
 		inventory.addInventoryItem(new InventoryItem(1L, "2% Milk", "Refrigerator"));
-		inventory.addInventoryItem(new InventoryItem(1L, "Bread", "Refrigerator"));
+		inventory.addInventoryItem(new InventoryItem(1L, "Cheese", "Refrigerator"));
 		assertEquals(2, inventory.numberOfItems());
 	}
 
@@ -50,4 +50,20 @@ class InventoryTest {
 		assertEquals(1, i.getItemsByCategory("dry").size());
 		assertEquals(0, i.getItemsByCategory("frozen").size());
 	}
+
+	@Test
+	@DisplayName("Copy constructor makes a deep copy of items")
+	void deep_copy() {
+		Inventory i = new Inventory();
+		i.addInventoryItem(new InventoryItem(1L, "2% Milk", "Refrigerated"));
+		i.addInventoryItem(new InventoryItem(2L, "Bread", "Dry"));
+
+		Inventory i2 = new Inventory(i);
+		assertNotSame(i, i2);
+		assertEquals(i.numberOfItems(), i2.numberOfItems());
+		InventoryItem item = i.getInventoryItem("2% Milk").get();
+		InventoryItem item2 = i2.getInventoryItem("2% Milk").get();
+		assertNotSame(item, item2);
+	}
+
 }

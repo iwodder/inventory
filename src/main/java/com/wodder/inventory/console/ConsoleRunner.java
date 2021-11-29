@@ -4,7 +4,7 @@ import java.io.*;
 import java.util.*;
 
 public class ConsoleRunner {
-	private final static String INPUT_PROMPT = "> ";
+	private static final String INPUT_PROMPT = "> ";
 	private ConsoleMenu rootMenu;
 	private final InputStream in;
 	private final PrintStream out;
