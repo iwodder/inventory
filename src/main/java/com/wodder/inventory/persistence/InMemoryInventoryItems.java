@@ -17,7 +17,7 @@ final class InMemoryInventoryItems implements InventoryItems {
 	@Override
 	public Optional<InventoryItem> loadItem(Long id) {
 		if (db.containsKey(id)) {
-			return Optional.of(db.get(id));
+			return Optional.of(new InventoryItem(db.get(id)));
 		} else {
 			return Optional.empty();
 		}
@@ -28,7 +28,7 @@ final class InMemoryInventoryItems implements InventoryItems {
 		if (db.containsKey(item.getId())) {
 			InventoryItem updatedItem = new InventoryItem(item);
 			db.replace(item.getId(), updatedItem);
-			return Optional.of(db.get(item.getId()));
+			return Optional.of(new InventoryItem(updatedItem));
 		} else {
 			return Optional.empty();
 		}
@@ -55,13 +55,16 @@ final class InMemoryInventoryItems implements InventoryItems {
 
 	@Override
 	public List<InventoryItem> loadAllItems() {
-		return List.copyOf(db.values());
+		return db.values().stream()
+				.map(InventoryItem::new)
+				.collect(Collectors.toList());
 	}
 
 	@Override
 	public List<InventoryItem> loadActiveItems() {
 		return db.values().stream()
 				.filter(InventoryItem::isActive)
-				.collect(Collectors.toUnmodifiableList());
+				.map(InventoryItem::new)
+				.collect(Collectors.toList());
 	}
 }

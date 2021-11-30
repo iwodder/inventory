@@ -5,7 +5,7 @@ import com.wodder.inventory.domain.*;
 import java.time.*;
 import java.util.*;
 
-public class InMemoryInventoryStorage implements InventoryStorage {
+public final class InMemoryInventoryStorage implements InventoryStorage {
 	private final Map<LocalDate, Inventory> db;
 
 	InMemoryInventoryStorage() {
@@ -14,20 +14,24 @@ public class InMemoryInventoryStorage implements InventoryStorage {
 
 	@Override
 	public boolean save(Inventory i) {
-		if (db.containsKey(i.date())) {
+		if (isPresent(i)) {
 			return false;
 		} else {
 			db.put(i.date(), new Inventory(i));
+			return true;
 		}
-		return true;
 	}
 
 	@Override
 	public Optional<Inventory> load(Inventory i) {
-		if (db.containsKey(i.date())) {
+		if (isPresent(i)) {
 			return Optional.of(new Inventory(db.get(i.date())));
 		} else {
 			return Optional.empty();
 		}
+	}
+
+	private boolean isPresent(Inventory i) {
+		return db.containsKey(i.date());
 	}
 }
