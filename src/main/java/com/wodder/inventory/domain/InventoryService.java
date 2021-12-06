@@ -3,6 +3,7 @@ package com.wodder.inventory.domain;
 import com.wodder.inventory.persistence.*;
 
 import java.time.*;
+import java.util.*;
 
 public class InventoryService {
 
@@ -25,5 +26,13 @@ public class InventoryService {
 			return false;
 		}
 		return inventoryStorage.save(i);
+	}
+
+	public Optional<Inventory> loadInventory(LocalDate date) {
+		if (date != null && date.isBefore(LocalDate.now().plusDays(1))) {
+			return inventoryStorage.load(new Inventory(date));
+		} else {
+			return Optional.empty();
+		}
 	}
 }

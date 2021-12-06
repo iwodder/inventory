@@ -89,6 +89,30 @@ class InventoryServiceTest {
 		verify(storage).save(inventory);
 	}
 
+	@Test
+	@DisplayName("Loading inventory requires providing a date")
+	void loads_completed_inventory() {
+		when(storage.load(any())).thenReturn(Optional.of(new Inventory()));
+		Optional<Inventory> inventory = service.loadInventory(LocalDate.now());
+		assertTrue(inventory.isPresent());
+	}
+
+	@Test
+	@DisplayName("Loading inventory requires a date")
+	void loading_inventory_requires_a_date() {
+		Optional<Inventory> inventory = service.loadInventory(null);
+		assertTrue(inventory.isEmpty());
+		verifyNoInteractions(storage);
+	}
+
+	@Test
+	@DisplayName("Loading inventory requires today's date or earlier")
+	void loading_inventory_requires_a_current_date() {
+		Optional<Inventory> inventory = service.loadInventory(LocalDate.now().plusDays(1));
+		assertTrue(inventory.isEmpty());
+		verifyNoInteractions(storage);
+	}
+
 
 	private void stubActiveItemReturn() {
 		when(items.loadActiveItems()).thenReturn(activeItems);
