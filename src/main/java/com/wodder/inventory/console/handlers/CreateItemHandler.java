@@ -1,16 +1,15 @@
 package com.wodder.inventory.console.handlers;
 
 import com.wodder.inventory.console.*;
-import com.wodder.inventory.console.models.*;
-import com.wodder.inventory.dtos.*;
+import com.wodder.inventory.models.*;
 
 import java.io.*;
 import java.util.*;
 
 public class CreateItemHandler extends InputHandler {
-	private final InventoryItemModel itemModel;
+	private final com.wodder.inventory.console.models.InventoryItemModel itemModel;
 
-	public CreateItemHandler(InventoryItemModel itemModel) {
+	public CreateItemHandler(com.wodder.inventory.console.models.InventoryItemModel itemModel) {
 		this.itemModel = itemModel;
 	}
 
@@ -26,13 +25,13 @@ public class CreateItemHandler extends InputHandler {
 
 	private void processNewItem(String in, PrintStream out) {
 		Map<String, String> valuesMap = MenuUtils.extractKeyValuePairs(in);
-		InventoryItemDto createdDto = InventoryItemDto.builder()
+		InventoryItemModel createdDto = InventoryItemModel.builder()
 				.withName(valuesMap.get("NAME"))
 				.withCategory(valuesMap.get("CATEGORY"))
 				.build();
-		Result<InventoryItemDto, String> result = itemModel.createItem(createdDto);
+		Result<InventoryItemModel, String> result = itemModel.createItem(createdDto);
 		if (result.isOK()) {
-			InventoryItemDto newItem = result.getOk();
+			InventoryItemModel newItem = result.getOk();
 			out.printf("Successfully created %s with id of %d%n", newItem.getName(), newItem.getId());
 		} else {
 			out.println(result.getErr());

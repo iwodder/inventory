@@ -1,8 +1,7 @@
 package com.wodder.inventory.console.menus.inventory;
 
 import com.wodder.inventory.console.handlers.*;
-import com.wodder.inventory.console.models.*;
-import com.wodder.inventory.dtos.*;
+import com.wodder.inventory.models.*;
 import org.junit.jupiter.api.*;
 
 import java.util.*;
@@ -78,10 +77,10 @@ class CreateItemMenuTest extends BaseMenuTest {
 		menu.process(in,out,err);
 	}
 
-	class TestInventoryItemModel implements InventoryItemModel {
-		public InventoryItemDto dto;
+	class TestInventoryItemModel implements com.wodder.inventory.console.models.InventoryItemModel {
+		public InventoryItemModel dto;
 
-		public Result<InventoryItemDto, String> createItem(InventoryItemDto dto) {
+		public Result<InventoryItemModel, String> createItem(InventoryItemModel dto) {
 			this.dto = dto;
 			dto.setId(1L);
 			if (success) {
@@ -92,17 +91,17 @@ class CreateItemMenuTest extends BaseMenuTest {
 		}
 
 		@Override
-		public Result<Boolean, String> deleteItem(InventoryItemDto itemDto) {
+		public Result<Boolean, String> deleteItem(InventoryItemModel itemDto) {
 			return null;
 		}
 
 		@Override
-		public Result<InventoryItemDto, String> updateItem(InventoryItemDto itemDto) {
+		public Result<InventoryItemModel, String> updateItem(InventoryItemModel itemDto) {
 			return null;
 		}
 
 		@Override
-		public Result<List<InventoryItemDto>, String> getItems() {
+		public Result<List<InventoryItemModel>, String> getItems() {
 			return null;
 		}
 	}

@@ -1,4 +1,4 @@
-package com.wodder.inventory.dtos;
+package com.wodder.inventory.models;
 
 //TODO Update class with static creators
 public class Result<T, E> {

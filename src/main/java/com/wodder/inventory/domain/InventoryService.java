@@ -1,5 +1,7 @@
 package com.wodder.inventory.domain;
 
+import com.wodder.inventory.domain.entities.*;
+import com.wodder.inventory.models.*;
 import com.wodder.inventory.persistence.*;
 
 import java.time.*;
@@ -7,17 +9,20 @@ import java.util.*;
 
 public class InventoryService {
 
-	private final InventoryItems inventoryItems;
+	private final InventoryItemStorage inventoryItemStorage;
 	private final InventoryStorage inventoryStorage;
 
-	public InventoryService(InventoryItems items, InventoryStorage inventoryStorage) {
-		this.inventoryItems = items;
+	public InventoryService(InventoryItemStorage items, InventoryStorage inventoryStorage) {
+		this.inventoryItemStorage = items;
 		this.inventoryStorage = inventoryStorage;
 	}
 
-	public Inventory createNewInventory() {
-		Inventory i = new Inventory();
-		inventoryItems.loadActiveItems().forEach(i::addInventoryItem);
+	public InventoryModel createNewInventory() {
+		InventoryModel i = new InventoryModel();
+		inventoryItemStorage.loadCounts()
+				.stream()
+				.map(InventoryCount::toModel)
+				.forEach(i::addInventoryItemModel);
 		return i;
 	}
 

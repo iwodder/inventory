@@ -1,16 +1,16 @@
 package com.wodder.inventory.persistence;
 
-import com.wodder.inventory.domain.*;
+import com.wodder.inventory.domain.entities.*;
 
 import java.util.*;
 import java.util.concurrent.atomic.*;
 import java.util.stream.*;
 
-final class InMemoryInventoryItems implements InventoryItems {
+final class InMemoryInventoryItemStorage implements InventoryItemStorage {
 	private static final AtomicLong id = new AtomicLong(0);
 	private final Map<Long, InventoryItem> db;
 
-	InMemoryInventoryItems() {
+	InMemoryInventoryItemStorage() {
 		db = new HashMap<>();
 	}
 
@@ -66,5 +66,27 @@ final class InMemoryInventoryItems implements InventoryItems {
 				.filter(InventoryItem::isActive)
 				.map(InventoryItem::new)
 				.collect(Collectors.toList());
+	}
+
+	@Override
+	public List<InventoryCount> loadCounts() {
+		return db.values().stream()
+				.filter(InventoryItem::isActive)
+				.map(item -> new InventoryCount(item.getId(), item.getName(), item.getCategory(), item.getOnHandQty()))
+				.collect(Collectors.toList());
+	}
+
+	@Override
+	public void updateCount(InventoryCount count) {
+		if (db.containsKey(count.getItemId())) {
+			InventoryItem item = db.get(count.getItemId());
+			item.setOnHandQty(count.getCount());
+		}
+	}
+
+	@Override
+	public Optional<InventoryCount> loadCount(Long id) {
+		return loadItem(id)
+				.map(item -> new InventoryCount(item.getId(), item.getName(), item.getCategory(), item.getOnHandQty()));
 	}
 }

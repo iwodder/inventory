@@ -1,4 +1,4 @@
-package com.wodder.inventory.dtos;
+package com.wodder.inventory.models;
 
 import org.junit.jupiter.api.*;
 
@@ -7,16 +7,16 @@ import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class InventoryItemDtoTest {
+class InventoryItemModelTest {
 
 	@Test
-	@DisplayName("Creates InventoryItemDto from map")
+	@DisplayName("Creates InventoryItemModel from map")
 	void createDtoFromMap() {
 		Map<String, String> values = new HashMap<>();
 		values.put("NAME", "bread");
 		values.put("ID", "1");
 		values.put("CATEGORY", "refrigerated");
-		InventoryItemDto result = InventoryItemDto.fromMap(values);
+		InventoryItemModel result = InventoryItemModel.fromMap(values);
 		assertNotNull(result);
 		assertEquals(1L, result.getId());
 		assertEquals("bread", result.getName());
@@ -24,12 +24,12 @@ class InventoryItemDtoTest {
 	}
 
 	@Test
-	@DisplayName("Creates InventoryItemDto from map with missing id")
+	@DisplayName("Creates InventoryItemModel from map with missing id")
 	void createDtoFromMapMissingId() {
 		Map<String, String> values = new HashMap<>();
 		values.put("NAME", "bread");
 		values.put("CATEGORY", "refrigerated");
-		InventoryItemDto result = InventoryItemDto.fromMap(values);
+		InventoryItemModel result = InventoryItemModel.fromMap(values);
 		assertNotNull(result);
 		assertNull(result.getId());
 		assertEquals("bread", result.getName());
@@ -37,23 +37,23 @@ class InventoryItemDtoTest {
 	}
 
 	@Test
-	@DisplayName("Null map returns an empty InventoryItemDto")
+	@DisplayName("Null map returns an empty InventoryItemModel")
 	void nullMap() throws Exception {
-		InventoryItemDto result = InventoryItemDto.fromMap(null);
+		InventoryItemModel result = InventoryItemModel.fromMap(null);
 		assertNotNull(result);
 		assertGettersReturnNull(result);
 	}
 
 	@Test
-	@DisplayName("Empty map returns an empty InventoryItemDto")
+	@DisplayName("Empty map returns an empty InventoryItemModel")
 	void emptyMap() throws Exception {
-		InventoryItemDto result = InventoryItemDto.fromMap(new HashMap<>());
+		InventoryItemModel result = InventoryItemModel.fromMap(new HashMap<>());
 		assertNotNull(result);
 		assertGettersReturnNull(result);
 	}
 
-	private void assertGettersReturnNull(InventoryItemDto result) throws IllegalAccessException, InvocationTargetException {
-		Method[] methods = InventoryItemDto.class.getDeclaredMethods();
+	private void assertGettersReturnNull(InventoryItemModel result) throws IllegalAccessException, InvocationTargetException {
+		Method[] methods = InventoryItemModel.class.getDeclaredMethods();
 		for (Method m : methods) {
 			if (m.getName().startsWith("get")) {
 				assertNull(m.invoke(result));

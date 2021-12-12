@@ -1,30 +1,30 @@
 package com.wodder.inventory.console.handlers;
 
-import com.wodder.inventory.dtos.*;
+import com.wodder.inventory.models.*;
 
 import java.util.*;
 
 public class ItemTableFormatter {
-	private final List<InventoryItemDto> items;
+	private final List<InventoryItemModel> items;
 
-	public ItemTableFormatter(List<InventoryItemDto> items) {
+	public ItemTableFormatter(List<InventoryItemModel> items) {
 		this.items = new ArrayList<>(items);
 	}
 
 	public String formatToTable() {
 		StringBuilder output = new StringBuilder();
-		items.sort(Comparator.comparing(InventoryItemDto::getId));
+		items.sort(Comparator.comparing(InventoryItemModel::getId));
 		int maxId = Math.max(items.stream()
-				.map(InventoryItemDto::getId)
+				.map(InventoryItemModel::getId)
 				.mapToInt(Long::intValue)
 				.max().orElseGet(() -> 20), "ID".length());
 		int maxName = Math.max(items.stream()
-				.map(InventoryItemDto::getName)
+				.map(InventoryItemModel::getName)
 				.max(Comparator.comparing(String::length))
 				.map(String::length)
 				.orElseGet(() -> 20), "NAME".length());
 		int maxCategory = Math.max(items.stream()
-				.map(InventoryItemDto::getCategory)
+				.map(InventoryItemModel::getCategory)
 				.max(Comparator.comparing(String::length))
 				.map(String::length)
 				.orElseGet(() -> 20), "CATEGORY".length());
@@ -43,7 +43,7 @@ public class ItemTableFormatter {
 		output.append(System.lineSeparator());
 		output.append(rowSep);
 		output.append(System.lineSeparator());
-		for (InventoryItemDto dto : items) {
+		for (InventoryItemModel dto : items) {
 			output.append(String.format(
 					"|%s|%s|%s|", centerText(dto.getId().toString(), maxId),
 					centerText(dto.getName(), maxName), centerText(dto.getCategory(), maxCategory)));

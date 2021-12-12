@@ -1,6 +1,7 @@
 package com.wodder.inventory.domain;
 
-import com.wodder.inventory.dtos.*;
+import com.wodder.inventory.domain.entities.*;
+import com.wodder.inventory.models.*;
 import com.wodder.inventory.persistence.*;
 
 import java.util.*;
@@ -8,9 +9,9 @@ import java.util.stream.*;
 
 class ItemStorageService implements ItemStorage {
 
-	private final InventoryItems store;
+	private final InventoryItemStorage store;
 
-	ItemStorageService(InventoryItems store) {
+	ItemStorageService(InventoryItemStorage store) {
 		this.store = store;
 	}
 
@@ -19,25 +20,25 @@ class ItemStorageService implements ItemStorage {
 	}
 
 	@Override
-	public Optional<InventoryItemDto> addItem(InventoryItemDto newItem) {
+	public Optional<InventoryItemModel> addItem(InventoryItemModel newItem) {
 		if (newItem.getId() != null || newItem.getName() == null) return Optional.empty();
 
 		InventoryItem item = new InventoryItem(newItem);
 		item.setActive(true);
 		item.setId(store.createItem(item));
 
-		return Optional.of(item.toDto());
+		return Optional.of(item.toItemModel());
 	}
 
 	@Override
-	public Boolean deleteItem(InventoryItemDto itemToDelete) {
+	public Boolean deleteItem(InventoryItemModel itemToDelete) {
 		if (itemToDelete.getId() == null) return false;
 
 		return store.deleteItem(itemToDelete.getId());
 	}
 
 	@Override
-	public Optional<InventoryItemDto> updateItem(InventoryItemDto updatedItem) {
+	public Optional<InventoryItemModel> updateItem(InventoryItemModel updatedItem) {
 		if (updatedItem.getId() == null) return Optional.empty();
 		InventoryItem item = new InventoryItem(updatedItem);
 		Optional<InventoryItem> result = store.updateItem(item);
@@ -45,22 +46,22 @@ class ItemStorageService implements ItemStorage {
 	}
 
 	@Override
-	public Optional<InventoryItemDto> readItem(Long itemId) {
+	public Optional<InventoryItemModel> readItem(Long itemId) {
 		if (itemId == null) return Optional.empty();
 		Optional<InventoryItem> result = store.loadItem(itemId);
 		return result.map(this::convertDtoToItem);
 	}
 
 	@Override
-	public List<InventoryItemDto> readAllItems() {
+	public List<InventoryItemModel> readAllItems() {
 		return store.loadAllItems()
 				.stream()
 				.map(this::convertDtoToItem)
 				.collect(Collectors.toList());
 	}
 
-	private InventoryItemDto convertDtoToItem(InventoryItem item) {
-		return InventoryItemDto.builder()
+	private InventoryItemModel convertDtoToItem(InventoryItem item) {
+		return InventoryItemModel.builder()
 				.withCategory(item.getCategory())
 				.withName(item.getName())
 				.withId(item.getId())

@@ -1,16 +1,15 @@
 package com.wodder.inventory.console.handlers;
 
 import com.wodder.inventory.console.*;
-import com.wodder.inventory.console.models.*;
-import com.wodder.inventory.dtos.*;
+import com.wodder.inventory.models.*;
 
 import java.io.*;
 import java.util.*;
 
 public class UpdateItemHandler extends InputHandler {
-	private final InventoryItemModel model;
+	private final com.wodder.inventory.console.models.InventoryItemModel model;
 
-	public UpdateItemHandler(InventoryItemModel model) {
+	public UpdateItemHandler(com.wodder.inventory.console.models.InventoryItemModel model) {
 		this.model = model;
 	}
 
@@ -26,8 +25,8 @@ public class UpdateItemHandler extends InputHandler {
 
 	private void processInput(PrintStream out, PrintStream err, String line) {
 		Map<String, String> values = MenuUtils.extractKeyValuePairs(line);
-		InventoryItemDto dto = InventoryItemDto.fromMap(values);
-		Result<InventoryItemDto, String> result = model.updateItem(dto);
+		InventoryItemModel dto = InventoryItemModel.fromMap(values);
+		Result<InventoryItemModel, String> result = model.updateItem(dto);
 		if (result.isOK()) {
 			out.println("Item updated successfully");
 		} else {

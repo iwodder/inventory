@@ -1,6 +1,7 @@
 package com.wodder.inventory.domain;
 
-import com.wodder.inventory.dtos.*;
+import com.wodder.inventory.domain.entities.*;
+import com.wodder.inventory.models.*;
 import com.wodder.inventory.persistence.*;
 import org.junit.jupiter.api.*;
 
@@ -10,7 +11,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class StorageTest {
 
-	private final InventoryItems store = new TestDataStore();
+	private final InventoryItemStorage store = new TestDataStore();
 	private ItemStorageService storage;
 
 	@BeforeEach
@@ -21,55 +22,55 @@ class StorageTest {
 	@Test
 	@DisplayName("Can add new item")
 	void adds_new_item() {
-		InventoryItemDto itemData = InventoryItemDto.builder()
+		InventoryItemModel itemData = InventoryItemModel.builder()
 				.withName("2% Milk").build();
 
-		Optional<InventoryItemDto> result = storage.addItem(itemData);
+		Optional<InventoryItemModel> result = storage.addItem(itemData);
 
 		assertTrue(result.isPresent());
-		InventoryItemDto returned = result.get();
+		InventoryItemModel returned = result.get();
 		assertEquals(1L, returned.getId());
 	}
 
 	@Test
 	@DisplayName("New item shouldn't have id")
 	void add_item_with_id() {
-		InventoryItemDto itemDTO = InventoryItemDto.builder().withId(1L).build();
+		InventoryItemModel itemDTO = InventoryItemModel.builder().withId(1L).build();
 
-		Optional<InventoryItemDto> result = storage.addItem(itemDTO);
+		Optional<InventoryItemModel> result = storage.addItem(itemDTO);
 		assertFalse(result.isPresent());
 	}
 
 	@Test
 	@DisplayName("New item requires name")
 	void add_item_no_name() {
-		InventoryItemDto itemDTO = InventoryItemDto.builder().build();
-		Optional<InventoryItemDto> result = storage.addItem(itemDTO);
+		InventoryItemModel itemDTO = InventoryItemModel.builder().build();
+		Optional<InventoryItemModel> result = storage.addItem(itemDTO);
 		assertFalse(result.isPresent());
 	}
 
 	@Test
 	@DisplayName("Can delete an item")
 	void delete_item() {
-		InventoryItemDto itemDTO = InventoryItemDto.builder().withId(1L).withName("2% Milk").build();
+		InventoryItemModel itemDTO = InventoryItemModel.builder().withId(1L).withName("2% Milk").build();
 		assertTrue(storage.deleteItem(itemDTO));
 	}
 
 	@Test
 	@DisplayName("Deleting item requires an id")
 	void delete_item_no_id() {
-		InventoryItemDto itemDTO = InventoryItemDto.builder().withName("2% Milk").build();
+		InventoryItemModel itemDTO = InventoryItemModel.builder().withName("2% Milk").build();
 		assertFalse(storage.deleteItem(itemDTO));
 	}
 
 	@Test
 	@DisplayName("Can update an item")
 	void update_item() {
-		InventoryItemDto itemDTO = InventoryItemDto.builder().withId(1L).withName("2% Milk").build();
+		InventoryItemModel itemDTO = InventoryItemModel.builder().withId(1L).withName("2% Milk").build();
 
-		Optional<InventoryItemDto> result = storage.updateItem(itemDTO);
+		Optional<InventoryItemModel> result = storage.updateItem(itemDTO);
 		assertTrue(result.isPresent());
-		InventoryItemDto updatedItem = result.get();
+		InventoryItemModel updatedItem = result.get();
 		assertEquals(itemDTO.getName(), updatedItem.getName());
 		assertEquals(itemDTO.getId(), updatedItem.getId());
 		assertNotSame(itemDTO, updatedItem);
@@ -78,7 +79,7 @@ class StorageTest {
 	@Test
 	@DisplayName("Updating item requires id")
 	void update_item_no_id() {
-		InventoryItemDto itemDTO = InventoryItemDto.builder().withName("2% Milk").build();
+		InventoryItemModel itemDTO = InventoryItemModel.builder().withName("2% Milk").build();
 
 		assertFalse(storage.updateItem(itemDTO).isPresent());
 	}
@@ -86,23 +87,23 @@ class StorageTest {
 	@Test
 	@DisplayName("Can load existing item")
 	void read_item() {
-		Optional<InventoryItemDto> item = storage.readItem(1L);
+		Optional<InventoryItemModel> item = storage.readItem(1L);
 		assertTrue(item.isPresent());
-		InventoryItemDto result = item.get();
+		InventoryItemModel result = item.get();
 		assertEquals(1L, result.getId());
 	}
 
 	@Test
 	@DisplayName("Id is required to load item")
 	void read_item_bo_id() {
-		Optional<InventoryItemDto> item = storage.readItem(null);
+		Optional<InventoryItemModel> item = storage.readItem(null);
 		assertFalse(item.isPresent());
 	}
 
 	@Test
 	@DisplayName("Can load all available items")
 	void read_all_items() {
-		List<InventoryItemDto> result = storage.readAllItems();
+		List<InventoryItemModel> result = storage.readAllItems();
 		assertNotNull(result);
 		assertFalse(result.isEmpty());
 		assertEquals(3, result.size());
@@ -111,18 +112,18 @@ class StorageTest {
 	@Test
 	@DisplayName("Newly added items are active by default")
 	void active_by_default() {
-		InventoryItemDto itemData = InventoryItemDto.builder()
+		InventoryItemModel itemData = InventoryItemModel.builder()
 				.withName("2% Milk").build();
 
-		Optional<InventoryItemDto> result = storage.addItem(itemData);
+		Optional<InventoryItemModel> result = storage.addItem(itemData);
 
 		assertTrue(result.isPresent());
-		InventoryItemDto returned = result.get();
+		InventoryItemModel returned = result.get();
 		assertEquals(1L, returned.getId());
 		assertTrue(returned.isActive());
 	}
 
-	private static class TestDataStore implements InventoryItems {
+	private static class TestDataStore implements InventoryItemStorage {
 		private Map<Long, InventoryItem> db = new HashMap<>();
 
 		private TestDataStore() {
@@ -164,6 +165,11 @@ class StorageTest {
 
 		@Override
 		public List<InventoryItem> loadActiveItems() {
+			return null;
+		}
+
+		@Override
+		public List<InventoryCount> loadCounts() {
 			return null;
 		}
 	}

@@ -10,8 +10,8 @@ class PersistenceFactoryImplTest {
 	@DisplayName("PersistenceFactory returns same instance when getting data store")
 	void getInventoryDataStore() {
 		PersistenceFactory factory = new PersistenceFactoryImpl();
-		InventoryItems items = factory.getInventoryDataStore();
-		InventoryItems items1 = factory.getInventoryDataStore();
+		InventoryItemStorage items = factory.getInventoryDataStore();
+		InventoryItemStorage items1 = factory.getInventoryDataStore();
 		assertSame(items, items1);
 	}
 }

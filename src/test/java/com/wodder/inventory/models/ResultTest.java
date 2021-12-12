@@ -1,4 +1,4 @@
-package com.wodder.inventory.dtos;
+package com.wodder.inventory.models;
 
 import org.junit.jupiter.api.*;
 

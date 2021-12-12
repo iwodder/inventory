@@ -2,8 +2,7 @@ package com.wodder.inventory.console.handlers;
 
 import com.wodder.inventory.console.*;
 import com.wodder.inventory.console.menus.inventory.*;
-import com.wodder.inventory.console.models.*;
-import com.wodder.inventory.dtos.*;
+import com.wodder.inventory.models.*;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.*;
 import org.junit.jupiter.params.*;
@@ -18,10 +17,10 @@ import static org.mockito.Mockito.*;
 class DeleteItemHandlerTest extends BaseMenuTest {
 
 	@Captor
-	private ArgumentCaptor<InventoryItemDto> captor;
+	private ArgumentCaptor<InventoryItemModel> captor;
 
 	@Mock
-	private InventoryItemModel model;
+	private com.wodder.inventory.console.models.InventoryItemModel model;
 
 	@Mock
 	private ConsoleMenu menu;
@@ -33,12 +32,12 @@ class DeleteItemHandlerTest extends BaseMenuTest {
 	@ValueSource(longs = { 1L, 2L, 3L })
 	@DisplayName("Can delete an existing item.")
 	void handleInput(Long id) {
-		when(model.deleteItem(any(InventoryItemDto.class))).thenReturn(new Result<>(Boolean.TRUE, null));
+		when(model.deleteItem(any(InventoryItemModel.class))).thenReturn(new Result<>(Boolean.TRUE, null));
 		setChars("id=" + id);
 		deleteItemHandler.handleInput(in, out, err);
 
 		verify(model).deleteItem(captor.capture());
-		InventoryItemDto dto = captor.getValue();
+		InventoryItemModel dto = captor.getValue();
 		assertEquals(id, dto.getId());
 	}
 
@@ -46,7 +45,7 @@ class DeleteItemHandlerTest extends BaseMenuTest {
 	@ValueSource(longs = { 1L, 2L, 3L })
 	@DisplayName("Prints success message when item is deleted successfully")
 	void printsSuccessOnDelete(Long id) {
-		when(model.deleteItem(any(InventoryItemDto.class))).thenReturn(new Result<>(Boolean.TRUE, null));
+		when(model.deleteItem(any(InventoryItemModel.class))).thenReturn(new Result<>(Boolean.TRUE, null));
 		setChars("id=" + id);
 		deleteItemHandler.handleInput(in, out, err);
 		assertSuccessfulDelete(id);
@@ -56,7 +55,7 @@ class DeleteItemHandlerTest extends BaseMenuTest {
 	@ValueSource(longs = { 1L, 2L, 3L })
 	@DisplayName("Prints error message when delete fails")
 	void printErrorOnDelete(Long id) {
-		when(model.deleteItem(any(InventoryItemDto.class))).thenReturn(new Result<>(null, "Unable to delete item"));
+		when(model.deleteItem(any(InventoryItemModel.class))).thenReturn(new Result<>(null, "Unable to delete item"));
 		setChars("id=" + id);
 		deleteItemHandler.handleInput(in, out, err);
 		assertEquals(String.format("Unable to delete item with id of %d.%n", id), baosErr.toString());
@@ -73,7 +72,7 @@ class DeleteItemHandlerTest extends BaseMenuTest {
 	@Test
 	@DisplayName("User can enter just id to delete item")
 	void enterNumberOnly() {
-		when(model.deleteItem(any(InventoryItemDto.class))).thenReturn(new Result<>(Boolean.TRUE, null));
+		when(model.deleteItem(any(InventoryItemModel.class))).thenReturn(new Result<>(Boolean.TRUE, null));
 		setChars("1");
 		deleteItemHandler.handleInput(in, out, err);
 		assertSuccessfulDelete(1L);

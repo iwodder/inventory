@@ -1,18 +1,18 @@
 package com.wodder.inventory.domain;
 
-import com.wodder.inventory.dtos.*;
+import com.wodder.inventory.models.*;
 
 import java.util.*;
 
 public interface ItemStorage {
 
-	Optional<InventoryItemDto> addItem(InventoryItemDto newItem);
+	Optional<InventoryItemModel> addItem(InventoryItemModel newItem);
 
-	Boolean deleteItem(InventoryItemDto itemToDelete);
+	Boolean deleteItem(InventoryItemModel itemToDelete);
 
-	Optional<InventoryItemDto> updateItem(InventoryItemDto updatedItem);
+	Optional<InventoryItemModel> updateItem(InventoryItemModel updatedItem);
 
-	Optional<InventoryItemDto> readItem(Long itemId);
+	Optional<InventoryItemModel> readItem(Long itemId);
 
-	List<InventoryItemDto> readAllItems();
+	List<InventoryItemModel> readAllItems();
 }

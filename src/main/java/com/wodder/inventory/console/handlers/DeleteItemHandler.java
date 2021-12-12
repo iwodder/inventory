@@ -1,16 +1,15 @@
 package com.wodder.inventory.console.handlers;
 
 import com.wodder.inventory.console.*;
-import com.wodder.inventory.console.models.*;
-import com.wodder.inventory.dtos.*;
+import com.wodder.inventory.models.*;
 
 import java.io.*;
 import java.util.*;
 
 public class DeleteItemHandler extends InputHandler {
-	private final InventoryItemModel model;
+	private final com.wodder.inventory.console.models.InventoryItemModel model;
 
-	public DeleteItemHandler(InventoryItemModel model) {
+	public DeleteItemHandler(com.wodder.inventory.console.models.InventoryItemModel model) {
 		this.model = model;
 	}
 
@@ -27,7 +26,7 @@ public class DeleteItemHandler extends InputHandler {
 			} else {
 				id = Long.parseLong(keyValues.get("ID"));
 			}
-			Result<Boolean, String> result = model.deleteItem(InventoryItemDto.builder().withId(id).build());
+			Result<Boolean, String> result = model.deleteItem(InventoryItemModel.builder().withId(id).build());
 			if (result.isOK()) {
 				out.printf("Successfully deleted item with id of %d.%n", id);
 			} else {

@@ -1,6 +1,7 @@
 package com.wodder.inventory.domain;
 
-import com.wodder.inventory.dtos.*;
+import com.wodder.inventory.domain.entities.*;
+import com.wodder.inventory.models.*;
 import com.wodder.inventory.persistence.*;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.*;
@@ -16,11 +17,11 @@ import static org.mockito.Mockito.*;
 @ExtendWith(MockitoExtension.class)
 class InventoryServiceTest {
 
-	private List<InventoryItem> activeItems;
+	private List<InventoryCount> activeItems;
 	private Inventory inventory;
 
 	@Mock
-	InventoryItems items;
+	InventoryItemStorage items;
 
 	@Mock
 	InventoryStorage storage;
@@ -34,29 +35,20 @@ class InventoryServiceTest {
 	}
 
 	@Test
-	@DisplayName("Creates a new inventory")
+	@DisplayName("Creates a new inventory model")
 	void new_inventory() {
 		stubActiveItemReturn();
-		Inventory dto = service.createNewInventory();
+		InventoryModel dto = service.createNewInventory();
 		assertNotNull(dto);
-		assertEquals(LocalDate.now(), dto.getInventoryDate());
 	}
 
 	@Test
 	@DisplayName("New inventory has active items")
 	void active_items() {
 		stubActiveItemReturn();
-		activeItems.add(new InventoryItem(1L, "2% Milk", "refrigerated"));
-		Inventory result = service.createNewInventory();
+		activeItems.add(new InventoryCount(1L, "2% Milk", "refrigerated"));
+		InventoryModel result = service.createNewInventory();
 		assertEquals(1, result.numberOfItems());
-	}
-
-	@Test
-	@DisplayName("Inventory service loads only active items from inventory items")
-	void active_items_only() {
-		stubActiveItemReturn();
-		service.createNewInventory();
-		verify(items).loadActiveItems();
 	}
 
 	@Test
@@ -115,7 +107,7 @@ class InventoryServiceTest {
 
 
 	private void stubActiveItemReturn() {
-		when(items.loadActiveItems()).thenReturn(activeItems);
+		when(items.loadCounts()).thenReturn(activeItems);
 	}
 
 	private void stubStorageSave(boolean result) {
@@ -128,10 +120,6 @@ class InventoryServiceTest {
 		} else {
 			inventory = new Inventory(date);
 		}
-		inventory.addInventoryItem(new InventoryItem(InventoryItemDto.builder()
-				.withId(1L)
-				.withName("Bread")
-				.withCategory("Dry")
-				.build()));
+		inventory.addInventoryCount(new InventoryCount(1L, "Bread", "Dry", 0));
 	}
 }

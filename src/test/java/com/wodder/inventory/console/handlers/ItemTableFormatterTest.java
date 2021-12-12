@@ -1,6 +1,6 @@
 package com.wodder.inventory.console.handlers;
 
-import com.wodder.inventory.dtos.*;
+import com.wodder.inventory.models.*;
 import org.junit.jupiter.api.*;
 
 import java.io.*;
@@ -15,8 +15,8 @@ class ItemTableFormatterTest {
 	@Test
 	@DisplayName("Handles data smaller than column title")
 	void smaller_than_column_title() {
-		List<InventoryItemDto> items = new ArrayList<>();
-		items.add(InventoryItemDto.builder().withId(1L).withName("bread").withCategory("dry").build());
+		List<InventoryItemModel> items = new ArrayList<>();
+		items.add(InventoryItemModel.builder().withId(1L).withName("bread").withCategory("dry").build());
 		ItemTableFormatter formatter = new ItemTableFormatter(items);
 		assertEquals(loadExpectedOutput("smallerColumnValue"), formatter.formatToTable());
 	}

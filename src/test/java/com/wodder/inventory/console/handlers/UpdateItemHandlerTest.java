@@ -2,8 +2,7 @@ package com.wodder.inventory.console.handlers;
 
 import com.wodder.inventory.console.*;
 import com.wodder.inventory.console.menus.inventory.*;
-import com.wodder.inventory.console.models.*;
-import com.wodder.inventory.dtos.*;
+import com.wodder.inventory.models.*;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.*;
 import org.mockito.*;
@@ -16,10 +15,10 @@ import static org.mockito.Mockito.*;
 class UpdateItemHandlerTest extends BaseMenuTest {
 
 	@Captor
-	ArgumentCaptor<InventoryItemDto> captor;
+	ArgumentCaptor<InventoryItemModel> captor;
 
 	@Mock
-	InventoryItemModel model;
+	com.wodder.inventory.console.models.InventoryItemModel model;
 
 	@Mock
 	ConsoleMenu menu;
@@ -27,13 +26,13 @@ class UpdateItemHandlerTest extends BaseMenuTest {
 	@Test
 	@DisplayName("Can update an item with only id and name")
 	void updateItem() {
-		when(model.updateItem(any())).thenReturn(new Result<>(InventoryItemDto.builder().build(), null));
+		when(model.updateItem(any())).thenReturn(new Result<>(InventoryItemModel.builder().build(), null));
 		setChars("id=1 name=milk");
 		UpdateItemHandler handler = new UpdateItemHandler(model);
 		handler.handleInput(in, out, err);
 		verify(model).updateItem(captor.capture());
 
-		InventoryItemDto dto = captor.getValue();
+		InventoryItemModel dto = captor.getValue();
 		assertNotNull(dto);
 		assertEquals(1L, dto.getId());
 		assertEquals("milk", dto.getName());
@@ -43,13 +42,13 @@ class UpdateItemHandlerTest extends BaseMenuTest {
 	@Test
 	@DisplayName("Can update an item with only id and category")
 	void updateItem1() {
-		when(model.updateItem(any())).thenReturn(new Result<>(InventoryItemDto.builder().build(), null));
+		when(model.updateItem(any())).thenReturn(new Result<>(InventoryItemModel.builder().build(), null));
 		setChars("id=1 category=refrigerated");
 		UpdateItemHandler handler = new UpdateItemHandler(model);
 		handler.handleInput(in, out, err);
 		verify(model).updateItem(captor.capture());
 
-		InventoryItemDto dto = captor.getValue();
+		InventoryItemModel dto = captor.getValue();
 		assertNotNull(dto);
 		assertEquals(1L, dto.getId());
 		assertEquals("refrigerated", dto.getCategory());

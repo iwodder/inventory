@@ -1,12 +1,12 @@
-package com.wodder.inventory.domain;
+package com.wodder.inventory.domain.entities;
 
-import com.wodder.inventory.dtos.*;
+import com.wodder.inventory.models.*;
 
 public class InventoryItem {
 	private Long id;
 	private String name;
 	private  String category;
-	private int count;
+	private int onHandQty;
 	private boolean active;
 
 	public InventoryItem(Long id, String name, String category) {
@@ -19,15 +19,15 @@ public class InventoryItem {
 		this.id = that.id;
 		this.name = that.name;
 		this.category = that.category;
-		this.count = that.count;
+		this.onHandQty = that.onHandQty;
 		this.active = that.active;
 	}
 
-	public InventoryItem(InventoryItemDto dto) {
-		this.id = dto.getId();
-		this.name = dto.getName();
-		this.category = dto.getCategory();
-		this.active = dto.isActive();
+	public InventoryItem(InventoryItemModel model) {
+		this.id = model.getId();
+		this.name = model.getName();
+		this.category = model.getCategory();
+		this.active = model.isActive();
 	}
 
 	public Long getId() {
@@ -54,15 +54,15 @@ public class InventoryItem {
 		this.category = category;
 	}
 
-	public void setCount(int count) {
-		if (count < 0) {
+	public void setOnHandQty(int onHandQty) {
+		if (onHandQty < 0) {
 			throw new IllegalArgumentException("Inventory item cannot have negative count");
 		}
-		this.count = count;
+		this.onHandQty = onHandQty;
 	}
 
-	public int getCount() {
-		return count;
+	public int getOnHandQty() {
+		return onHandQty;
 	}
 
 	public boolean isActive() {
@@ -88,12 +88,16 @@ public class InventoryItem {
 		return name.hashCode();
 	}
 
-	public InventoryItemDto toDto() {
-		return InventoryItemDto.builder()
+	public InventoryItemModel toItemModel() {
+		return InventoryItemModel.builder()
 				.withId(this.id)
 				.withName(this.name)
 				.withCategory(this.category)
 				.isActive(this.active)
 				.build();
+	}
+
+	public InventoryCountModel toCountModel() {
+		return new InventoryCountModel(id, name, category, onHandQty);
 	}
 }

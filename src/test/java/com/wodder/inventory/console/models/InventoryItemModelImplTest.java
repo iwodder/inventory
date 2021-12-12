@@ -1,7 +1,8 @@
 package com.wodder.inventory.console.models;
 
 import com.wodder.inventory.domain.*;
-import com.wodder.inventory.dtos.*;
+import com.wodder.inventory.models.InventoryItemModel;
+import com.wodder.inventory.models.*;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.*;
 import org.mockito.*;
@@ -24,8 +25,8 @@ class InventoryItemModelImplTest {
 	@Test
 	@DisplayName("Create item returns ok on success")
 	void createItemSuccess() {
-		when(itemStorage.addItem(any(InventoryItemDto.class))).thenReturn(Optional.of(InventoryItemDto.builder().build()));
-		Result<InventoryItemDto, String> r = inventoryItemModel.createItem(InventoryItemDto.builder().build());
+		when(itemStorage.addItem(any(InventoryItemModel.class))).thenReturn(Optional.of(InventoryItemModel.builder().build()));
+		Result<InventoryItemModel, String> r = inventoryItemModel.createItem(InventoryItemModel.builder().build());
 		assertTrue(r.isOK());
 		assertFalse(r.isErr());
 	}
@@ -33,8 +34,8 @@ class InventoryItemModelImplTest {
 	@Test
 	@DisplayName("Create item returns error result on failure")
 	void createItemFailure() {
-		when(itemStorage.addItem(any(InventoryItemDto.class))).thenReturn(Optional.empty());
-		Result<InventoryItemDto, String> r = inventoryItemModel.createItem(InventoryItemDto.builder().build());
+		when(itemStorage.addItem(any(InventoryItemModel.class))).thenReturn(Optional.empty());
+		Result<InventoryItemModel, String> r = inventoryItemModel.createItem(InventoryItemModel.builder().build());
 		assertFalse(r.isOK());
 		assertTrue(r.isErr());
 	}
@@ -42,8 +43,8 @@ class InventoryItemModelImplTest {
 	@Test
 	@DisplayName("Delete item returns ok on success")
 	void deleteItemSuccess() {
-		when(itemStorage.deleteItem(any(InventoryItemDto.class))).thenReturn(Boolean.TRUE);
-		Result<Boolean, String> result = inventoryItemModel.deleteItem(InventoryItemDto.builder().build());
+		when(itemStorage.deleteItem(any(InventoryItemModel.class))).thenReturn(Boolean.TRUE);
+		Result<Boolean, String> result = inventoryItemModel.deleteItem(InventoryItemModel.builder().build());
 		assertTrue(result.isOK());
 		assertFalse(result.isErr());
 	}
@@ -51,7 +52,7 @@ class InventoryItemModelImplTest {
 	@Test
 	@DisplayName("Delete item returns err on failure")
 	void deleteItemFailure() {
-		Result<Boolean, String> result = inventoryItemModel.deleteItem(InventoryItemDto.builder().build());
+		Result<Boolean, String> result = inventoryItemModel.deleteItem(InventoryItemModel.builder().build());
 		assertTrue(result.isErr());
 		assertFalse(result.isOK());
 	}
@@ -59,8 +60,8 @@ class InventoryItemModelImplTest {
 	@Test
 	@DisplayName("Update item returns ok on success")
 	void updateItemSuccess() {
-		when(itemStorage.updateItem(any(InventoryItemDto.class))).thenReturn(Optional.of(InventoryItemDto.builder().build()));
-		Result<InventoryItemDto, String> result = inventoryItemModel.updateItem(InventoryItemDto.builder().build());
+		when(itemStorage.updateItem(any(InventoryItemModel.class))).thenReturn(Optional.of(InventoryItemModel.builder().build()));
+		Result<InventoryItemModel, String> result = inventoryItemModel.updateItem(InventoryItemModel.builder().build());
 		assertTrue(result.isOK());
 		assertFalse(result.isErr());
 	}
@@ -68,7 +69,7 @@ class InventoryItemModelImplTest {
 	@Test
 	@DisplayName("Update item returns err on failure")
 	void updateItemFailure() {
-		Result<InventoryItemDto, String> result = inventoryItemModel.updateItem(InventoryItemDto.builder().build());
+		Result<InventoryItemModel, String> result = inventoryItemModel.updateItem(InventoryItemModel.builder().build());
 		assertTrue(result.isErr());
 		assertFalse(result.isOK());
 	}
@@ -76,7 +77,7 @@ class InventoryItemModelImplTest {
 	@Test
 	@DisplayName("Get items returns err on failure")
 	void getItemsFailure() {
-		Result<List<InventoryItemDto>, String> result = inventoryItemModel.getItems();
+		Result<List<InventoryItemModel>, String> result = inventoryItemModel.getItems();
 		assertFalse(result.isOK());
 		assertTrue(result.isErr());
 	}
@@ -85,7 +86,7 @@ class InventoryItemModelImplTest {
 	@DisplayName("Get items returns err on empty items list")
 	void getItemsFailure1() {
 		when(itemStorage.readAllItems()).thenReturn(Collections.emptyList());
-		Result<List<InventoryItemDto>, String> result = inventoryItemModel.getItems();
+		Result<List<InventoryItemModel>, String> result = inventoryItemModel.getItems();
 		assertFalse(result.isOK());
 		assertTrue(result.isErr());
 	}
@@ -93,10 +94,10 @@ class InventoryItemModelImplTest {
 	@Test
 	@DisplayName("Get items returns ok on success")
 	void getItemsSuccess() {
-		List<InventoryItemDto> items = new ArrayList<>();
-		items.add(InventoryItemDto.builder().build());
+		List<InventoryItemModel> items = new ArrayList<>();
+		items.add(InventoryItemModel.builder().build());
 		when(itemStorage.readAllItems()).thenReturn(items);
-		Result<List<InventoryItemDto>, String> result = inventoryItemModel.getItems();
+		Result<List<InventoryItemModel>, String> result = inventoryItemModel.getItems();
 		assertFalse(result.isErr());
 		assertTrue(result.isOK());
 	}

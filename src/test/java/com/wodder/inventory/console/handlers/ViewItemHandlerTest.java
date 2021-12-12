@@ -2,8 +2,7 @@ package com.wodder.inventory.console.handlers;
 
 import com.wodder.inventory.console.*;
 import com.wodder.inventory.console.menus.inventory.*;
-import com.wodder.inventory.console.models.*;
-import com.wodder.inventory.dtos.*;
+import com.wodder.inventory.models.*;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.*;
 import org.mockito.*;
@@ -19,7 +18,7 @@ import static org.mockito.Mockito.*;
 class ViewItemHandlerTest extends BaseMenuTest {
 
 	@Mock
-	InventoryItemModel inventoryItemModel;
+	com.wodder.inventory.console.models.InventoryItemModel inventoryItemModel;
 
 	@Mock
 	ConsoleMenu menu;
@@ -85,9 +84,9 @@ class ViewItemHandlerTest extends BaseMenuTest {
 	}
 
 	private void mockSuccessfulReturn() {
-		List<InventoryItemDto> items = new ArrayList<>();
-		items.add(InventoryItemDto.builder().withId(1L).withName("bread").withCategory("dry").build());
-		items.add(InventoryItemDto.builder().withId(2L).withName("milk").withCategory("refrigerated").build());
+		List<InventoryItemModel> items = new ArrayList<>();
+		items.add(InventoryItemModel.builder().withId(1L).withName("bread").withCategory("dry").build());
+		items.add(InventoryItemModel.builder().withId(2L).withName("milk").withCategory("refrigerated").build());
 		when(inventoryItemModel.getItems()).thenReturn(new Result<>(items, null));
 	}
 }
