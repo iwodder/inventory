@@ -1,6 +1,7 @@
 package com.wodder.inventory.domain;
 
 import com.wodder.inventory.domain.entities.*;
+import com.wodder.inventory.models.*;
 import org.junit.jupiter.api.*;
 
 import java.time.*;
@@ -67,4 +68,16 @@ class InventoryTest {
 		assertNotSame(item, item2);
 	}
 
+	@Test
+	@DisplayName("Can create an Inventory from InventoryModel")
+	void from_model() {
+		InventoryModel model = new InventoryModel();
+		model.setInventoryDate(LocalDate.now());
+		model.addInventoryCountModel(new InventoryCountModel(1L, "Pistachios", "Dry Goods", 3));
+		model.addInventoryCountModel(new InventoryCountModel(1L, "2% Milk", "Refrigerated", 3));
+		Inventory i = new Inventory(model);
+
+		assertEquals(model.getInventoryDate(), i.date());
+		assertEquals(model.numberOfItems(), i.numberOfItems());
+	}
 }

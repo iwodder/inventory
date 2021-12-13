@@ -22,20 +22,21 @@ public class InventoryService {
 		inventoryItemStorage.loadCounts()
 				.stream()
 				.map(InventoryCount::toModel)
-				.forEach(i::addInventoryItemModel);
+				.forEach(i::addInventoryCountModel);
 		return i;
 	}
 
-	public boolean saveInventory(Inventory i) {
-		if (i.numberOfItems() == 0 || i.date().isBefore(LocalDate.now())) {
+	public boolean saveInventory(InventoryModel i) {
+		if (i.numberOfItems() == 0 || i.getInventoryDate().isBefore(LocalDate.now())) {
 			return false;
 		}
-		return inventoryStorage.save(i);
+
+		return inventoryStorage.save(new Inventory(i));
 	}
 
-	public Optional<Inventory> loadInventory(LocalDate date) {
+	public Optional<InventoryModel> loadInventory(LocalDate date) {
 		if (date != null && date.isBefore(LocalDate.now().plusDays(1))) {
-			return inventoryStorage.load(new Inventory(date));
+			return inventoryStorage.load(new Inventory(date)).map(Inventory::toModel);
 		} else {
 			return Optional.empty();
 		}

@@ -27,6 +27,13 @@ public class InventoryCount {
 		this.count = that.count;
 	}
 
+	public InventoryCount(InventoryCountModel model) {
+		this.itemId = model.getItemId();
+		this.name = model.getName();
+		this.category = model.getCategory();
+		this.count = model.getCount();
+	}
+
 	public long getItemId() {
 		return itemId;
 	}

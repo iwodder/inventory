@@ -1,5 +1,7 @@
 package com.wodder.inventory.domain.entities;
 
+import com.wodder.inventory.models.*;
+
 import java.time.*;
 import java.util.*;
 import java.util.function.*;
@@ -22,6 +24,12 @@ public class Inventory {
 	public Inventory(LocalDate date) {
 		items = new HashMap<>();
 		this.date = date;
+	}
+
+	public Inventory(InventoryModel model) {
+		this.date = model.getInventoryDate();
+		this.items = new HashMap<>();
+		model.items().map(InventoryCount::new).forEach(this::addInventoryCount);
 	}
 
 	public Inventory(Inventory that) {
@@ -73,5 +81,16 @@ public class Inventory {
 
 	public LocalDate getInventoryDate() {
 		return date;
+	}
+
+	public InventoryModel toModel() {
+		InventoryModel result = new InventoryModel();
+		result.setInventoryDate(date);
+		items.values().stream()
+				.flatMap(List::stream)
+				.map(InventoryCount::toModel)
+				.forEach(result::addInventoryCountModel);
+
+		return result;
 	}
 }

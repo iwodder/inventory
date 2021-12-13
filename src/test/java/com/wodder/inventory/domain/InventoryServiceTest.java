@@ -18,7 +18,7 @@ import static org.mockito.Mockito.*;
 class InventoryServiceTest {
 
 	private List<InventoryCount> activeItems;
-	private Inventory inventory;
+	private InventoryModel inventory;
 
 	@Mock
 	InventoryItemStorage items;
@@ -54,14 +54,14 @@ class InventoryServiceTest {
 	@Test
 	@DisplayName("Saving inventory requires having items")
 	void saves_inventory_false() {
-		inventory = new Inventory();
+		inventory = new InventoryModel();
 		assertFalse(service.saveInventory(inventory));
 	}
 
 	@Test
 	@DisplayName("Saving inventory requires having items")
 	void saves_inventory_true() {
-		setupTestInventory(null);
+		setupTestInventory(LocalDate.now());
 		stubStorageSave(true);
 		assertTrue(service.saveInventory(inventory));
 	}
@@ -74,25 +74,17 @@ class InventoryServiceTest {
 	}
 
 	@Test
-	@DisplayName("Saving inventory interacts with inventory storage")
-	void stores_completed_inventory() {
-		setupTestInventory(null);
-		service.saveInventory(inventory);
-		verify(storage).save(inventory);
-	}
-
-	@Test
 	@DisplayName("Loading inventory requires providing a date")
 	void loads_completed_inventory() {
 		when(storage.load(any())).thenReturn(Optional.of(new Inventory()));
-		Optional<Inventory> inventory = service.loadInventory(LocalDate.now());
+		Optional<InventoryModel> inventory = service.loadInventory(LocalDate.now());
 		assertTrue(inventory.isPresent());
 	}
 
 	@Test
 	@DisplayName("Loading inventory requires a date")
 	void loading_inventory_requires_a_date() {
-		Optional<Inventory> inventory = service.loadInventory(null);
+		Optional<InventoryModel> inventory = service.loadInventory(null);
 		assertTrue(inventory.isEmpty());
 		verifyNoInteractions(storage);
 	}
@@ -100,26 +92,25 @@ class InventoryServiceTest {
 	@Test
 	@DisplayName("Loading inventory requires today's date or earlier")
 	void loading_inventory_requires_a_current_date() {
-		Optional<Inventory> inventory = service.loadInventory(LocalDate.now().plusDays(1));
+		Optional<InventoryModel> inventory = service.loadInventory(LocalDate.now().plusDays(1));
 		assertTrue(inventory.isEmpty());
 		verifyNoInteractions(storage);
 	}
-
 
 	private void stubActiveItemReturn() {
 		when(items.loadCounts()).thenReturn(activeItems);
 	}
 
 	private void stubStorageSave(boolean result) {
-		when(storage.save(inventory)).thenReturn(result);
+		when(storage.save(any())).thenReturn(result);
 	}
 
 	private void setupTestInventory(LocalDate date) {
-		if (date == null) {
-			inventory = new Inventory();
-		} else {
-			inventory = new Inventory(date);
+		inventory = new InventoryModel();
+		if (date != null) {
+			inventory.setInventoryDate(date);
 		}
-		inventory.addInventoryCount(new InventoryCount(1L, "Bread", "Dry", 0));
+		inventory.addInventoryCountModel(
+				new InventoryCountModel(1L, "Bread", "Dry", 0));
 	}
 }

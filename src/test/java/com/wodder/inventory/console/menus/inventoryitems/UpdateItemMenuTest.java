@@ -1,4 +1,4 @@
-package com.wodder.inventory.console.menus.inventory;
+package com.wodder.inventory.console.menus.inventoryitems;
 
 import org.junit.jupiter.api.*;
 

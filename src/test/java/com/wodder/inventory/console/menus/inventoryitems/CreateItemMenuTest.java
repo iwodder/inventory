@@ -1,4 +1,4 @@
-package com.wodder.inventory.console.menus.inventory;
+package com.wodder.inventory.console.menus.inventoryitems;
 
 import com.wodder.inventory.console.handlers.*;
 import com.wodder.inventory.models.*;

@@ -2,7 +2,7 @@ package com.wodder.inventory.console.menus;
 
 import com.wodder.inventory.console.*;
 import com.wodder.inventory.console.handlers.*;
-import com.wodder.inventory.console.menus.inventory.*;
+import com.wodder.inventory.console.menus.inventoryitems.*;
 import com.wodder.inventory.console.models.*;
 import com.wodder.inventory.domain.*;
 
