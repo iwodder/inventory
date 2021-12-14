@@ -6,11 +6,13 @@ import com.wodder.inventory.models.*;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.*;
 import org.mockito.*;
+import org.mockito.internal.verification.*;
 import org.mockito.junit.jupiter.*;
 
 import java.time.*;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 class CountHandlerTest extends BaseMenuTest {
@@ -49,8 +51,41 @@ class CountHandlerTest extends BaseMenuTest {
 	@Test
 	@DisplayName("User chooses which location to count")
 	void choose_location() {
+		when(service.createNewInventory()).thenReturn(model);
 		setChars("pantry\nexit");
 		handler.handleInput(in,out,err);
-		assertEquals(String.format("---- Counting Pantry ----%n"), baosOut.toString());
+		String expected = String.format("---- Counting Pantry ----%n");
+		String actual = baosOut.toString();
+		assertTrue(actual.startsWith(expected), () -> String.format("Expected %s to start with %s", actual, expected));
+	}
+
+	@Test
+	@DisplayName("Performing inventory creates a new inventory once")
+	void created_once() {
+		when(service.createNewInventory()).thenReturn(model);
+		setChars("pantry\nfreezer\nexit");
+		handler.handleInput(in, out, err);
+		verify(service, new Times(1)).createNewInventory();
+	}
+
+	@Test
+	@DisplayName("Leaving and returning clears performed inventory")
+	void created_twice() {
+		when(service.createNewInventory()).thenReturn(model);
+		setChars("pantry\nexit\nfreezer\nexit");
+		handler.handleInput(in, out, err);
+		handler.handleInput(in, out, err);
+		verify(service, new Times(2)).createNewInventory();
+	}
+
+	@Test
+	@DisplayName("Choosing a location to count loops through all items")
+	void count_items() {
+		when(service.createNewInventory()).thenReturn(model);
+		setChars("pantry\nexit");
+		handler.handleInput(in,out,err);
+		String expected = String.format("1) Bananas%n2) Apples%n");
+		String actual = baosOut.toString();
+		assertTrue(actual.endsWith(expected), () -> String.format("Expected %s to end with %s", actual, expected));
 	}
 }
