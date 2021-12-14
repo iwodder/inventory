@@ -6,12 +6,14 @@ public class InventoryItemModel {
 	private Long id;
 	private String name;
 	private String category;
+	private String location;
 	private boolean active;
 
 	private InventoryItemModel(InventoryItemModelBuilder b) {
 		this.id = b.id;
 		this.name = b.name;
 		this.category = b.category;
+		this.location = b.location;
 		this.active = b.active;
 	}
 
@@ -20,6 +22,7 @@ public class InventoryItemModel {
 		this.name = that.name;
 		this.category = that.category;
 		this.active = that.active;
+		this.location = that.location;
 	}
 
 	private InventoryItemModel() {}
@@ -52,6 +55,14 @@ public class InventoryItemModel {
 		this.active = active;
 	}
 
+	public String getLocation() {
+		return location;
+	}
+
+	public void setLocation(String location) {
+		this.location = location;
+	}
+
 	public static InventoryItemModel fromMap(Map<String, String> values) {
 		InventoryItemModel result = new InventoryItemModel();
 		if (values != null && !values.isEmpty()) {
@@ -72,6 +83,7 @@ public class InventoryItemModel {
 		private Long id;
 		private String name;
 		private String category;
+		private String location;
 		private boolean active;
 
 		private InventoryItemModelBuilder() {
@@ -90,6 +102,11 @@ public class InventoryItemModel {
 
 		public InventoryItemModelBuilder withCategory(String category) {
 			this.category = category;
+			return this;
+		}
+
+		public InventoryItemModelBuilder withLocation(String location) {
+			this.location = location;
 			return this;
 		}
 

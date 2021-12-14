@@ -95,9 +95,9 @@ class InMemoryInventoryItemStorageTest {
 	@Test
 	@DisplayName("Can load all active inventory items")
 	void load_active() {
-		InventoryItem i1 = new InventoryItem(InventoryItemModel.builder().isActive(true).build());
-		InventoryItem i2 = new InventoryItem(InventoryItemModel.builder().isActive(true).build());
-		InventoryItem i3 = new InventoryItem(InventoryItemModel.builder().isActive(false).build());
+		InventoryItem i1 = new InventoryItem(InventoryItemModel.builder().withName("Bananas").isActive(true).build());
+		InventoryItem i2 = new InventoryItem(InventoryItemModel.builder().withName("Apples").isActive(true).build());
+		InventoryItem i3 = new InventoryItem(InventoryItemModel.builder().withName("Kiwi").isActive(false).build());
 		inventoryItemStorage.createItem(i1);
 		inventoryItemStorage.createItem(i2);
 		inventoryItemStorage.createItem(i3);
@@ -129,7 +129,7 @@ class InMemoryInventoryItemStorageTest {
 	void save_count() {
 		InventoryItem i1 = new InventoryItem(InventoryItemModel.builder().withName("2% Milk").withCategory("Refrigerated").isActive(true).build());
 		Long id = inventoryItemStorage.createItem(i1);
-		InventoryCount count = new InventoryCount(id, null, null, 2);
+		InventoryCount count = new InventoryCount(id, null, null, null,2);
 		inventoryItemStorage.updateCount(count);
 		InventoryCount c2 = inventoryItemStorage.loadCount(id).get();
 		assertEquals(2, c2.getCount());

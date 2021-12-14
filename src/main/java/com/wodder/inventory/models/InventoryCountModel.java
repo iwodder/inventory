@@ -5,15 +5,19 @@ public class InventoryCountModel {
 	private final long itemId;
 	private final String name;
 	private final String category;
-	private final int onHandQty;
+	private final String location;
 	private int count;
 
-	public InventoryCountModel(long itemId, String name, String category, int currentOnHand) {
+	public InventoryCountModel(long itemId, String name, String category, String location, int count) {
 		this.itemId = itemId;
 		this.name = name;
 		this.category = category;
-		this.onHandQty = currentOnHand;
-		this.count = 0;
+		this.location = location;
+		this.count = count;
+	}
+
+	public InventoryCountModel(long itemId, String name, String category, String location) {
+		this(itemId, name, category, location, 0);
 	}
 
 	public long getItemId() {
@@ -28,12 +32,12 @@ public class InventoryCountModel {
 		return category;
 	}
 
-	public int getOnHandQty() {
-		return onHandQty;
-	}
-
 	public int getCount() {
 		return count;
+	}
+
+	public String getLocation() {
+		return location;
 	}
 
 	public void setCount(int count) {

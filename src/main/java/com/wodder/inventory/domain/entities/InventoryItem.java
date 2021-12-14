@@ -6,7 +6,7 @@ public class InventoryItem {
 	private Long id;
 	private String name;
 	private  String category;
-	private int onHandQty;
+	private String location;
 	private boolean active;
 
 	public InventoryItem(Long id, String name, String category) {
@@ -19,8 +19,8 @@ public class InventoryItem {
 		this.id = that.id;
 		this.name = that.name;
 		this.category = that.category;
-		this.onHandQty = that.onHandQty;
 		this.active = that.active;
+		this.location = that.location;
 	}
 
 	public InventoryItem(InventoryItemModel model) {
@@ -28,6 +28,7 @@ public class InventoryItem {
 		this.name = model.getName();
 		this.category = model.getCategory();
 		this.active = model.isActive();
+		this.location = model.getLocation() != null ? model.getLocation() : "unassigned";
 	}
 
 	public Long getId() {
@@ -54,23 +55,20 @@ public class InventoryItem {
 		this.category = category;
 	}
 
-	public void setOnHandQty(int onHandQty) {
-		if (onHandQty < 0) {
-			throw new IllegalArgumentException("Inventory item cannot have negative count");
-		}
-		this.onHandQty = onHandQty;
-	}
-
-	public int getOnHandQty() {
-		return onHandQty;
-	}
-
 	public boolean isActive() {
 		return active;
 	}
 
 	public void setActive(boolean active) {
 		this.active = active;
+	}
+
+	public String getLocation() {
+		return location;
+	}
+
+	public void setLocation(String location) {
+		this.location = location;
 	}
 
 	@Override
@@ -93,11 +91,8 @@ public class InventoryItem {
 				.withId(this.id)
 				.withName(this.name)
 				.withCategory(this.category)
+				.withLocation(this.location)
 				.isActive(this.active)
 				.build();
-	}
-
-	public InventoryCountModel toCountModel() {
-		return new InventoryCountModel(id, name, category, onHandQty);
 	}
 }

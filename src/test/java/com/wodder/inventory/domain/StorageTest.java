@@ -33,6 +33,20 @@ class StorageTest {
 	}
 
 	@Test
+	@DisplayName("Item without a location gets set to \"unassigned\"")
+	void no_location_provided() {
+		InventoryItemModel itemData = InventoryItemModel.builder()
+				.withName("2% Milk").build();
+
+		Optional<InventoryItemModel> result = storage.addItem(itemData);
+
+		assertTrue(result.isPresent());
+		InventoryItemModel returned = result.get();
+		assertEquals(1L, returned.getId());
+		assertEquals("unassigned", returned.getLocation());
+	}
+
+	@Test
 	@DisplayName("New item shouldn't have id")
 	void add_item_with_id() {
 		InventoryItemModel itemDTO = InventoryItemModel.builder().withId(1L).build();

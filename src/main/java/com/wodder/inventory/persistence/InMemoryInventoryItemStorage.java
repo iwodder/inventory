@@ -9,9 +9,11 @@ import java.util.stream.*;
 final class InMemoryInventoryItemStorage implements InventoryItemStorage {
 	private static final AtomicLong id = new AtomicLong(0);
 	private final Map<Long, InventoryItem> db;
+	private final Map<InventoryItem, InventoryCount> counts;
 
 	InMemoryInventoryItemStorage() {
 		db = new HashMap<>();
+		counts = new HashMap<>();
 	}
 
 	@Override
@@ -40,6 +42,7 @@ final class InMemoryInventoryItemStorage implements InventoryItemStorage {
 		InventoryItem newItem = new InventoryItem(item);
 		newItem.setId(itemId);
 		db.put(itemId, newItem);
+		counts.put(newItem, new InventoryCount(newItem.getId(), newItem.getName(), newItem.getCategory(), item.getLocation()));
 		return itemId;
 	}
 
@@ -72,21 +75,20 @@ final class InMemoryInventoryItemStorage implements InventoryItemStorage {
 	public List<InventoryCount> loadCounts() {
 		return db.values().stream()
 				.filter(InventoryItem::isActive)
-				.map(item -> new InventoryCount(item.getId(), item.getName(), item.getCategory(), item.getOnHandQty()))
+				.flatMap(item -> Stream.of(counts.get(item)))
 				.collect(Collectors.toList());
 	}
 
 	@Override
 	public void updateCount(InventoryCount count) {
 		if (db.containsKey(count.getItemId())) {
-			InventoryItem item = db.get(count.getItemId());
-			item.setOnHandQty(count.getCount());
+			counts.replace(db.get(count.getItemId()), new InventoryCount(count));
 		}
 	}
 
 	@Override
 	public Optional<InventoryCount> loadCount(Long id) {
 		return loadItem(id)
-				.map(item -> new InventoryCount(item.getId(), item.getName(), item.getCategory(), item.getOnHandQty()));
+				.map(counts::get);
 	}
 }

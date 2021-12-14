@@ -46,7 +46,7 @@ class InventoryServiceTest {
 	@DisplayName("New inventory has active items")
 	void active_items() {
 		stubActiveItemReturn();
-		activeItems.add(new InventoryCount(1L, "2% Milk", "refrigerated"));
+		activeItems.add(new InventoryCount(1L, "2% Milk", "refrigerated", "Refrigerator"));
 		InventoryModel result = service.createNewInventory();
 		assertEquals(1, result.numberOfItems());
 	}
@@ -111,6 +111,6 @@ class InventoryServiceTest {
 			inventory.setInventoryDate(date);
 		}
 		inventory.addInventoryCountModel(
-				new InventoryCountModel(1L, "Bread", "Dry", 0));
+				new InventoryCountModel(1L, "Bread", "Dry", "Pantry"));
 	}
 }
