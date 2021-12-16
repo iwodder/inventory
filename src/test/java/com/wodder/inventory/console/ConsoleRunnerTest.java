@@ -5,6 +5,7 @@ import com.wodder.inventory.console.menus.inventoryitems.*;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.*;
 import org.mockito.*;
+import org.mockito.internal.verification.*;
 import org.mockito.junit.jupiter.*;
 
 import java.io.*;
@@ -25,6 +26,9 @@ class ConsoleRunnerTest extends BaseMenuTest {
 
 	@Mock
 	InputHandler mockHandler;
+
+	@Mock
+	InputStream testInputStream;
 
 
 	@BeforeEach
@@ -47,7 +51,7 @@ class ConsoleRunnerTest extends BaseMenuTest {
 	@DisplayName("Console runner accepts a rootmenu")
 	void console_runner_1() {
 		ConsoleRunner runner = new ConsoleRunner();
-		runner.setMenu(new RootMenu("Root Menu", handler));
+		runner.setMenu(menu);
 		assertNotNull(runner.getMenu());
 	}
 
@@ -61,20 +65,18 @@ class ConsoleRunnerTest extends BaseMenuTest {
 
 	@Test
 	@DisplayName("Console runner prints menu on start")
-	void console_runner_3() {
-		ByteArrayOutputStream baos = new ByteArrayOutputStream();
-		ConsoleRunner runner = new ConsoleRunner(new TestInputStream(), new PrintStream(baos));
-		handler.iterations = 1;
-		runner.setMenu(rootMenu);
+	void console_runner_3() throws IOException{
+		when(menu.getExit()).thenReturn(false, true);
+		ConsoleRunner runner = new ConsoleRunner(testInputStream, new PrintStream(new ByteArrayOutputStream()));
+		runner.setMenu(menu);
 		runner.start();
-		assertNotEquals("", baos.toString());
+		verify(menu, new Times(1)).printMenu(any());
 	}
 
 	@Test
 	@DisplayName("Console runner passes input and output to handle method")
-	void console_runner_4() {
-		ByteArrayOutputStream baos = new ByteArrayOutputStream();
-		ConsoleRunner runner = new ConsoleRunner(new TestInputStream(), new PrintStream(baos));
+	void console_runner_4() throws IOException {
+		ConsoleRunner runner = new ConsoleRunner(testInputStream, new PrintStream(new ByteArrayOutputStream()));
 		runner.setMenu(rootMenu);
 		runner.start();
 		handler.iterations = 1;
@@ -83,9 +85,8 @@ class ConsoleRunnerTest extends BaseMenuTest {
 
 	@Test
 	@DisplayName("Console runner processes main loop until prompted to exit")
-	void console_runner_5() {
-		ByteArrayOutputStream baos = new ByteArrayOutputStream();
-		ConsoleRunner runner = new ConsoleRunner(new TestInputStream(), new PrintStream(baos));
+	void console_runner_5() throws IOException {
+		ConsoleRunner runner = new ConsoleRunner(testInputStream, new PrintStream(new ByteArrayOutputStream()));
 		runner.setMenu(rootMenu);
 		runner.start();
 		handler.iterations = 3;
@@ -141,14 +142,6 @@ class ConsoleRunnerTest extends BaseMenuTest {
 			}
 			assertNotNull(input);
 			assertNotNull(out);
-		}
-	}
-
-	private static class TestInputStream extends InputStream {
-
-		@Override
-		public int read() throws IOException {
-			return 0;
 		}
 	}
 }

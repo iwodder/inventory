@@ -42,29 +42,21 @@ class ItemStorageService implements ItemStorage {
 		if (updatedItem.getId() == null) return Optional.empty();
 		InventoryItem item = new InventoryItem(updatedItem);
 		Optional<InventoryItem> result = store.updateItem(item);
-		return result.map(this::convertDtoToItem);
+		return result.map(InventoryItem::toItemModel);
 	}
 
 	@Override
 	public Optional<InventoryItemModel> readItem(Long itemId) {
 		if (itemId == null) return Optional.empty();
 		Optional<InventoryItem> result = store.loadItem(itemId);
-		return result.map(this::convertDtoToItem);
+		return result.map(InventoryItem::toItemModel);
 	}
 
 	@Override
 	public List<InventoryItemModel> readAllItems() {
 		return store.loadAllItems()
 				.stream()
-				.map(this::convertDtoToItem)
+				.map(InventoryItem::toItemModel)
 				.collect(Collectors.toList());
-	}
-
-	private InventoryItemModel convertDtoToItem(InventoryItem item) {
-		return InventoryItemModel.builder()
-				.withCategory(item.getCategory())
-				.withName(item.getName())
-				.withId(item.getId())
-				.build();
 	}
 }
