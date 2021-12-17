@@ -5,7 +5,7 @@ import com.wodder.inventory.models.*;
 public class InventoryItem {
 	private Long id;
 	private String name;
-	private  String category;
+	private String category;
 	private String location;
 	private boolean active;
 

@@ -4,18 +4,18 @@ import com.wodder.inventory.models.*;
 
 public class InventoryCount {
 
-	private final long itemId;
+	private final Long itemId;
 	private final String name;
 	private final String category;
 	private final String location;
-	private final int count;
+	private int count;
 
 	public InventoryCount(Long itemId, String name, String category, String location, Integer count) {
 		this.itemId = itemId;
 		this.name = name;
 		this.category = category;
 		this.location = location;
-		this.count = count;
+		setCount(count);
 	}
 
 	public InventoryCount(Long itemId, String name, String category, String location) {
@@ -23,22 +23,14 @@ public class InventoryCount {
 	}
 
 	public InventoryCount(InventoryCount that) {
-		this.itemId = that.itemId;
-		this.name = that.name;
-		this.category = that.category;
-		this.location = that.location;
-		this.count = that.count;
+		this(that.getItemId(), that.getName(), that.getCategory(), that.getLocation(), that.getCount());
 	}
 
 	public InventoryCount(InventoryCountModel model) {
-		this.itemId = model.getItemId();
-		this.name = model.getName();
-		this.category = model.getCategory();
-		this.count = model.getCount();
-		this.location = model.getLocation();
+		this(model.getItemId(), model.getName(), model.getCategory(), model.getLocation(), model.getCount());
 	}
 
-	public long getItemId() {
+	public Long getItemId() {
 		return itemId;
 	}
 
@@ -50,8 +42,19 @@ public class InventoryCount {
 		return category;
 	}
 
+	public String getLocation() {
+		return location;
+	}
+
 	public int getCount() {
 		return count;
+	}
+
+	private void setCount(int count) {
+		if (count < 0) {
+			throw new IllegalArgumentException();
+		}
+		this.count = count;
 	}
 
 	public InventoryCountModel toModel() {
