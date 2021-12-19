@@ -1,7 +1,7 @@
 package com.wodder.inventory.console.menus.inventory.handlers;
 
+import com.wodder.inventory.application.*;
 import com.wodder.inventory.console.handlers.*;
-import com.wodder.inventory.domain.*;
 import com.wodder.inventory.models.*;
 
 import java.io.*;

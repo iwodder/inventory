@@ -1,6 +1,6 @@
 package com.wodder.inventory.console.models;
 
-import com.wodder.inventory.domain.*;
+import com.wodder.inventory.application.*;
 import com.wodder.inventory.models.InventoryItemModel;
 import com.wodder.inventory.models.*;
 import org.junit.jupiter.api.*;

@@ -1,4 +1,4 @@
-package com.wodder.inventory.domain;
+package com.wodder.inventory.application;
 
 import com.wodder.inventory.models.*;
 

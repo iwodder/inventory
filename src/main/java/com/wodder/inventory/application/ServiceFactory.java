@@ -1,4 +1,4 @@
-package com.wodder.inventory.domain;
+package com.wodder.inventory.application;
 
 public interface ServiceFactory {
 

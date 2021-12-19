@@ -1,10 +1,10 @@
 package com.wodder.inventory.console.menus;
 
+import com.wodder.inventory.application.*;
 import com.wodder.inventory.console.*;
 import com.wodder.inventory.console.handlers.*;
 import com.wodder.inventory.console.menus.inventoryitems.*;
 import com.wodder.inventory.console.models.*;
-import com.wodder.inventory.domain.*;
 
 public class MenuFactory {
 	private final ServiceFactory serviceFactory;
