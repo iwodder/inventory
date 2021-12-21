@@ -141,9 +141,9 @@ class StorageTest {
 		private Map<Long, InventoryItem> db = new HashMap<>();
 
 		private TestDataStore() {
-			db.put(1L, new InventoryItem(1L, "2% Milk", "Refridgerated"));
-			db.put(2L, new InventoryItem(1L, "Almond Milk", "Refridgerated"));
-			db.put(3L, new InventoryItem(1L, "Oatmeal", "Dry Goods"));
+			db.put(1L, new InventoryItem(1L, "2% Milk", new Category("Refrigerated")));
+			db.put(2L, new InventoryItem(1L, "Almond Milk", new Category("Refrigerated")));
+			db.put(3L, new InventoryItem(1L, "Oatmeal", new Category("Dry Goods")));
 		}
 
 		@Override
@@ -156,7 +156,7 @@ class StorageTest {
 		@Override
 		public Optional<InventoryItem> updateItem(InventoryItem item) {
 			Objects.requireNonNull(item);
-			InventoryItem newItem = new InventoryItem(item.getId(), item.getName(), item.getCategory());
+			InventoryItem newItem = new InventoryItem(item.getId(), item.getName(), new Category(item.getCategory()));
 			return Optional.of(newItem);
 		}
 

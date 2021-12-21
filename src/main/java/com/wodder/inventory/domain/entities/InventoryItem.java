@@ -5,11 +5,11 @@ import com.wodder.inventory.models.*;
 public class InventoryItem {
 	private Long id;
 	private String name;
-	private String category;
-	private String location;
+	private Category category;
+	private Location location;
 	private boolean active;
 
-	public InventoryItem(Long id, String name, String category) {
+	public InventoryItem(Long id, String name, Category category) {
 		this.id = id;
 		this.name = name;
 		this.category = category;
@@ -23,12 +23,14 @@ public class InventoryItem {
 		this.location = that.location;
 	}
 
+	private InventoryItem
+
 	public InventoryItem(InventoryItemModel model) {
 		this.id = model.getId();
 		this.name = model.getName();
-		this.category = model.getCategory();
+		this.category = model.getCategory() != null ? new Category(model.getCategory()) : new Category();
 		this.active = model.isActive();
-		this.location = model.getLocation() != null ? model.getLocation() : "unassigned";
+		this.location = model.getLocation() != null ? new Location(model.getName()) : new Location();
 	}
 
 	public Long getId() {
@@ -48,10 +50,10 @@ public class InventoryItem {
 	}
 
 	public String getCategory() {
-		return category;
+		return category.getName();
 	}
 
-	public void setCategory(String category) {
+	public void setCategory(Category category) {
 		this.category = category;
 	}
 
@@ -64,10 +66,10 @@ public class InventoryItem {
 	}
 
 	public String getLocation() {
-		return location;
+		return location.getName();
 	}
 
-	public void setLocation(String location) {
+	public void setLocation(Location location) {
 		this.location = location;
 	}
 
@@ -90,8 +92,8 @@ public class InventoryItem {
 		return InventoryItemModel.builder()
 				.withId(this.id)
 				.withName(this.name)
-				.withCategory(this.category)
-				.withLocation(this.location)
+				.withCategory(this.category.getName())
+				.withLocation(this.location.getName())
 				.isActive(this.active)
 				.build();
 	}

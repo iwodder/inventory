@@ -12,7 +12,7 @@ public class Location {
 		setName(name);
 	}
 
-	public Location() {
+	Location() {
 		this(DEFAULT_VALUE);
 	}
 

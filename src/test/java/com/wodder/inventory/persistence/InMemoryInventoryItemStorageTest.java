@@ -19,7 +19,7 @@ class InMemoryInventoryItemStorageTest {
 	@Test
 	@DisplayName("Can load a saved item")
 	void loadItem() {
-		InventoryItem item1 = new InventoryItem(null, "2% Milk", null);
+		InventoryItem item1 = new InventoryItem(null, "2% Milk", new Category("REFRIGERATED"));
 		Long id = inventoryItemStorage.createItem(item1);
 
 		Optional<InventoryItem> result = inventoryItemStorage.loadItem(id);
@@ -38,9 +38,9 @@ class InMemoryInventoryItemStorageTest {
 	@Test
 	@DisplayName("Able to update an item")
 	void updateItem() {
-		Long id = inventoryItemStorage.createItem(new InventoryItem(null, "2% Milk", null));
+		Long id = inventoryItemStorage.createItem(new InventoryItem(null, "2% Milk", new Category("REFRIGERATED")));
 
-		InventoryItem item2 = new InventoryItem(id,"2% MILK", "REFRIGERATED");
+		InventoryItem item2 = new InventoryItem(id,"2% MILK", new Category("REFRIGERATED"));
 		Optional<InventoryItem> result = inventoryItemStorage.updateItem(item2);
 		assertTrue(result.isPresent());
 		InventoryItem updated = result.get();
@@ -52,7 +52,7 @@ class InMemoryInventoryItemStorageTest {
 	@Test
 	@DisplayName("Item must be present to update")
 	void update_item_not_present() {
-		InventoryItem item = new InventoryItem(1L, "2% Milk", null);
+		InventoryItem item = new InventoryItem(1L, "2% Milk", new Category("REFRIGERATED"));
 		Optional<InventoryItem> result = inventoryItemStorage.updateItem(item);
 		assertFalse(result.isPresent());
 	}
@@ -60,7 +60,7 @@ class InMemoryInventoryItemStorageTest {
 	@Test
 	@DisplayName("Can store an item")
 	void createItem() {
-		InventoryItem itemDTO = new InventoryItem(null, "2% Milk", null);
+		InventoryItem itemDTO = new InventoryItem(null, "2% Milk", new Category("REFRIGERATED"));
 
 		Long result = inventoryItemStorage.createItem(itemDTO);
 		assertNotNull(result);
@@ -69,7 +69,7 @@ class InMemoryInventoryItemStorageTest {
 	@Test
 	@DisplayName("Can delete an item")
 	void deleteItem() {
-		InventoryItem item = new InventoryItem(null, "2% Milk", null);
+		InventoryItem item = new InventoryItem(null, "2% Milk", new Category("REFRIGERATED"));
 		Long id = inventoryItemStorage.createItem(item);
 
 		assertTrue(inventoryItemStorage.deleteItem(id));
@@ -85,7 +85,7 @@ class InMemoryInventoryItemStorageTest {
 	@Test
 	@DisplayName("Can load all inventory items")
 	void load_all_items() {
-		inventoryItemStorage.createItem(new InventoryItem(null, "2% Milk", "Refridgerated"));
+		inventoryItemStorage.createItem(new InventoryItem(null, "2% Milk", new Category("Refrigerated")));
 		List<InventoryItem> items = inventoryItemStorage.loadAllItems();
 		assertNotNull(items);
 		assertFalse(items.isEmpty());
