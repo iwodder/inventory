@@ -4,26 +4,30 @@ import com.wodder.inventory.domain.entities.*;
 import com.wodder.inventory.models.*;
 import com.wodder.inventory.persistence.*;
 import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.extension.*;
+import org.mockito.*;
+import org.mockito.junit.jupiter.*;
 
 import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
 
+@ExtendWith(MockitoExtension.class)
 class StorageTest {
 
-	private final InventoryItemStorage store = new TestDataStore();
-	private ItemStorageService storage;
+	@Mock
+	private InventoryItemStorage store;
 
-	@BeforeEach
-	void setup() {
-		storage = new ItemStorageService(store);
-	}
+	@InjectMocks
+	private ItemStorageService storage;
 
 	@Test
 	@DisplayName("Can add new item")
 	void adds_new_item() {
 		InventoryItemModel itemData = InventoryItemModel.builder()
 				.withName("2% Milk").build();
+		when(store.createItem(any())).thenReturn(1L);
 
 		Optional<InventoryItemModel> result = storage.addItem(itemData);
 
@@ -37,6 +41,7 @@ class StorageTest {
 	void no_location_provided() {
 		InventoryItemModel itemData = InventoryItemModel.builder()
 				.withName("2% Milk").build();
+		when(store.createItem(any())).thenReturn(1L);
 
 		Optional<InventoryItemModel> result = storage.addItem(itemData);
 
@@ -66,6 +71,7 @@ class StorageTest {
 	@Test
 	@DisplayName("Can delete an item")
 	void delete_item() {
+		when(store.deleteItem(1L)).thenReturn(true);
 		InventoryItemModel itemDTO = InventoryItemModel.builder().withId(1L).withName("2% Milk").build();
 		assertTrue(storage.deleteItem(itemDTO));
 	}
@@ -81,7 +87,7 @@ class StorageTest {
 	@DisplayName("Can update an item")
 	void update_item() {
 		InventoryItemModel itemDTO = InventoryItemModel.builder().withId(1L).withName("2% Milk").build();
-
+		when(store.updateItem(any())).thenReturn(Optional.of(new InventoryItem(itemDTO)));
 		Optional<InventoryItemModel> result = storage.updateItem(itemDTO);
 		assertTrue(result.isPresent());
 		InventoryItemModel updatedItem = result.get();
@@ -101,6 +107,7 @@ class StorageTest {
 	@Test
 	@DisplayName("Can load existing item")
 	void read_item() {
+		when(store.loadItem(1L)).thenReturn(Optional.of(new InventoryItem(1L, "Bread", new Category("Dry Goods"), new Location("Pantry"))));
 		Optional<InventoryItemModel> item = storage.readItem(1L);
 		assertTrue(item.isPresent());
 		InventoryItemModel result = item.get();
@@ -117,6 +124,11 @@ class StorageTest {
 	@Test
 	@DisplayName("Can load all available items")
 	void read_all_items() {
+		when(store.loadAllItems()).thenReturn(
+				Arrays.asList(
+						new InventoryItem(1L, "Bread", new Category("Dry Goods"), new Location("Refrigerator")),
+						new InventoryItem(2L, "Yogurt", new Category("Dairy"), new Location("Refrigerator")),
+						new InventoryItem(3L, "Cereal", new Category("Dry Goods"), new Location("Pantry"))));
 		List<InventoryItemModel> result = storage.readAllItems();
 		assertNotNull(result);
 		assertFalse(result.isEmpty());
@@ -126,6 +138,7 @@ class StorageTest {
 	@Test
 	@DisplayName("Newly added items are active by default")
 	void active_by_default() {
+		when(store.createItem(any())).thenReturn(1L);
 		InventoryItemModel itemData = InventoryItemModel.builder()
 				.withName("2% Milk").build();
 
@@ -135,56 +148,5 @@ class StorageTest {
 		InventoryItemModel returned = result.get();
 		assertEquals(1L, returned.getId());
 		assertTrue(returned.isActive());
-	}
-
-	private static class TestDataStore implements InventoryItemStorage {
-		private Map<Long, InventoryItem> db = new HashMap<>();
-
-		private TestDataStore() {
-			db.put(1L, new InventoryItem(1L, "2% Milk", new Category("Refrigerated")));
-			db.put(2L, new InventoryItem(1L, "Almond Milk", new Category("Refrigerated")));
-			db.put(3L, new InventoryItem(1L, "Oatmeal", new Category("Dry Goods")));
-		}
-
-		@Override
-		public Optional<InventoryItem> loadItem(Long id) {
-			Objects.requireNonNull(id);
-			InventoryItem itemDTO = new InventoryItem(id, null, null);
-			return Optional.of(itemDTO);
-		}
-
-		@Override
-		public Optional<InventoryItem> updateItem(InventoryItem item) {
-			Objects.requireNonNull(item);
-			InventoryItem newItem = new InventoryItem(item.getId(), item.getName(), new Category(item.getCategory()));
-			return Optional.of(newItem);
-		}
-
-		@Override
-		public Long createItem(InventoryItem item) {
-			Objects.requireNonNull(item);
-			return 1L;
-		}
-
-		@Override
-		public boolean deleteItem(Long itemId) {
-			Objects.requireNonNull(itemId);
-			return true;
-		}
-
-		@Override
-		public List<InventoryItem> loadAllItems() {
-			return Collections.unmodifiableList(new ArrayList<>(db.values()));
-		}
-
-		@Override
-		public List<InventoryItem> loadActiveItems() {
-			return null;
-		}
-
-		@Override
-		public List<InventoryCount> loadCounts() {
-			return null;
-		}
 	}
 }

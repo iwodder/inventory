@@ -9,10 +9,12 @@ public class InventoryItem {
 	private Location location;
 	private boolean active;
 
-	public InventoryItem(Long id, String name, Category category) {
+	public InventoryItem(Long id, String name, Category category, Location location) {
 		this.id = id;
 		this.name = name;
 		this.category = category;
+		this.location = location;
+		this.active = true;
 	}
 
 	public InventoryItem(InventoryItem that) {
@@ -22,8 +24,6 @@ public class InventoryItem {
 		this.active = that.active;
 		this.location = that.location;
 	}
-
-	private InventoryItem
 
 	public InventoryItem(InventoryItemModel model) {
 		this.id = model.getId();
