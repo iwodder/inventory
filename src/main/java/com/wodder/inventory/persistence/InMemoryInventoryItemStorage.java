@@ -7,13 +7,17 @@ import java.util.concurrent.atomic.*;
 import java.util.stream.*;
 
 final class InMemoryInventoryItemStorage implements InventoryItemStorage {
-	private static final AtomicLong id = new AtomicLong(0);
+	private static final AtomicLong itemId = new AtomicLong(0);
 	private final Map<Long, InventoryItem> db;
 	private final Map<InventoryItem, InventoryCount> counts;
+	private final List<Location> locations;
+	private final List<Category> categories;
 
 	InMemoryInventoryItemStorage() {
 		db = new HashMap<>();
 		counts = new HashMap<>();
+		locations = new ArrayList<>();
+		categories = new ArrayList<>();
 	}
 
 	@Override
@@ -38,7 +42,7 @@ final class InMemoryInventoryItemStorage implements InventoryItemStorage {
 
 	@Override
 	public Long createItem(InventoryItem item) {
-		Long itemId = id.addAndGet(1);
+		Long itemId = InMemoryInventoryItemStorage.itemId.addAndGet(1);
 		InventoryItem newItem = new InventoryItem(item);
 		newItem.setId(itemId);
 		db.put(itemId, newItem);
@@ -90,5 +94,29 @@ final class InMemoryInventoryItemStorage implements InventoryItemStorage {
 	public Optional<InventoryCount> loadCount(Long id) {
 		return loadItem(id)
 				.map(counts::get);
+	}
+
+	@Override
+	public Optional<Location> loadLocation(String name) {
+		Optional<Location> opt = locations.stream().filter(l -> l.getName().equals(name)).findAny();
+		if (opt.isPresent()) {
+			return opt;
+		} else {
+			Location l = new Location(name);
+			locations.add(new Location(l));
+			return Optional.of(l);
+		}
+	}
+
+	@Override
+	public Optional<Category> loadCategory(String name) {
+		Optional<Category> opt = categories.stream().filter(l -> l.getName().equals(name)).findAny();
+		if (opt.isPresent()) {
+			return opt;
+		} else {
+			Category c = new Category(name);
+			categories.add(new Category(c));
+			return Optional.of(c);
+		}
 	}
 }

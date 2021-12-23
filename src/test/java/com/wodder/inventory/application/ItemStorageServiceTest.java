@@ -14,7 +14,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
-class StorageTest {
+class ItemStorageServiceTest {
 
 	@Mock
 	private InventoryItemStorage store;
@@ -22,12 +22,16 @@ class StorageTest {
 	@InjectMocks
 	private ItemStorageService storage;
 
+	@Captor
+	ArgumentCaptor<InventoryItem> argumentCaptor;
+
 	@Test
 	@DisplayName("Can add new item")
 	void adds_new_item() {
 		InventoryItemModel itemData = InventoryItemModel.builder()
 				.withName("2% Milk").build();
 		when(store.createItem(any())).thenReturn(1L);
+		when(store.loadItem(1L)).thenReturn(Optional.of(new InventoryItem(1L,"2% Milk", new Category(), new Location())));
 
 		Optional<InventoryItemModel> result = storage.addItem(itemData);
 
@@ -37,11 +41,32 @@ class StorageTest {
 	}
 
 	@Test
+	@DisplayName("Newly created item is active")
+	void new_item_is_active() {
+		when(store.loadLocation("Pantry")).thenReturn(Optional.of(new Location("Pantry")));
+		when(store.loadCategory("Dry Goods")).thenReturn(Optional.of(new Category("Dry Goods")));
+		InventoryItemModel model = InventoryItemModel.builder()
+				.withName("Bread")
+				.withLocation("Pantry")
+				.withCategory("Dry Goods")
+				.build();
+		storage.addItem(model);
+		verify(store).createItem(argumentCaptor.capture());
+		InventoryItem i = argumentCaptor.getValue();
+		assertEquals("Bread", i.getName());
+		assertEquals("Pantry", i.getLocation());
+		assertEquals("Dry Goods", i.getCategory());
+		assertTrue(i.isActive());
+	}
+
+	@Test
 	@DisplayName("Item without a location gets set to \"unassigned\"")
 	void no_location_provided() {
 		InventoryItemModel itemData = InventoryItemModel.builder()
 				.withName("2% Milk").build();
 		when(store.createItem(any())).thenReturn(1L);
+		when(store.loadItem(1L)).thenReturn(
+				Optional.of(new InventoryItem(1L, "2% Milk", new Category(), new Location())));
 
 		Optional<InventoryItemModel> result = storage.addItem(itemData);
 
@@ -64,8 +89,7 @@ class StorageTest {
 	@DisplayName("New item requires name")
 	void add_item_no_name() {
 		InventoryItemModel itemDTO = InventoryItemModel.builder().build();
-		Optional<InventoryItemModel> result = storage.addItem(itemDTO);
-		assertFalse(result.isPresent());
+		assertThrows(IllegalArgumentException.class, () -> storage.addItem(itemDTO));
 	}
 
 	@Test
@@ -84,16 +108,25 @@ class StorageTest {
 	}
 
 	@Test
-	@DisplayName("Can update an item")
-	void update_item() {
-		InventoryItemModel itemDTO = InventoryItemModel.builder().withId(1L).withName("2% Milk").build();
-		when(store.updateItem(any())).thenReturn(Optional.of(new InventoryItem(itemDTO)));
-		Optional<InventoryItemModel> result = storage.updateItem(itemDTO);
-		assertTrue(result.isPresent());
-		InventoryItemModel updatedItem = result.get();
-		assertEquals(itemDTO.getName(), updatedItem.getName());
-		assertEquals(itemDTO.getId(), updatedItem.getId());
-		assertNotSame(itemDTO, updatedItem);
+	@DisplayName("Able to update item category")
+	void update_item_category() {
+		InventoryItemModel model = InventoryItemModel.builder()
+				.withId(1L)
+				.withName("2% Milk")
+				.withCategory("Refrigerated")
+				.build();
+
+		when(store.loadItem(1L)).thenReturn(Optional.of(
+				new InventoryItem(1L, "2% Milk", new Category("Dairy"), new Location("Refrigerator"), true)));
+
+		storage.updateItemCategory(model);
+
+		verify(store).updateItem(argumentCaptor.capture());
+		InventoryItem item = argumentCaptor.getValue();
+		assertEquals(1L, item.getId());
+		assertEquals("2% Milk", item.getName());
+		assertEquals("Refrigerated", item.getCategory());
+		assertEquals("Refrigerator", item.getLocation());
 	}
 
 	@Test
@@ -101,7 +134,7 @@ class StorageTest {
 	void update_item_no_id() {
 		InventoryItemModel itemDTO = InventoryItemModel.builder().withName("2% Milk").build();
 
-		assertFalse(storage.updateItem(itemDTO).isPresent());
+		assertFalse(storage.updateItemCategory(itemDTO).isPresent());
 	}
 
 	@Test
@@ -133,20 +166,5 @@ class StorageTest {
 		assertNotNull(result);
 		assertFalse(result.isEmpty());
 		assertEquals(3, result.size());
-	}
-
-	@Test
-	@DisplayName("Newly added items are active by default")
-	void active_by_default() {
-		when(store.createItem(any())).thenReturn(1L);
-		InventoryItemModel itemData = InventoryItemModel.builder()
-				.withName("2% Milk").build();
-
-		Optional<InventoryItemModel> result = storage.addItem(itemData);
-
-		assertTrue(result.isPresent());
-		InventoryItemModel returned = result.get();
-		assertEquals(1L, returned.getId());
-		assertTrue(returned.isActive());
 	}
 }

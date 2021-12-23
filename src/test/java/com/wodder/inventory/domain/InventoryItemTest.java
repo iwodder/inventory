@@ -14,4 +14,19 @@ class InventoryItemTest {
 		assertEquals(inv, inv2);
 	}
 
+	@Test
+	@DisplayName("Name is required for creating an item")
+	void name_required() {
+		assertThrows(IllegalArgumentException.class, () -> {
+			InventoryItem i = new InventoryItem(null, new Category("Dry Goods"), new Location("Pantry"));
+		});
+	}
+
+	@Test
+	@DisplayName("Name cannot be blank")
+	void blank_name() {
+		assertThrows(IllegalArgumentException.class, () -> {
+			InventoryItem i = new InventoryItem("", new Category("Dry Goods"), new Location("Pantry"));
+		});
+	}
 }

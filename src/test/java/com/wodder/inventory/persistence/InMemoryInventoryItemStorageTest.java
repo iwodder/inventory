@@ -146,4 +146,22 @@ class InMemoryInventoryItemStorageTest {
 		assertEquals(i1.getCategory(), count.getCategory());
 		assertEquals(0, count.getCount());
 	}
+
+	@Test
+	@DisplayName("Can load a location by name")
+	void load_location() {
+		Location l = new Location("pantry");
+		Optional<Location> opt = inventoryItemStorage.loadLocation("pantry");
+		assertTrue(opt.isPresent());
+		assertEquals(l.getName(), opt.get().getName());
+	}
+
+	@Test
+	@DisplayName("Can load a category by name")
+	void load_category() {
+		Category c = new Category("refrigerated");
+		Optional<Category> opt = inventoryItemStorage.loadCategory("refrigerated");
+		assertTrue(opt.isPresent());
+		assertEquals(c.getName(), opt.get().getName());
+	}
 }

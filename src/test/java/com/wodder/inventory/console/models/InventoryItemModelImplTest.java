@@ -60,7 +60,7 @@ class InventoryItemModelImplTest {
 	@Test
 	@DisplayName("Update item returns ok on success")
 	void updateItemSuccess() {
-		when(itemStorage.updateItem(any(InventoryItemModel.class))).thenReturn(Optional.of(InventoryItemModel.builder().build()));
+		when(itemStorage.updateItemCategory(any(InventoryItemModel.class))).thenReturn(Optional.of(InventoryItemModel.builder().build()));
 		Result<InventoryItemModel, String> result = inventoryItemModel.updateItem(InventoryItemModel.builder().build());
 		assertTrue(result.isOK());
 		assertFalse(result.isErr());

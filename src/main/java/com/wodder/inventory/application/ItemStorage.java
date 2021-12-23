@@ -10,7 +10,7 @@ public interface ItemStorage {
 
 	Boolean deleteItem(InventoryItemModel itemToDelete);
 
-	Optional<InventoryItemModel> updateItem(InventoryItemModel updatedItem);
+	Optional<InventoryItemModel> updateItemCategory(InventoryItemModel updatedItem);
 
 	Optional<InventoryItemModel> readItem(Long itemId);
 

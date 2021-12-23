@@ -21,13 +21,6 @@ class CategoryTest {
 	}
 
 	@Test
-	@DisplayName("Category created with null defaults to unassigned")
-	void not_null() {
-		Category c = new Category(null);
-		assertEquals("unassigned", c.getName());
-	}
-
-	@Test
 	@DisplayName("Category must be created with non-empty string")
 	void not_blank() {
 		Category c = new Category("");

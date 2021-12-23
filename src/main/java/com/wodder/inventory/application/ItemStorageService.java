@@ -21,13 +21,13 @@ class ItemStorageService implements ItemStorage {
 
 	@Override
 	public Optional<InventoryItemModel> addItem(InventoryItemModel newItem) {
-		if (newItem.getId() != null || newItem.getName() == null) return Optional.empty();
+		if (newItem.getId() != null) return Optional.empty();
 
-		InventoryItem item = new InventoryItem(newItem);
-		item.setActive(true);
-		item.setId(store.createItem(item));
+		Category category = store.loadCategory(newItem.getCategory()).orElseGet(Category::defaultCategory);
+		Location location = store.loadLocation(newItem.getLocation()).orElseGet(Location::defaultLocation);
+		InventoryItem item = new InventoryItem(newItem.getName(), category, location);
 
-		return Optional.of(item.toItemModel());
+		return store.loadItem(store.createItem(item)).map(InventoryItem::toItemModel);
 	}
 
 	@Override
@@ -38,8 +38,13 @@ class ItemStorageService implements ItemStorage {
 	}
 
 	@Override
-	public Optional<InventoryItemModel> updateItem(InventoryItemModel updatedItem) {
+	public Optional<InventoryItemModel> updateItemCategory(InventoryItemModel updatedItem) {
 		if (updatedItem.getId() == null) return Optional.empty();
+		Optional<InventoryItem> opt = store.loadItem(updatedItem.getId());
+		if (opt.isPresent()) {
+			InventoryItem item = opt.get();
+
+		}
 		InventoryItem item = new InventoryItem(updatedItem);
 		Optional<InventoryItem> result = store.updateItem(item);
 		return result.map(InventoryItem::toItemModel);

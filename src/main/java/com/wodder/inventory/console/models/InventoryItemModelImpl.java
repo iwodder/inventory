@@ -31,7 +31,7 @@ public class InventoryItemModelImpl implements InventoryItemModel {
 
 	@Override
 	public Result<com.wodder.inventory.models.InventoryItemModel, String> updateItem(com.wodder.inventory.models.InventoryItemModel itemDto) {
-		Optional<com.wodder.inventory.models.InventoryItemModel> result = storage.updateItem(itemDto);
+		Optional<com.wodder.inventory.models.InventoryItemModel> result = storage.updateItemCategory(itemDto);
 		return result.<Result<com.wodder.inventory.models.InventoryItemModel, String>>map(i -> new Result<>(i, null))
 				.orElseGet(() -> new Result<>(null, "Unable to update item"));
 	}

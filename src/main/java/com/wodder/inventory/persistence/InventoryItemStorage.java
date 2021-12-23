@@ -20,11 +20,11 @@ public interface InventoryItemStorage {
 
 	List<InventoryCount> loadCounts();
 
-	default void updateCount(InventoryCount count) {
-		throw new UnsupportedOperationException();
-	}
+	void updateCount(InventoryCount count);
 
-	default Optional<InventoryCount> loadCount(Long id) {
-		throw new UnsupportedOperationException();
-	}
+	Optional<InventoryCount> loadCount(Long id);
+
+	Optional<Location> loadLocation(String name);
+
+	Optional<Category> loadCategory(String name);
 }

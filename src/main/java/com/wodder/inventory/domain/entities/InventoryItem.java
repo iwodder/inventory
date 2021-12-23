@@ -9,12 +9,12 @@ public class InventoryItem {
 	private Location location;
 	private boolean active;
 
+	public InventoryItem(String name, Category category, Location location) {
+		this(null, name, category, location, true);
+	}
+
 	public InventoryItem(Long id, String name, Category category, Location location) {
-		this.id = id;
-		this.name = name;
-		this.category = category;
-		this.location = location;
-		this.active = true;
+		this(id, name, category, location, true);
 	}
 
 	public InventoryItem(InventoryItem that) {
@@ -33,6 +33,14 @@ public class InventoryItem {
 		this.location = model.getLocation() != null ? new Location(model.getName()) : new Location();
 	}
 
+	public InventoryItem(Long id, String name, Category c, Location l, Boolean a) {
+		this.id = id;
+		setName(name);
+		this.category = c;
+		this.location = l;
+		this.active = a;
+	}
+
 	public Long getId() {
 		return id;
 	}
@@ -46,6 +54,9 @@ public class InventoryItem {
 	}
 
 	public void setName(String name) {
+		if (name == null || name.isBlank()) {
+			throw new IllegalArgumentException(name == null ? "Name was null" : "Name was blank");
+		}
 		this.name = name;
 	}
 

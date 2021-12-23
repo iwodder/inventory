@@ -12,12 +12,16 @@ public class Location {
 		setName(name);
 	}
 
-	Location() {
+	public Location() {
 		this(DEFAULT_VALUE);
 	}
 
 	public String getName() {
 		return name;
+	}
+
+	public static Location defaultLocation() {
+		return new Location();
 	}
 
 	@Override

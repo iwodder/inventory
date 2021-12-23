@@ -12,6 +12,14 @@ public class Category {
 		setName(name);
 	}
 
+	public Category(Category that) {
+		this(that.getName());
+	}
+
+	public static Category defaultCategory() {
+		return new Category();
+	}
+
 	public String getName() {
 		return name;
 	}
