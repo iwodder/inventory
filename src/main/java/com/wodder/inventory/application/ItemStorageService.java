@@ -38,16 +38,24 @@ class ItemStorageService implements ItemStorage {
 	}
 
 	@Override
-	public Optional<InventoryItemModel> updateItemCategory(InventoryItemModel updatedItem) {
-		if (updatedItem.getId() == null) return Optional.empty();
-		Optional<InventoryItem> opt = store.loadItem(updatedItem.getId());
-		if (opt.isPresent()) {
-			InventoryItem item = opt.get();
-
+	public Optional<InventoryItemModel> updateItemCategory(InventoryItemModel updateModel) {
+		if (updateModel.getId() == null) {
+			return Optional.empty();
+		} else {
+			return processUpdate(updateModel);
 		}
-		InventoryItem item = new InventoryItem(updatedItem);
-		Optional<InventoryItem> result = store.updateItem(item);
-		return result.map(InventoryItem::toItemModel);
+	}
+
+	private Optional<InventoryItemModel> processUpdate(InventoryItemModel updateModel) {
+		Optional<InventoryItem> inventoryItem = store.loadItem(updateModel.getId());
+		Optional<Category> category = store.loadCategory(updateModel.getCategory());
+		if (inventoryItem.isPresent() && category.isPresent()) {
+			InventoryItem item = inventoryItem.get();
+			InventoryItem updatedItem = item.updateCategory(category.get());
+			return store.updateItem(updatedItem).map(InventoryItem::toItemModel);
+		} else {
+			return Optional.empty();
+		}
 	}
 
 	@Override

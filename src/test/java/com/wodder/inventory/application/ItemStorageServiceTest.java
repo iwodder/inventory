@@ -118,6 +118,7 @@ class ItemStorageServiceTest {
 
 		when(store.loadItem(1L)).thenReturn(Optional.of(
 				new InventoryItem(1L, "2% Milk", new Category("Dairy"), new Location("Refrigerator"), true)));
+		when(store.loadCategory("Refrigerated")).thenReturn(Optional.of(new Category("Refrigerated")));
 
 		storage.updateItemCategory(model);
 

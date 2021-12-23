@@ -36,7 +36,7 @@ public class InventoryItem {
 	public InventoryItem(Long id, String name, Category c, Location l, Boolean a) {
 		this.id = id;
 		setName(name);
-		this.category = c;
+		setCategory(c);
 		this.location = l;
 		this.active = a;
 	}
@@ -64,8 +64,15 @@ public class InventoryItem {
 		return category.getName();
 	}
 
-	public void setCategory(Category category) {
-		this.category = category;
+	private void setCategory(Category c) {
+		if (c == null) {
+			throw new IllegalArgumentException("Category is required");
+		}
+		this.category = c;
+	}
+
+	public InventoryItem updateCategory(Category category) {
+		return new InventoryItem(this.id, this.name, category, this.location, this.active);
 	}
 
 	public boolean isActive() {
