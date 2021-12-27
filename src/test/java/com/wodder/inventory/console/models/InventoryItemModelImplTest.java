@@ -60,7 +60,7 @@ class InventoryItemModelImplTest {
 	@Test
 	@DisplayName("Update item returns ok on success")
 	void updateItemSuccess() {
-		when(itemStorage.updateItemCategory(any(InventoryItemModel.class))).thenReturn(Optional.of(InventoryItemModel.builder().build()));
+		when(itemStorage.updateItemCategory(any(), any())).thenReturn(Optional.of(InventoryItemModel.builder().build()));
 		Result<InventoryItemModel, String> result = inventoryItemModel.updateItem(InventoryItemModel.builder().build());
 		assertTrue(result.isOK());
 		assertFalse(result.isErr());
@@ -85,7 +85,7 @@ class InventoryItemModelImplTest {
 	@Test
 	@DisplayName("Get items returns err on empty items list")
 	void getItemsFailure1() {
-		when(itemStorage.readAllItems()).thenReturn(Collections.emptyList());
+		when(itemStorage.loadAllActiveItems()).thenReturn(Collections.emptyList());
 		Result<List<InventoryItemModel>, String> result = inventoryItemModel.getItems();
 		assertFalse(result.isOK());
 		assertTrue(result.isErr());
@@ -96,7 +96,7 @@ class InventoryItemModelImplTest {
 	void getItemsSuccess() {
 		List<InventoryItemModel> items = new ArrayList<>();
 		items.add(InventoryItemModel.builder().build());
-		when(itemStorage.readAllItems()).thenReturn(items);
+		when(itemStorage.loadAllActiveItems()).thenReturn(items);
 		Result<List<InventoryItemModel>, String> result = inventoryItemModel.getItems();
 		assertFalse(result.isErr());
 		assertTrue(result.isOK());

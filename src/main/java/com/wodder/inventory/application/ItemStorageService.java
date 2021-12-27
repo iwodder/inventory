@@ -33,40 +33,65 @@ class ItemStorageService implements ItemStorage {
 	@Override
 	public Boolean deleteItem(InventoryItemModel itemToDelete) {
 		if (itemToDelete.getId() == null) return false;
-
 		return store.deleteItem(itemToDelete.getId());
 	}
 
 	@Override
-	public Optional<InventoryItemModel> updateItemCategory(InventoryItemModel updateModel) {
-		if (updateModel.getId() == null) {
+	public Optional<InventoryItemModel> updateItemCategory(Long inventoryItemId, String category) {
+		if (inventoryItemId == null) {
 			return Optional.empty();
 		} else {
-			return processUpdate(updateModel);
+			return processCategoryUpdate(inventoryItemId, category);
 		}
 	}
 
-	private Optional<InventoryItemModel> processUpdate(InventoryItemModel updateModel) {
-		Optional<InventoryItem> inventoryItem = store.loadItem(updateModel.getId());
-		Optional<Category> category = store.loadCategory(updateModel.getCategory());
-		if (inventoryItem.isPresent() && category.isPresent()) {
+	@Override
+	public Optional<InventoryItemModel> updateItemLocation(Long inventoryItemId, String location) {
+		Optional<InventoryItem> opt = store.loadItem(inventoryItemId);
+		Optional<Location> loc = store.loadLocation(location);
+		if (opt.isPresent() && loc.isPresent()) {
+			InventoryItem item = opt.get();
+			item.updateLocation(loc.get());
+			store.updateItem(item);
+			return Optional.of(item.toItemModel());
+		} else {
+			return Optional.empty();
+		}
+	}
+
+	@Override
+	public Optional<InventoryItemModel> updateItemName(Long inventoryItemId, String name) {
+		Optional<InventoryItem> opt = store.loadItem(1L);
+		if (opt.isPresent()) {
+			InventoryItem item = opt.get();
+			item.updateName(name);
+			store.updateItem(item);
+			return Optional.of(item.toItemModel());
+		} else {
+			return Optional.empty();
+		}
+	}
+
+	private Optional<InventoryItemModel> processCategoryUpdate(Long inventoryItemId, String category) {
+		Optional<InventoryItem> inventoryItem = store.loadItem(inventoryItemId);
+		Optional<Category> c = store.loadCategory(category);
+		if (inventoryItem.isPresent() && c.isPresent()) {
 			InventoryItem item = inventoryItem.get();
-			InventoryItem updatedItem = item.updateCategory(category.get());
-			return store.updateItem(updatedItem).map(InventoryItem::toItemModel);
+			item.updateCategory(c.get());
+			return store.updateItem(item).map(InventoryItem::toItemModel);
 		} else {
 			return Optional.empty();
 		}
 	}
 
 	@Override
-	public Optional<InventoryItemModel> readItem(Long itemId) {
+	public Optional<InventoryItemModel> loadItem(Long itemId) {
 		if (itemId == null) return Optional.empty();
-		Optional<InventoryItem> result = store.loadItem(itemId);
-		return result.map(InventoryItem::toItemModel);
+		return store.loadItem(itemId).map(InventoryItem::toItemModel);
 	}
 
 	@Override
-	public List<InventoryItemModel> readAllItems() {
+	public List<InventoryItemModel> loadAllActiveItems() {
 		return store.loadAllItems()
 				.stream()
 				.map(InventoryItem::toItemModel)

@@ -10,9 +10,13 @@ public interface ItemStorage {
 
 	Boolean deleteItem(InventoryItemModel itemToDelete);
 
-	Optional<InventoryItemModel> updateItemCategory(InventoryItemModel updatedItem);
+	Optional<InventoryItemModel> updateItemCategory(Long inventoryItemId, String category);
 
-	Optional<InventoryItemModel> readItem(Long itemId);
+	Optional<InventoryItemModel> updateItemLocation(Long inventoryItemId, String location);
 
-	List<InventoryItemModel> readAllItems();
+	Optional<InventoryItemModel> updateItemName(Long inventoryItemId, String name);
+
+	Optional<InventoryItemModel> loadItem(Long itemId);
+
+	List<InventoryItemModel> loadAllActiveItems();
 }

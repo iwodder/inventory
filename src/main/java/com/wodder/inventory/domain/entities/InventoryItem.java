@@ -71,8 +71,25 @@ public class InventoryItem {
 		this.category = c;
 	}
 
-	public InventoryItem updateCategory(Category category) {
-		return new InventoryItem(this.id, this.name, category, this.location, this.active);
+	public void updateCategory(Category category) {
+		if (this.category.equals(category)) {
+			throw new IllegalArgumentException("Cannot update to the same category");
+		}
+		setCategory(category);
+	}
+
+	public void updateLocation(Location location) {
+		if (this.location.equals(location)) {
+			throw new IllegalArgumentException("Cannot update to the same location");
+		}
+		setLocation(location);
+	}
+
+	public void updateName(String name) {
+		if (this.name.equals(name)) {
+			throw new IllegalArgumentException("Cannot update to the same name");
+		}
+		setName(name);
 	}
 
 	public boolean isActive() {

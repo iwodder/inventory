@@ -110,17 +110,11 @@ class ItemStorageServiceTest {
 	@Test
 	@DisplayName("Able to update item category")
 	void update_item_category() {
-		InventoryItemModel model = InventoryItemModel.builder()
-				.withId(1L)
-				.withName("2% Milk")
-				.withCategory("Refrigerated")
-				.build();
-
 		when(store.loadItem(1L)).thenReturn(Optional.of(
 				new InventoryItem(1L, "2% Milk", new Category("Dairy"), new Location("Refrigerator"), true)));
 		when(store.loadCategory("Refrigerated")).thenReturn(Optional.of(new Category("Refrigerated")));
 
-		storage.updateItemCategory(model);
+		storage.updateItemCategory(1L, "Refrigerated");
 
 		verify(store).updateItem(argumentCaptor.capture());
 		InventoryItem item = argumentCaptor.getValue();
@@ -131,27 +125,52 @@ class ItemStorageServiceTest {
 	}
 
 	@Test
-	@DisplayName("Updating item requires id")
-	void update_item_no_id() {
-		InventoryItemModel itemDTO = InventoryItemModel.builder().withName("2% Milk").build();
+	@DisplayName("Able to update item name")
+	void update_item_name() {
+		when(store.loadItem(1L)).thenReturn(
+				Optional.of(new InventoryItem(1L, "2% Milk", new Category("Dairy"), new Location("Refrigerator"), true)));
 
-		assertFalse(storage.updateItemCategory(itemDTO).isPresent());
+		storage.updateItemName(1L, "2% Low-fat Milk");
+
+		verify(store).updateItem(argumentCaptor.capture());
+
+		InventoryItem item = argumentCaptor.getValue();
+		assertEquals(1L, item.getId());
+		assertEquals("2% Low-fat Milk", item.getName());
+		assertEquals("Dairy", item.getCategory());
+		assertEquals("Refrigerator", item.getLocation());
+	}
+
+	@Test
+	@DisplayName("Updating item category requires id")
+	void update_item_no_id() {
+		assertFalse(storage.updateItemCategory(null, "2% Milk").isPresent());
 	}
 
 	@Test
 	@DisplayName("Can load existing item")
 	void read_item() {
 		when(store.loadItem(1L)).thenReturn(Optional.of(new InventoryItem(1L, "Bread", new Category("Dry Goods"), new Location("Pantry"))));
-		Optional<InventoryItemModel> item = storage.readItem(1L);
+		Optional<InventoryItemModel> item = storage.loadItem(1L);
 		assertTrue(item.isPresent());
 		InventoryItemModel result = item.get();
 		assertEquals(1L, result.getId());
 	}
 
 	@Test
+	@DisplayName("Can update an item's location")
+	void update_location() {
+		when(store.loadItem(1L)).thenReturn(Optional.of(new InventoryItem(1L, "2% Milk", new Category("Refrigerated"), new Location("Refrigerator"))));
+		when(store.loadLocation("Pantry")).thenReturn(Optional.of(new Location("Pantry")));
+		InventoryItemModel model = storage.updateItemLocation(1L, "Pantry").get();
+		assertEquals(1L, model.getId());
+		assertEquals("Pantry", model.getLocation());
+	}
+
+	@Test
 	@DisplayName("Id is required to load item")
 	void read_item_bo_id() {
-		Optional<InventoryItemModel> item = storage.readItem(null);
+		Optional<InventoryItemModel> item = storage.loadItem(null);
 		assertFalse(item.isPresent());
 	}
 
@@ -163,7 +182,7 @@ class ItemStorageServiceTest {
 						new InventoryItem(1L, "Bread", new Category("Dry Goods"), new Location("Refrigerator")),
 						new InventoryItem(2L, "Yogurt", new Category("Dairy"), new Location("Refrigerator")),
 						new InventoryItem(3L, "Cereal", new Category("Dry Goods"), new Location("Pantry"))));
-		List<InventoryItemModel> result = storage.readAllItems();
+		List<InventoryItemModel> result = storage.loadAllActiveItems();
 		assertNotNull(result);
 		assertFalse(result.isEmpty());
 		assertEquals(3, result.size());

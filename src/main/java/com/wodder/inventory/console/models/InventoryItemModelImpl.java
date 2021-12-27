@@ -31,14 +31,14 @@ public class InventoryItemModelImpl implements InventoryItemModel {
 
 	@Override
 	public Result<com.wodder.inventory.models.InventoryItemModel, String> updateItem(com.wodder.inventory.models.InventoryItemModel itemDto) {
-		Optional<com.wodder.inventory.models.InventoryItemModel> result = storage.updateItemCategory(itemDto);
+		Optional<com.wodder.inventory.models.InventoryItemModel> result = storage.updateItemCategory(itemDto.getId(), itemDto.getCategory());
 		return result.<Result<com.wodder.inventory.models.InventoryItemModel, String>>map(i -> new Result<>(i, null))
 				.orElseGet(() -> new Result<>(null, "Unable to update item"));
 	}
 
 	@Override
 	public Result<List<com.wodder.inventory.models.InventoryItemModel>, String> getItems() {
-		List<com.wodder.inventory.models.InventoryItemModel> items = storage.readAllItems();
+		List<com.wodder.inventory.models.InventoryItemModel> items = storage.loadAllActiveItems();
 		return items.isEmpty() ?
 				new Result<>(null, "Unable to access items") :
 				new Result<>(items, null);

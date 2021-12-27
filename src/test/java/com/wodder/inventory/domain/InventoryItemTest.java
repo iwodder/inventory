@@ -40,14 +40,18 @@ class InventoryItemTest {
 	}
 
 	@Test
-	@DisplayName("Updating category returns a new inventory item")
+	@DisplayName("Can successfully update a category")
 	void update_category() {
 		InventoryItem i = new InventoryItem("Bread", new Category("Dry Goods"), new Location("Pantry"));
-		Category c = new Category("Produce");
-		InventoryItem i2 = i.updateCategory(c);
-		assertNotSame(i, i2);
-		assertEquals(i.getName(), i2.getName());
-		assertEquals(i.getLocation(), i2.getLocation());
-		assertEquals(c.getName(), i2.getCategory());
+		i.updateCategory(new Category("Refrigerated"));
+		assertEquals("Refrigerated", i.getCategory());
+	}
+
+	@Test
+	@DisplayName("Trying to update with the same category causes IllegalArgumentException")
+	void update_same_category() {
+		final InventoryItem i = new InventoryItem("Bread", new Category("Dry Goods"), new Location("Pantry"));
+		assertThrows(IllegalArgumentException.class, () -> i.updateCategory(new Category("Dry Goods")));
+
 	}
 }
