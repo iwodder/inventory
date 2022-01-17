@@ -17,7 +17,7 @@ import static org.mockito.Mockito.*;
 class ItemStorageServiceTest {
 
 	@Mock
-	private InventoryItemStorage store;
+	private InventoryItemRepository store;
 
 	@InjectMocks
 	private ItemStorageService storage;
@@ -29,15 +29,17 @@ class ItemStorageServiceTest {
 	@DisplayName("Can add new item")
 	void adds_new_item() {
 		InventoryItemModel itemData = InventoryItemModel.builder()
-				.withName("2% Milk").build();
-		when(store.createItem(any())).thenReturn(1L);
+				.withName("2% Milk").withCategory("Dairy")
+				.withLocation("Refrigerator").withUnitOfMeasurement("Gallon").withItemsPerCase(4)
+				.withItemPrice("1.99").withCasePrice("4.98").build();
+
+		when(store.saveItem(any())).thenReturn(1L);
 		when(store.loadItem(1L)).thenReturn(Optional.of(new InventoryItem(1L,"2% Milk", new Category(), new Location())));
 
 		Optional<InventoryItemModel> result = storage.addItem(itemData);
 
-		assertTrue(result.isPresent());
-		InventoryItemModel returned = result.get();
-		assertEquals(1L, returned.getId());
+		verify(store).saveItem(argumentCaptor.capture());
+
 	}
 
 	@Test
@@ -51,7 +53,7 @@ class ItemStorageServiceTest {
 				.withCategory("Dry Goods")
 				.build();
 		storage.addItem(model);
-		verify(store).createItem(argumentCaptor.capture());
+		verify(store).saveItem(argumentCaptor.capture());
 		InventoryItem i = argumentCaptor.getValue();
 		assertEquals("Bread", i.getName());
 		assertEquals("Pantry", i.getLocation());
@@ -64,7 +66,7 @@ class ItemStorageServiceTest {
 	void no_location_provided() {
 		InventoryItemModel itemData = InventoryItemModel.builder()
 				.withName("2% Milk").build();
-		when(store.createItem(any())).thenReturn(1L);
+		when(store.saveItem(any())).thenReturn(1L);
 		when(store.loadItem(1L)).thenReturn(
 				Optional.of(new InventoryItem(1L, "2% Milk", new Category(), new Location())));
 
@@ -186,5 +188,37 @@ class ItemStorageServiceTest {
 		assertNotNull(result);
 		assertFalse(result.isEmpty());
 		assertEquals(3, result.size());
+	}
+
+	@Test
+	@DisplayName("Can update the Unit of Measurement for an item")
+	void update_uom() {
+		when(store.loadItem(1L)).thenReturn(Optional.of(new InventoryItem(1L, "2% Milk", new Category("Refrigerated"), new Location("Refrigerator"), new UnitOfMeasurement("Quarts", 4))));
+		Optional<InventoryItemModel> opt = storage.updateItemUnitOfMeasurement(1L, "Gallons", 4);
+		assertTrue(opt.isPresent());
+		InventoryItemModel result = opt.get();
+		assertEquals("Gallons", result.getUnits());
+		assertEquals(4, result.getUnitsPerCase());
+	}
+
+	@Test
+	@DisplayName("If item is not present then empty is returned")
+	void item_not_found() {
+		when(store.loadItem(1L)).thenReturn(Optional.empty());
+		Optional<InventoryItemModel> opt = storage.updateItemUnitOfMeasurement(1L, "Gallons", 4);
+		assertFalse(opt.isPresent());
+	}
+
+	@Test
+	@DisplayName("Can update the price for an item")
+	void update_price() {
+		when(store.loadItem(1L)).thenReturn(Optional.of(new InventoryItem(
+				1L, "2% Milk", new Category("Refrigerated"), new Location("Refrigerator"),
+				new UnitOfMeasurement("Quarts", 4), new Price("0.99", "1.99"))));
+		Optional<InventoryItemModel> opt = storage.updateItemPrice(1L, "0.68", "19.23");
+		assertTrue(opt.isPresent());
+		InventoryItemModel result = opt.get();
+		assertEquals("0.68", result.getItemPrice());
+		assertEquals("19.23", result.getCasePrice());
 	}
 }

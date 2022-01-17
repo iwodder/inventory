@@ -9,7 +9,7 @@ import java.util.*;
 import static org.junit.jupiter.api.Assertions.*;
 
 class InMemoryInventoryItemStorageTest {
-	private InventoryItemStorage inventoryItemStorage;
+	private InventoryItemRepository inventoryItemStorage;
 
 	@BeforeEach
 	void setup() {
@@ -20,7 +20,7 @@ class InMemoryInventoryItemStorageTest {
 	@DisplayName("Can load a saved item")
 	void loadItem() {
 		InventoryItem item1 = new InventoryItem(null, "2% Milk", new Category("REFRIGERATED"), new Location("REFRIGERATOR"));
-		Long id = inventoryItemStorage.createItem(item1);
+		Long id = inventoryItemStorage.saveItem(item1);
 
 		Optional<InventoryItem> result = inventoryItemStorage.loadItem(id);
 		assertTrue(result.isPresent());
@@ -38,7 +38,7 @@ class InMemoryInventoryItemStorageTest {
 	@Test
 	@DisplayName("Able to update an item")
 	void updateItem() {
-		Long id = inventoryItemStorage.createItem(new InventoryItem(null, "2% Milk", new Category("REFRIGERATED"), new Location("REFRIGERATOR")));
+		Long id = inventoryItemStorage.saveItem(new InventoryItem(null, "2% Milk", new Category("REFRIGERATED"), new Location("REFRIGERATOR")));
 
 		InventoryItem item2 = new InventoryItem(id,"2% MILK", new Category("REFRIGERATED"), new Location("REFRIGERATOR"));
 		Optional<InventoryItem> result = inventoryItemStorage.updateItem(item2);
@@ -62,7 +62,7 @@ class InMemoryInventoryItemStorageTest {
 	void createItem() {
 		InventoryItem itemDTO = new InventoryItem(null, "2% Milk", new Category("REFRIGERATED"), new Location("REFRIGERATOR"));
 
-		Long result = inventoryItemStorage.createItem(itemDTO);
+		Long result = inventoryItemStorage.saveItem(itemDTO);
 		assertNotNull(result);
 	}
 
@@ -70,7 +70,7 @@ class InMemoryInventoryItemStorageTest {
 	@DisplayName("Can delete an item")
 	void deleteItem() {
 		InventoryItem item = new InventoryItem(null, "2% Milk", new Category("REFRIGERATED"), new Location("REFRIGERATOR"));
-		Long id = inventoryItemStorage.createItem(item);
+		Long id = inventoryItemStorage.saveItem(item);
 
 		assertTrue(inventoryItemStorage.deleteItem(id));
 		assertFalse(inventoryItemStorage.loadItem(id).isPresent());
@@ -85,7 +85,7 @@ class InMemoryInventoryItemStorageTest {
 	@Test
 	@DisplayName("Can load all inventory items")
 	void load_all_items() {
-		inventoryItemStorage.createItem(new InventoryItem(null, "2% Milk", new Category("Refrigerated"), new Location("REFRIGERATOR")));
+		inventoryItemStorage.saveItem(new InventoryItem(null, "2% Milk", new Category("Refrigerated"), new Location("REFRIGERATOR")));
 		List<InventoryItem> items = inventoryItemStorage.loadAllItems();
 		assertNotNull(items);
 		assertFalse(items.isEmpty());
@@ -98,9 +98,9 @@ class InMemoryInventoryItemStorageTest {
 		InventoryItem i1 = new InventoryItem(InventoryItemModel.builder().withName("Bananas").isActive(true).build());
 		InventoryItem i2 = new InventoryItem(InventoryItemModel.builder().withName("Apples").isActive(true).build());
 		InventoryItem i3 = new InventoryItem(InventoryItemModel.builder().withName("Kiwi").isActive(false).build());
-		inventoryItemStorage.createItem(i1);
-		inventoryItemStorage.createItem(i2);
-		inventoryItemStorage.createItem(i3);
+		inventoryItemStorage.saveItem(i1);
+		inventoryItemStorage.saveItem(i2);
+		inventoryItemStorage.saveItem(i3);
 		List<InventoryItem> actives = inventoryItemStorage.loadActiveItems();
 		assertEquals(2, actives.size());
 	}
@@ -117,9 +117,9 @@ class InMemoryInventoryItemStorageTest {
 		InventoryItem i1 = new InventoryItem(InventoryItemModel.builder().withName("2% Milk").withCategory("Refrigerated").isActive(true).build());
 		InventoryItem i2 = new InventoryItem(InventoryItemModel.builder().withName("Cheese").withCategory("Refrigerated").isActive(true).build());
 		InventoryItem i3 = new InventoryItem(InventoryItemModel.builder().withName("Pistachios").withCategory("Dry Goods").isActive(true).build());
-		Long id = inventoryItemStorage.createItem(i1);
-		inventoryItemStorage.createItem(i2);
-		inventoryItemStorage.createItem(i3);
+		Long id = inventoryItemStorage.saveItem(i1);
+		inventoryItemStorage.saveItem(i2);
+		inventoryItemStorage.saveItem(i3);
 		List<InventoryCount> counts = inventoryItemStorage.loadCounts();
 		assertEquals(3, counts.size());
 	}
@@ -128,7 +128,7 @@ class InMemoryInventoryItemStorageTest {
 	@DisplayName("Can save new on hand count")
 	void save_count() {
 		InventoryItem i1 = new InventoryItem(InventoryItemModel.builder().withName("2% Milk").withCategory("Refrigerated").isActive(true).build());
-		Long id = inventoryItemStorage.createItem(i1);
+		Long id = inventoryItemStorage.saveItem(i1);
 		InventoryCount count = new InventoryCount(id, null, null, null,2);
 		inventoryItemStorage.updateCount(count);
 		InventoryCount c2 = inventoryItemStorage.loadCount(id).get();
@@ -139,7 +139,7 @@ class InMemoryInventoryItemStorageTest {
 	@DisplayName("Can load a single count")
 	void load_count() {
 		InventoryItem i1 = new InventoryItem(InventoryItemModel.builder().withName("2% Milk").withCategory("Refrigerated").isActive(true).build());
-		Long id = inventoryItemStorage.createItem(i1);
+		Long id = inventoryItemStorage.saveItem(i1);
 		InventoryCount count = inventoryItemStorage.loadCount(id).get();
 		assertEquals(id, count.getItemId());
 		assertEquals(i1.getName(), count.getName());

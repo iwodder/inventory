@@ -16,6 +16,10 @@ public interface ItemStorage {
 
 	Optional<InventoryItemModel> updateItemName(Long inventoryItemId, String name);
 
+	Optional<InventoryItemModel> updateItemUnitOfMeasurement(Long inventoryItemId, String unitOfMeasurement, Integer unitsPerCase);
+
+	Optional<InventoryItemModel> updateItemPrice(Long inventoryItemId, String unitPrice, String casePrice);
+
 	Optional<InventoryItemModel> loadItem(Long itemId);
 
 	List<InventoryItemModel> loadAllActiveItems();

@@ -45,4 +45,9 @@ public class Location {
 			this.name = DEFAULT_VALUE;
 		}
 	}
+
+	@Override
+	public String toString() {
+		return name;
+	}
 }

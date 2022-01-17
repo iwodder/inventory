@@ -6,7 +6,7 @@ import java.util.*;
 import java.util.concurrent.atomic.*;
 import java.util.stream.*;
 
-final class InMemoryInventoryItemStorage implements InventoryItemStorage {
+final class InMemoryInventoryItemStorage implements InventoryItemRepository {
 	private static final AtomicLong itemId = new AtomicLong(0);
 	private final Map<Long, InventoryItem> db;
 	private final Map<InventoryItem, InventoryCount> counts;
@@ -41,7 +41,7 @@ final class InMemoryInventoryItemStorage implements InventoryItemStorage {
 	}
 
 	@Override
-	public Long createItem(InventoryItem item) {
+	public Long saveItem(InventoryItem item) {
 		Long itemId = InMemoryInventoryItemStorage.itemId.addAndGet(1);
 		InventoryItem newItem = new InventoryItem(item);
 		newItem.setId(itemId);

@@ -4,18 +4,24 @@ import java.util.*;
 
 public class Category {
 	private static final String DEFAULT_NAME = "unassigned";
+	private final Long id;
 	private String name;
 
 	public Category() {
-		this(DEFAULT_NAME);
+		this(0L, DEFAULT_NAME);
 	}
 
 	public Category(String name) {
-		setName(name);
+		this(0L, name);
 	}
 
 	public Category(Category that) {
-		this(that.getName());
+		this(that.getId(), that.getName());
+	}
+
+	public Category(Long id, String name) {
+		this.id = id;
+		setName(name);
 	}
 
 	public static Category defaultCategory() {
@@ -24,6 +30,10 @@ public class Category {
 
 	public String getName() {
 		return name;
+	}
+
+	public Long getId() {
+		return id;
 	}
 
 	private void setName(String name) {
@@ -45,5 +55,10 @@ public class Category {
 	@Override
 	public int hashCode() {
 		return Objects.hash(getName());
+	}
+
+	@Override
+	public String toString() {
+		return name;
 	}
 }

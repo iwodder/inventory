@@ -3,7 +3,6 @@ package com.wodder.inventory.domain.entities;
 import com.wodder.inventory.models.*;
 
 public class InventoryCount {
-
 	private final Long itemId;
 	private final String name;
 	private final String category;

@@ -9,31 +9,35 @@ import java.util.stream.*;
 
 class ItemStorageService implements ItemStorage {
 
-	private final InventoryItemStorage store;
+	private final InventoryItemRepository inventoryItemRepository;
+	private final OnHandRepository onHandRepository;
 
-	ItemStorageService(InventoryItemStorage store) {
-		this.store = store;
+	ItemStorageService(InventoryItemRepository itemRepository, OnHandRepository onHandRepository) {
+		this.inventoryItemRepository = itemRepository;
+		this.onHandRepository = onHandRepository;
 	}
 
 	ItemStorageService() {
-		this(null);
+		this(null, null);
 	}
 
 	@Override
 	public Optional<InventoryItemModel> addItem(InventoryItemModel newItem) {
 		if (newItem.getId() != null) return Optional.empty();
 
-		Category category = store.loadCategory(newItem.getCategory()).orElseGet(Category::defaultCategory);
-		Location location = store.loadLocation(newItem.getLocation()).orElseGet(Location::defaultLocation);
-		InventoryItem item = new InventoryItem(newItem.getName(), category, location);
+		Category category = inventoryItemRepository.loadCategory(newItem.getCategory()).orElseGet(Category::defaultCategory);
+		Location location = inventoryItemRepository.loadLocation(newItem.getLocation()).orElseGet(Location::defaultLocation);
+		UnitOfMeasurement unitOfMeasurement = new UnitOfMeasurement(newItem.getUnits(), newItem.getUnitsPerCase());
+		Price price = new Price(newItem.getItemPrice(), newItem.getCasePrice());
+		InventoryItem item = new InventoryItem(newItem.getName(), category, location, unitOfMeasurement, price);
 
-		return store.loadItem(store.createItem(item)).map(InventoryItem::toItemModel);
+		return inventoryItemRepository.loadItem(inventoryItemRepository.saveItem(item)).map(InventoryItem::toItemModel);
 	}
 
 	@Override
 	public Boolean deleteItem(InventoryItemModel itemToDelete) {
 		if (itemToDelete.getId() == null) return false;
-		return store.deleteItem(itemToDelete.getId());
+		return inventoryItemRepository.deleteItem(itemToDelete.getId());
 	}
 
 	@Override
@@ -47,12 +51,12 @@ class ItemStorageService implements ItemStorage {
 
 	@Override
 	public Optional<InventoryItemModel> updateItemLocation(Long inventoryItemId, String location) {
-		Optional<InventoryItem> opt = store.loadItem(inventoryItemId);
-		Optional<Location> loc = store.loadLocation(location);
+		Optional<InventoryItem> opt = inventoryItemRepository.loadItem(inventoryItemId);
+		Optional<Location> loc = inventoryItemRepository.loadLocation(location);
 		if (opt.isPresent() && loc.isPresent()) {
 			InventoryItem item = opt.get();
 			item.updateLocation(loc.get());
-			store.updateItem(item);
+			inventoryItemRepository.updateItem(item);
 			return Optional.of(item.toItemModel());
 		} else {
 			return Optional.empty();
@@ -61,24 +65,50 @@ class ItemStorageService implements ItemStorage {
 
 	@Override
 	public Optional<InventoryItemModel> updateItemName(Long inventoryItemId, String name) {
-		Optional<InventoryItem> opt = store.loadItem(1L);
+		Optional<InventoryItem> opt = inventoryItemRepository.loadItem(1L);
 		if (opt.isPresent()) {
 			InventoryItem item = opt.get();
 			item.updateName(name);
-			store.updateItem(item);
+			inventoryItemRepository.updateItem(item);
 			return Optional.of(item.toItemModel());
 		} else {
 			return Optional.empty();
 		}
 	}
 
+	@Override
+	public Optional<InventoryItemModel> updateItemUnitOfMeasurement(Long inventoryItemId, String unitOfMeasurement, Integer unitsPerCase) {
+		Optional<InventoryItem> opt = inventoryItemRepository.loadItem(inventoryItemId);
+		if (opt.isPresent()) {
+			InventoryItem item = opt.get();
+			item.updateUnitOfMeasurement(new UnitOfMeasurement(unitOfMeasurement, unitsPerCase));
+			inventoryItemRepository.updateItem(item);
+			return Optional.of(item.toItemModel());
+		} else {
+			return Optional.empty();
+		}
+	}
+
+	@Override
+	public Optional<InventoryItemModel> updateItemPrice(Long inventoryItemId, String unitPrice, String casePrice) {
+		Optional<InventoryItem> opt = inventoryItemRepository.loadItem(inventoryItemId);
+		if (opt.isPresent()) {
+			InventoryItem i = opt.get();
+			i.updatePrice(new Price(unitPrice, casePrice));
+			inventoryItemRepository.updateItem(i);
+			return Optional.of(i.toItemModel());
+		} else {
+			return Optional.empty();
+		}
+	}
+
 	private Optional<InventoryItemModel> processCategoryUpdate(Long inventoryItemId, String category) {
-		Optional<InventoryItem> inventoryItem = store.loadItem(inventoryItemId);
-		Optional<Category> c = store.loadCategory(category);
+		Optional<InventoryItem> inventoryItem = inventoryItemRepository.loadItem(inventoryItemId);
+		Optional<Category> c = inventoryItemRepository.loadCategory(category);
 		if (inventoryItem.isPresent() && c.isPresent()) {
 			InventoryItem item = inventoryItem.get();
 			item.updateCategory(c.get());
-			return store.updateItem(item).map(InventoryItem::toItemModel);
+			return inventoryItemRepository.updateItem(item).map(InventoryItem::toItemModel);
 		} else {
 			return Optional.empty();
 		}
@@ -87,12 +117,12 @@ class ItemStorageService implements ItemStorage {
 	@Override
 	public Optional<InventoryItemModel> loadItem(Long itemId) {
 		if (itemId == null) return Optional.empty();
-		return store.loadItem(itemId).map(InventoryItem::toItemModel);
+		return inventoryItemRepository.loadItem(itemId).map(InventoryItem::toItemModel);
 	}
 
 	@Override
 	public List<InventoryItemModel> loadAllActiveItems() {
-		return store.loadAllItems()
+		return inventoryItemRepository.loadAllItems()
 				.stream()
 				.map(InventoryItem::toItemModel)
 				.collect(Collectors.toList());

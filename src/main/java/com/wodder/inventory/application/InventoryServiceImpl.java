@@ -9,10 +9,10 @@ import java.util.*;
 
 public class InventoryServiceImpl implements InventoryService {
 
-	private final InventoryItemStorage inventoryItemStorage;
+	private final InventoryItemRepository inventoryItemStorage;
 	private final InventoryStorage inventoryStorage;
 
-	public InventoryServiceImpl(InventoryItemStorage items, InventoryStorage inventoryStorage) {
+	public InventoryServiceImpl(InventoryItemRepository items, InventoryStorage inventoryStorage) {
 		this.inventoryItemStorage = items;
 		this.inventoryStorage = inventoryStorage;
 	}

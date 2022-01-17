@@ -4,13 +4,13 @@ import com.wodder.inventory.domain.entities.*;
 
 import java.util.*;
 
-public interface InventoryItemStorage {
+public interface InventoryItemRepository {
 
 	Optional<InventoryItem> loadItem(Long id);
 
 	Optional<InventoryItem> updateItem(InventoryItem item);
 
-	Long createItem(InventoryItem item);
+	Long saveItem(InventoryItem item);
 
 	boolean deleteItem(Long itemId);
 

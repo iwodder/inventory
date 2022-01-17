@@ -19,7 +19,7 @@ public class ServiceFactoryImpl implements ServiceFactory {
 	public <T> T getService(Class<T> service) {
 		try {
 			if (service.isAssignableFrom(ItemStorageService.class)) {
-				return (T) new ItemStorageService(factory.getInventoryDataStore());
+				return (T) new ItemStorageService(factory.getInventoryDataStore(), null);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();

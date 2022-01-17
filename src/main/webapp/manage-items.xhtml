@@ -12,7 +12,7 @@
         <h:form>
             <h:outputStylesheet library="stylesheets" name="manage-items.css"/>
             <div class="data-table">
-                <p:dataTable id="itemsTable" editable="true" var="item" value="#{itemsController.allItems}">
+                <p:dataTable id="itemsTable" editable="true" var="item" value="#{itemsController.allItems()}">
                     <f:facet name="header">
                         Inventory Items
                     </f:facet>
@@ -27,6 +27,16 @@
                             </f:facet>
                             <f:facet name="input">
                                 <p:inputText id="nametxt" value="#{item.name}" style="width: 100%"/>
+                            </f:facet>
+                        </p:cellEditor>
+                    </p:column>
+                    <p:column headerText="Category">
+                        <p:cellEditor>
+                            <f:facet name="output">
+                                <h:outputText value="#{item.category}" />
+                            </f:facet>
+                            <f:facet name="input">
+                                <p:inputText id="categoryTxt" value="#{item.category}" style="width: 100%"/>
                             </f:facet>
                         </p:cellEditor>
                     </p:column>

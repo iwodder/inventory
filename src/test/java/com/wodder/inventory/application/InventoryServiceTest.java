@@ -21,7 +21,7 @@ class InventoryServiceTest {
 	private InventoryModel inventory;
 
 	@Mock
-	InventoryItemStorage items;
+	InventoryItemRepository items;
 
 	@Mock
 	InventoryStorage storage;
