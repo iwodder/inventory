@@ -22,8 +22,7 @@ class ItemStorageService implements ItemStorage {
 	}
 
 	@Override
-	public Optional<InventoryItemModel> addItem(InventoryItemModel newItem) {
-		if (newItem.getId() != null) return Optional.empty();
+	public Optional<InventoryItemModel> createNewItem(InventoryItemModel newItem) {
 
 		Category category = inventoryItemRepository.loadCategory(newItem.getCategory()).orElseGet(Category::defaultCategory);
 		Location location = inventoryItemRepository.loadLocation(newItem.getLocation()).orElseGet(Location::defaultLocation);

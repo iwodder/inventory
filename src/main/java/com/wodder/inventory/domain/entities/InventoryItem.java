@@ -44,14 +44,7 @@ public class InventoryItem {
 		this.active = that.active;
 		this.location = that.location;
 		this.uom = that.uom;
-	}
-
-	public InventoryItem(InventoryItemModel model) {
-		this.id = model.getId();
-		this.name = model.getName();
-		this.category = model.getCategory() != null ? new Category(model.getCategory()) : new Category();
-		this.active = model.isActive();
-		this.location = model.getLocation() != null ? new Location(model.getName()) : new Location();
+		this.price = that.price;
 	}
 
 	private InventoryItem(Long id, String name, Category c, Location l, Boolean a, UnitOfMeasurement u, Price p) {
@@ -130,8 +123,8 @@ public class InventoryItem {
 		return active;
 	}
 
-	public void setActive(boolean active) {
-		this.active = active;
+	public void inactivate() {
+		this.active = false;
 	}
 
 	public String getLocation() {

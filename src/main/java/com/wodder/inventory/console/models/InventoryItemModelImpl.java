@@ -14,7 +14,7 @@ public class InventoryItemModelImpl implements InventoryItemModel {
 
 	@Override
 	public Result<com.wodder.inventory.models.InventoryItemModel, String> createItem(com.wodder.inventory.models.InventoryItemModel itemDto) {
-		Optional<com.wodder.inventory.models.InventoryItemModel> result = storage.addItem(itemDto);
+		Optional<com.wodder.inventory.models.InventoryItemModel> result = storage.createNewItem(itemDto);
 		return result.<Result<com.wodder.inventory.models.InventoryItemModel, String>>map(inventoryItemDto -> new Result<>(inventoryItemDto, null))
 				.orElseGet(() -> new Result<>(null, "Unable to create new item"));
 	}

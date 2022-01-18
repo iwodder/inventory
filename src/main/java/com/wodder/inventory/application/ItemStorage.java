@@ -6,7 +6,7 @@ import java.util.*;
 
 public interface ItemStorage {
 
-	Optional<InventoryItemModel> addItem(InventoryItemModel newItem);
+	Optional<InventoryItemModel> createNewItem(InventoryItemModel newItem);
 
 	Boolean deleteItem(InventoryItemModel itemToDelete);
 

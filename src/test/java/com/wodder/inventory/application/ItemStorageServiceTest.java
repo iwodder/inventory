@@ -36,7 +36,7 @@ class ItemStorageServiceTest {
 		when(store.saveItem(any())).thenReturn(1L);
 		when(store.loadItem(1L)).thenReturn(Optional.of(new InventoryItem(1L,"2% Milk", new Category(), new Location())));
 
-		Optional<InventoryItemModel> result = storage.addItem(itemData);
+		Optional<InventoryItemModel> result = storage.createNewItem(itemData);
 
 		verify(store).saveItem(argumentCaptor.capture());
 
@@ -52,7 +52,7 @@ class ItemStorageServiceTest {
 				.withLocation("Pantry")
 				.withCategory("Dry Goods")
 				.build();
-		storage.addItem(model);
+		storage.createNewItem(model);
 		verify(store).saveItem(argumentCaptor.capture());
 		InventoryItem i = argumentCaptor.getValue();
 		assertEquals("Bread", i.getName());
@@ -70,7 +70,7 @@ class ItemStorageServiceTest {
 		when(store.loadItem(1L)).thenReturn(
 				Optional.of(new InventoryItem(1L, "2% Milk", new Category(), new Location())));
 
-		Optional<InventoryItemModel> result = storage.addItem(itemData);
+		Optional<InventoryItemModel> result = storage.createNewItem(itemData);
 
 		assertTrue(result.isPresent());
 		InventoryItemModel returned = result.get();
@@ -83,7 +83,7 @@ class ItemStorageServiceTest {
 	void add_item_with_id() {
 		InventoryItemModel itemDTO = InventoryItemModel.builder().withId(1L).build();
 
-		Optional<InventoryItemModel> result = storage.addItem(itemDTO);
+		Optional<InventoryItemModel> result = storage.createNewItem(itemDTO);
 		assertFalse(result.isPresent());
 	}
 
@@ -91,7 +91,7 @@ class ItemStorageServiceTest {
 	@DisplayName("New item requires name")
 	void add_item_no_name() {
 		InventoryItemModel itemDTO = InventoryItemModel.builder().build();
-		assertThrows(IllegalArgumentException.class, () -> storage.addItem(itemDTO));
+		assertThrows(IllegalArgumentException.class, () -> storage.createNewItem(itemDTO));
 	}
 
 	@Test

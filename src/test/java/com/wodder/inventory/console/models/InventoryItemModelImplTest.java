@@ -25,7 +25,7 @@ class InventoryItemModelImplTest {
 	@Test
 	@DisplayName("Create item returns ok on success")
 	void createItemSuccess() {
-		when(itemStorage.addItem(any(InventoryItemModel.class))).thenReturn(Optional.of(InventoryItemModel.builder().build()));
+		when(itemStorage.createNewItem(any(InventoryItemModel.class))).thenReturn(Optional.of(InventoryItemModel.builder().build()));
 		Result<InventoryItemModel, String> r = inventoryItemModel.createItem(InventoryItemModel.builder().build());
 		assertTrue(r.isOK());
 		assertFalse(r.isErr());
@@ -34,7 +34,7 @@ class InventoryItemModelImplTest {
 	@Test
 	@DisplayName("Create item returns error result on failure")
 	void createItemFailure() {
-		when(itemStorage.addItem(any(InventoryItemModel.class))).thenReturn(Optional.empty());
+		when(itemStorage.createNewItem(any(InventoryItemModel.class))).thenReturn(Optional.empty());
 		Result<InventoryItemModel, String> r = inventoryItemModel.createItem(InventoryItemModel.builder().build());
 		assertFalse(r.isOK());
 		assertTrue(r.isErr());

@@ -42,12 +42,12 @@ final class InMemoryInventoryItemStorage implements InventoryItemRepository {
 
 	@Override
 	public Long saveItem(InventoryItem item) {
-		Long itemId = InMemoryInventoryItemStorage.itemId.addAndGet(1);
+		Long id = InMemoryInventoryItemStorage.itemId.getAndIncrement();
 		InventoryItem newItem = new InventoryItem(item);
-		newItem.setId(itemId);
-		db.put(itemId, newItem);
+		newItem.setId(id);
+		db.put(id, newItem);
 		counts.put(newItem, new InventoryCount(newItem.getId(), newItem.getName(), newItem.getCategory(), item.getLocation()));
-		return itemId;
+		return id;
 	}
 
 	@Override

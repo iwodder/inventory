@@ -1,11 +1,11 @@
 package com.wodder.inventory.domain.entities;
 
 public class UnitOfMeasurement {
-	private final String unit;
+	private String unit;
 	private final int itemsPerCase;
 
 	public UnitOfMeasurement(String unit, int unitsPerCase) {
-		this.unit = unit;
+		setUnit(unit);
 		this.itemsPerCase = unitsPerCase;
 	}
 
@@ -19,6 +19,13 @@ public class UnitOfMeasurement {
 
 	public int getItemsPerCase() {
 		return itemsPerCase;
+	}
+
+	private void setUnit(String unit) {
+		if (unit == null || unit.isBlank()) {
+			throw new IllegalArgumentException(String.format("Unit cannot be %s.", (unit == null) ? "null" : "blank"));
+		}
+		this.unit = unit;
 	}
 
 	@Override

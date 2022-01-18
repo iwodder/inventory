@@ -1,7 +1,6 @@
 package com.wodder.inventory.persistence;
 
 import com.wodder.inventory.domain.entities.*;
-import com.wodder.inventory.models.*;
 import org.junit.jupiter.api.*;
 
 import java.util.*;
@@ -95,9 +94,10 @@ class InMemoryInventoryItemStorageTest {
 	@Test
 	@DisplayName("Can load all active inventory items")
 	void load_active() {
-		InventoryItem i1 = new InventoryItem(InventoryItemModel.builder().withName("Bananas").isActive(true).build());
-		InventoryItem i2 = new InventoryItem(InventoryItemModel.builder().withName("Apples").isActive(true).build());
-		InventoryItem i3 = new InventoryItem(InventoryItemModel.builder().withName("Kiwi").isActive(false).build());
+		InventoryItem i1 = new InventoryItem("Bananas", new Category("Fruit"), new Location("Pantry"));
+		InventoryItem i2 = new InventoryItem("Kiwis", new Category("Fruit"), new Location("Counter"));
+		InventoryItem i3 = new InventoryItem("Apples", new Category("Fruit"), new Location("Counter"));
+		i3.inactivate();
 		inventoryItemStorage.saveItem(i1);
 		inventoryItemStorage.saveItem(i2);
 		inventoryItemStorage.saveItem(i3);
@@ -114,9 +114,9 @@ class InMemoryInventoryItemStorageTest {
 	@Test
 	@DisplayName("Can load InventoryCounts from storage")
 	void loads_counts() {
-		InventoryItem i1 = new InventoryItem(InventoryItemModel.builder().withName("2% Milk").withCategory("Refrigerated").isActive(true).build());
-		InventoryItem i2 = new InventoryItem(InventoryItemModel.builder().withName("Cheese").withCategory("Refrigerated").isActive(true).build());
-		InventoryItem i3 = new InventoryItem(InventoryItemModel.builder().withName("Pistachios").withCategory("Dry Goods").isActive(true).build());
+		InventoryItem i1 = new InventoryItem("2% Milk",  new Category("Refrigerated"), new Location("Refrigerator"));
+		InventoryItem i2 = new InventoryItem("Cheese", new Category("Refrigerated"), new Location("Refrigerator"));
+		InventoryItem i3 = new InventoryItem("Pistachios",  new Category("Dry Goods"), new Location("Pantry"));
 		Long id = inventoryItemStorage.saveItem(i1);
 		inventoryItemStorage.saveItem(i2);
 		inventoryItemStorage.saveItem(i3);
@@ -127,7 +127,7 @@ class InMemoryInventoryItemStorageTest {
 	@Test
 	@DisplayName("Can save new on hand count")
 	void save_count() {
-		InventoryItem i1 = new InventoryItem(InventoryItemModel.builder().withName("2% Milk").withCategory("Refrigerated").isActive(true).build());
+		InventoryItem i1 = new InventoryItem("2% Milk",  new Category("Refrigerated"), new Location("Refrigerator"));
 		Long id = inventoryItemStorage.saveItem(i1);
 		InventoryCount count = new InventoryCount(id, null, null, null,2);
 		inventoryItemStorage.updateCount(count);
@@ -138,7 +138,7 @@ class InMemoryInventoryItemStorageTest {
 	@Test
 	@DisplayName("Can load a single count")
 	void load_count() {
-		InventoryItem i1 = new InventoryItem(InventoryItemModel.builder().withName("2% Milk").withCategory("Refrigerated").isActive(true).build());
+		InventoryItem i1 = new InventoryItem("2% Milk",  new Category("Refrigerated"), new Location("Refrigerator"));
 		Long id = inventoryItemStorage.saveItem(i1);
 		InventoryCount count = inventoryItemStorage.loadCount(id).get();
 		assertEquals(id, count.getItemId());
