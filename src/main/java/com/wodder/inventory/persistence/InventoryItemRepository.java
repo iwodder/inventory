@@ -10,7 +10,7 @@ public interface InventoryItemRepository {
 
 	Optional<InventoryItem> updateItem(InventoryItem item);
 
-	Long saveItem(InventoryItem item);
+	Optional<InventoryItem> saveItem(InventoryItem item);
 
 	boolean deleteItem(Long itemId);
 
@@ -23,8 +23,4 @@ public interface InventoryItemRepository {
 	void updateCount(InventoryCount count);
 
 	Optional<InventoryCount> loadCount(Long id);
-
-	Optional<Location> loadLocation(String name);
-
-	Optional<Category> loadCategory(String name);
 }

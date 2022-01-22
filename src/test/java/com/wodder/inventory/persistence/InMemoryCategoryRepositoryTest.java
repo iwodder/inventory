@@ -22,7 +22,15 @@ class InMemoryCategoryRepositoryTest {
 	@Test
 	@DisplayName("Can load a particular category by id")
 	void load() {
-		Optional<Category> result = categoryRepository.load(1L);
+		Optional<Category> result = categoryRepository.loadById(1L);
+		assertTrue(result.isPresent());
+		assertEquals(new Category("Dairy"), result.get());
+	}
+
+	@Test
+	@DisplayName("Can load a category by providing an item")
+	void load_by_item() {
+		Optional<Category> result = categoryRepository.loadByItem(new Category("Dairy"));
 		assertTrue(result.isPresent());
 		assertEquals(new Category("Dairy"), result.get());
 	}
@@ -53,6 +61,6 @@ class InMemoryCategoryRepositoryTest {
 	@Test
 	@DisplayName("Trying to load a category with an invalid id returns empty")
 	void doesnt_exist() {
-		assertTrue(categoryRepository.load(5L).isEmpty());
+		assertTrue(categoryRepository.loadById(5L).isEmpty());
 	}
 }

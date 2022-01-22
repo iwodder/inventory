@@ -19,6 +19,12 @@ class ItemStorageServiceTest {
 	@Mock
 	private InventoryItemRepository store;
 
+	@Mock
+	Repository<Category> categoryRepository;
+
+	@Mock
+	Repository<Location> locationRepository;
+
 	@InjectMocks
 	private ItemStorageService storage;
 
@@ -33,7 +39,7 @@ class ItemStorageServiceTest {
 				.withLocation("Refrigerator").withUnitOfMeasurement("Gallon").withItemsPerCase(4)
 				.withItemPrice("1.99").withCasePrice("4.98").build();
 
-		when(store.saveItem(any())).thenReturn(1L);
+		when(store.saveItem(any())).thenReturn(Optional.of(new InventoryItem(1L,"2% Milk", new Category(), new Location())));
 		when(store.loadItem(1L)).thenReturn(Optional.of(new InventoryItem(1L,"2% Milk", new Category(), new Location())));
 
 		Optional<InventoryItemModel> result = storage.createNewItem(itemData);
@@ -45,8 +51,8 @@ class ItemStorageServiceTest {
 	@Test
 	@DisplayName("Newly created item is active")
 	void new_item_is_active() {
-		when(store.loadLocation("Pantry")).thenReturn(Optional.of(new Location("Pantry")));
-		when(store.loadCategory("Dry Goods")).thenReturn(Optional.of(new Category("Dry Goods")));
+		when(locationRepository.loadByItem(new Location("Pantry"))).thenReturn(Optional.of(new Location("Pantry")));
+		when(categoryRepository.loadByItem(new Category("Dry Goods"))).thenReturn(Optional.of(new Category("Dry Goods")));
 		InventoryItemModel model = InventoryItemModel.builder()
 				.withName("Bread")
 				.withLocation("Pantry")
@@ -66,9 +72,8 @@ class ItemStorageServiceTest {
 	void no_location_provided() {
 		InventoryItemModel itemData = InventoryItemModel.builder()
 				.withName("2% Milk").build();
-		when(store.saveItem(any())).thenReturn(1L);
-		when(store.loadItem(1L)).thenReturn(
-				Optional.of(new InventoryItem(1L, "2% Milk", new Category(), new Location())));
+		when(store.saveItem(any())).thenReturn(Optional.of(new InventoryItem(1L, "2% Milk", new Category(), new Location())));
+
 
 		Optional<InventoryItemModel> result = storage.createNewItem(itemData);
 
@@ -114,7 +119,7 @@ class ItemStorageServiceTest {
 	void update_item_category() {
 		when(store.loadItem(1L)).thenReturn(Optional.of(
 				new InventoryItem(1L, "2% Milk", new Category("Dairy"), new Location("Refrigerator"), true)));
-		when(store.loadCategory("Refrigerated")).thenReturn(Optional.of(new Category("Refrigerated")));
+		when(categoryRepository.loadByItem(new Category("Refrigerated"))).thenReturn(Optional.of(new Category("Refrigerated")));
 
 		storage.updateItemCategory(1L, "Refrigerated");
 
@@ -163,7 +168,7 @@ class ItemStorageServiceTest {
 	@DisplayName("Can update an item's location")
 	void update_location() {
 		when(store.loadItem(1L)).thenReturn(Optional.of(new InventoryItem(1L, "2% Milk", new Category("Refrigerated"), new Location("Refrigerator"))));
-		when(store.loadLocation("Pantry")).thenReturn(Optional.of(new Location("Pantry")));
+		when(locationRepository.loadByItem(new Location("Pantry"))).thenReturn(Optional.of(new Location("Pantry")));
 		InventoryItemModel model = storage.updateItemLocation(1L, "Pantry").get();
 		assertEquals(1L, model.getId());
 		assertEquals("Pantry", model.getLocation());

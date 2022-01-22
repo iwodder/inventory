@@ -2,9 +2,8 @@ package com.wodder.inventory.domain.entities;
 
 import java.util.*;
 
-public class Category {
+public class Category extends Entity {
 	private static final String DEFAULT_NAME = "unassigned";
-	private final Long id;
 	private String name;
 
 	public Category() {
@@ -20,7 +19,7 @@ public class Category {
 	}
 
 	public Category(Long id, String name) {
-		this.id = id;
+		super(id);
 		setName(name);
 	}
 
@@ -30,10 +29,6 @@ public class Category {
 
 	public String getName() {
 		return name;
-	}
-
-	public Long getId() {
-		return id;
 	}
 
 	private void setName(String name) {

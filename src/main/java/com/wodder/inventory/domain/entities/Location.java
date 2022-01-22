@@ -1,19 +1,24 @@
 package com.wodder.inventory.domain.entities;
 
-public class Location {
+public class Location extends Entity {
 	private static final String DEFAULT_VALUE = "unassigned";
 	private String name;
 
-	public Location(Location that) {
-		this(that.getName());
+	public Location() {
+		this(DEFAULT_VALUE);
 	}
 
 	public Location(String name) {
-		setName(name);
+		this(0L, name);
 	}
 
-	public Location() {
-		this(DEFAULT_VALUE);
+	public Location(Location that) {
+		this(that.getId(), that.getName());
+	}
+
+	public Location(Long id, String name) {
+		super(id);
+		setName(name);
 	}
 
 	public String getName() {

@@ -8,6 +8,8 @@ public interface ItemStorage {
 
 	Optional<InventoryItemModel> createNewItem(InventoryItemModel newItem);
 
+	Optional<InventoryItemModel> createNewItem(String name, String category, String location, String unit, int unitsPerCase, String unitPrice, String casePrice);
+
 	Boolean deleteItem(InventoryItemModel itemToDelete);
 
 	Optional<InventoryItemModel> updateItemCategory(Long inventoryItemId, String category);

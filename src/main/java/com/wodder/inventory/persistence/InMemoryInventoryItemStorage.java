@@ -41,13 +41,13 @@ final class InMemoryInventoryItemStorage implements InventoryItemRepository {
 	}
 
 	@Override
-	public Long saveItem(InventoryItem item) {
+	public Optional<InventoryItem> saveItem(InventoryItem item) {
 		Long id = InMemoryInventoryItemStorage.itemId.getAndIncrement();
 		InventoryItem newItem = new InventoryItem(item);
 		newItem.setId(id);
 		db.put(id, newItem);
 		counts.put(newItem, new InventoryCount(newItem.getId(), newItem.getName(), newItem.getCategory(), item.getLocation()));
-		return id;
+		return Optional.of(new InventoryItem(newItem));
 	}
 
 	@Override
@@ -94,29 +94,5 @@ final class InMemoryInventoryItemStorage implements InventoryItemRepository {
 	public Optional<InventoryCount> loadCount(Long id) {
 		return loadItem(id)
 				.map(counts::get);
-	}
-
-	@Override
-	public Optional<Location> loadLocation(String name) {
-		Optional<Location> opt = locations.stream().filter(l -> l.getName().equals(name)).findAny();
-		if (opt.isPresent()) {
-			return opt;
-		} else {
-			Location l = new Location(name);
-			locations.add(new Location(l));
-			return Optional.of(l);
-		}
-	}
-
-	@Override
-	public Optional<Category> loadCategory(String name) {
-		Optional<Category> opt = categories.stream().filter(l -> l.getName().equals(name)).findAny();
-		if (opt.isPresent()) {
-			return opt;
-		} else {
-			Category c = new Category(name);
-			categories.add(new Category(c));
-			return Optional.of(c);
-		}
 	}
 }
