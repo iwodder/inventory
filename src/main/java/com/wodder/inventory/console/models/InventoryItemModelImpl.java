@@ -6,10 +6,10 @@ import com.wodder.inventory.models.*;
 import java.util.*;
 
 public class InventoryItemModelImpl implements InventoryItemModel {
-	private final ItemStorage storage;
+	private final ItemService storage;
 
-	public InventoryItemModelImpl(ItemStorage itemStorage) {
-		this.storage = itemStorage;
+	public InventoryItemModelImpl(ItemService itemService) {
+		this.storage = itemService;
 	}
 
 	@Override

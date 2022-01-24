@@ -14,7 +14,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
-class ItemStorageServiceTest {
+class ItemServiceImplTest {
 
 	@Mock
 	private InventoryItemRepository store;
@@ -26,7 +26,7 @@ class ItemStorageServiceTest {
 	Repository<Location> locationRepository;
 
 	@InjectMocks
-	private ItemStorageService storage;
+	private ItemServiceImpl storage;
 
 	@Captor
 	ArgumentCaptor<InventoryItem> argumentCaptor;

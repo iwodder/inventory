@@ -18,16 +18,16 @@ class ServiceFactoryImplTest {
 	ServiceFactoryImpl impl;
 
 	@Test
-	@DisplayName("Can provide the ItemStorageService")
+	@DisplayName("Can provide the ItemServiceImpl")
 	void item_service() {
-		ItemStorage itemStorage = impl.getItemStorage();
-		assertNotNull(itemStorage);
+		ItemService itemService = impl.getItemStorage();
+		assertNotNull(itemService);
 	}
 
 	@Test
 	@DisplayName("Can access service class through interface")
 	void service_interface() {
-		ItemStorage itemStorage = impl.getService(ItemStorage.class);
-		assertNotNull(itemStorage);
+		ItemService itemService = impl.getService(ItemService.class);
+		assertNotNull(itemService);
 	}
 }

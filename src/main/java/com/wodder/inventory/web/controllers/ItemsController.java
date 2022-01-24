@@ -13,10 +13,10 @@ import java.util.*;
 public class ItemsController implements Serializable {
 
 	@Inject
-	ItemStorage itemStorage;
+	ItemService itemService;
 
 	public List<InventoryItemModel> allItems() {
-		return itemStorage.loadAllActiveItems();
+		return itemService.loadAllActiveItems();
 	}
 
 	public void onRowEdit() {

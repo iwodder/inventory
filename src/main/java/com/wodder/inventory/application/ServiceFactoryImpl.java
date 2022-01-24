@@ -12,15 +12,15 @@ public class ServiceFactoryImpl implements ServiceFactory {
 		this.factory = factory;
 	}
 
-	public ItemStorage getItemStorage() {
-		return new ItemStorageService();
+	public ItemService getItemStorage() {
+		return new ItemServiceImpl();
 	}
 
 	@Override
 	public <T> T getService(Class<T> service) {
 		try {
-			if (service.isAssignableFrom(ItemStorageService.class)) {
-				return (T) new ItemStorageService(factory.getInventoryDataStore(), factory.getRepository(Category.class), factory.getRepository(Location.class));
+			if (service.isAssignableFrom(ItemServiceImpl.class)) {
+				return (T) new ItemServiceImpl(factory.getInventoryDataStore(), factory.getRepository(Category.class), factory.getRepository(Location.class));
 			}
 		} catch (Exception e) {
 			e.printStackTrace();

@@ -1,5 +1,7 @@
 package com.wodder.inventory.domain.entities;
 
+import com.wodder.inventory.models.*;
+
 import java.util.*;
 
 public class Category extends Entity {
@@ -37,6 +39,10 @@ public class Category extends Entity {
 		} else {
 			this.name = DEFAULT_NAME;
 		}
+	}
+
+	public CategoryModel toModel() {
+		return new CategoryModel(this);
 	}
 
 	@Override

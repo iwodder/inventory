@@ -4,7 +4,7 @@ import com.wodder.inventory.models.*;
 
 import java.util.*;
 
-public interface ItemStorage {
+public interface ItemService {
 
 	Optional<InventoryItemModel> createNewItem(InventoryItemModel newItem);
 

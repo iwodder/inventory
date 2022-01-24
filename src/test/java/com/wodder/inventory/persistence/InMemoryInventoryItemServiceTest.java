@@ -7,7 +7,7 @@ import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class InMemoryInventoryItemStorageTest {
+class InMemoryInventoryItemServiceTest {
 	private InventoryItemRepository inventoryItemStorage;
 
 	@BeforeEach

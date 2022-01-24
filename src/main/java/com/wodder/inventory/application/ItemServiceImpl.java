@@ -7,19 +7,19 @@ import com.wodder.inventory.persistence.*;
 import java.util.*;
 import java.util.stream.*;
 
-class ItemStorageService implements ItemStorage {
+class ItemServiceImpl implements ItemService {
 
 	private final InventoryItemRepository inventoryItemRepository;
 	private final Repository<Category> categoryRepository;
 	private final Repository<Location> locationRepository;
 
-	ItemStorageService(InventoryItemRepository itemRepository, Repository<Category> categoryRepository, Repository<Location> locationRepository) {
+	ItemServiceImpl(InventoryItemRepository itemRepository, Repository<Category> categoryRepository, Repository<Location> locationRepository) {
 		this.inventoryItemRepository = itemRepository;
 		this.categoryRepository = categoryRepository;
 		this.locationRepository = locationRepository;
 	}
 
-	ItemStorageService() {
+	ItemServiceImpl() {
 		this(null, null, null);
 	}
 

@@ -17,7 +17,7 @@ import static org.mockito.Mockito.*;
 class InventoryItemModelImplTest {
 
 	@Mock
-	ItemStorage itemStorage;
+	ItemService itemService;
 
 	@InjectMocks
 	InventoryItemModelImpl inventoryItemModel;
@@ -25,7 +25,7 @@ class InventoryItemModelImplTest {
 	@Test
 	@DisplayName("Create item returns ok on success")
 	void createItemSuccess() {
-		when(itemStorage.createNewItem(any(InventoryItemModel.class))).thenReturn(Optional.of(InventoryItemModel.builder().build()));
+		when(itemService.createNewItem(any(InventoryItemModel.class))).thenReturn(Optional.of(InventoryItemModel.builder().build()));
 		Result<InventoryItemModel, String> r = inventoryItemModel.createItem(InventoryItemModel.builder().build());
 		assertTrue(r.isOK());
 		assertFalse(r.isErr());
@@ -34,7 +34,7 @@ class InventoryItemModelImplTest {
 	@Test
 	@DisplayName("Create item returns error result on failure")
 	void createItemFailure() {
-		when(itemStorage.createNewItem(any(InventoryItemModel.class))).thenReturn(Optional.empty());
+		when(itemService.createNewItem(any(InventoryItemModel.class))).thenReturn(Optional.empty());
 		Result<InventoryItemModel, String> r = inventoryItemModel.createItem(InventoryItemModel.builder().build());
 		assertFalse(r.isOK());
 		assertTrue(r.isErr());
@@ -43,7 +43,7 @@ class InventoryItemModelImplTest {
 	@Test
 	@DisplayName("Delete item returns ok on success")
 	void deleteItemSuccess() {
-		when(itemStorage.deleteItem(any(InventoryItemModel.class))).thenReturn(Boolean.TRUE);
+		when(itemService.deleteItem(any(InventoryItemModel.class))).thenReturn(Boolean.TRUE);
 		Result<Boolean, String> result = inventoryItemModel.deleteItem(InventoryItemModel.builder().build());
 		assertTrue(result.isOK());
 		assertFalse(result.isErr());
@@ -60,7 +60,7 @@ class InventoryItemModelImplTest {
 	@Test
 	@DisplayName("Update item returns ok on success")
 	void updateItemSuccess() {
-		when(itemStorage.updateItemCategory(any(), any())).thenReturn(Optional.of(InventoryItemModel.builder().build()));
+		when(itemService.updateItemCategory(any(), any())).thenReturn(Optional.of(InventoryItemModel.builder().build()));
 		Result<InventoryItemModel, String> result = inventoryItemModel.updateItem(InventoryItemModel.builder().build());
 		assertTrue(result.isOK());
 		assertFalse(result.isErr());
@@ -85,7 +85,7 @@ class InventoryItemModelImplTest {
 	@Test
 	@DisplayName("Get items returns err on empty items list")
 	void getItemsFailure1() {
-		when(itemStorage.loadAllActiveItems()).thenReturn(Collections.emptyList());
+		when(itemService.loadAllActiveItems()).thenReturn(Collections.emptyList());
 		Result<List<InventoryItemModel>, String> result = inventoryItemModel.getItems();
 		assertFalse(result.isOK());
 		assertTrue(result.isErr());
@@ -96,7 +96,7 @@ class InventoryItemModelImplTest {
 	void getItemsSuccess() {
 		List<InventoryItemModel> items = new ArrayList<>();
 		items.add(InventoryItemModel.builder().build());
-		when(itemStorage.loadAllActiveItems()).thenReturn(items);
+		when(itemService.loadAllActiveItems()).thenReturn(items);
 		Result<List<InventoryItemModel>, String> result = inventoryItemModel.getItems();
 		assertFalse(result.isErr());
 		assertTrue(result.isOK());
