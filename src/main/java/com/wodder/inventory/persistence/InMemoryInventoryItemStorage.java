@@ -10,14 +10,10 @@ final class InMemoryInventoryItemStorage implements InventoryItemRepository {
 	private static final AtomicLong itemId = new AtomicLong(0);
 	private final Map<Long, InventoryItem> db;
 	private final Map<InventoryItem, InventoryCount> counts;
-	private final List<Location> locations;
-	private final List<Category> categories;
 
 	InMemoryInventoryItemStorage() {
 		db = new HashMap<>();
 		counts = new HashMap<>();
-		locations = new ArrayList<>();
-		categories = new ArrayList<>();
 	}
 
 	@Override

@@ -2,8 +2,10 @@ package com.wodder.inventory.persistence;
 
 import com.wodder.inventory.domain.entities.*;
 
+import java.lang.reflect.*;
 import java.util.*;
 import java.util.concurrent.atomic.*;
+import java.util.stream.*;
 
 public abstract class InMemoryRepository<T extends Entity> implements Repository<T> {
 	protected static final AtomicLong id = new AtomicLong(1);
@@ -30,7 +32,10 @@ public abstract class InMemoryRepository<T extends Entity> implements Repository
 
 	@Override
 	public final List<T> loadAllItems() {
-		return Collections.unmodifiableList(items);
+		return items.stream().map(this::copy)
+				.filter(Optional::isPresent)
+				.map(Optional::get)
+				.collect(Collectors.toUnmodifiableList());
 	}
 
 	@Override
@@ -49,5 +54,18 @@ public abstract class InMemoryRepository<T extends Entity> implements Repository
 
 	final long getNextId() {
 		return id.getAndIncrement();
+	}
+
+	private Optional<T> copy(T other) {
+		try {
+			Constructor<?> c = other.getClass().getConstructor(other.getClass());
+			@SuppressWarnings("unchecked")
+			T newInstance = (T) c.newInstance(other);
+			return Optional.of(newInstance);
+		} catch (Exception e) {
+			e.printStackTrace();
+			//TODO log warn
+		}
+		return Optional.empty();
 	}
 }

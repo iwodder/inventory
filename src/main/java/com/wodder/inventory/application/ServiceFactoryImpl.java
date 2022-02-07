@@ -12,9 +12,6 @@ public class ServiceFactoryImpl implements ServiceFactory {
 		this.factory = factory;
 	}
 
-	public ItemService getItemStorage() {
-		return new ItemServiceImpl();
-	}
 
 	@Override
 	public <T> T getService(Class<T> service) {

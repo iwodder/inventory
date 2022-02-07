@@ -2,7 +2,9 @@ package com.wodder.inventory.web.controllers;
 
 import com.wodder.inventory.application.*;
 import com.wodder.inventory.models.*;
+import com.wodder.inventory.persistence.*;
 
+import javax.annotation.*;
 import javax.faces.view.*;
 import javax.inject.*;
 import java.io.*;
@@ -12,8 +14,12 @@ import java.util.*;
 @ViewScoped
 public class ItemsController implements Serializable {
 
-	@Inject
-	ItemService itemService;
+	transient ItemService itemService;
+
+	@PostConstruct
+	void init() {
+		itemService = new ServiceFactoryImpl(new PersistenceFactoryImpl()).getService(ItemService.class);
+	}
 
 	public List<InventoryItemModel> allItems() {
 		return itemService.loadAllActiveItems();

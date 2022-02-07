@@ -19,10 +19,6 @@ class ItemServiceImpl implements ItemService {
 		this.locationRepository = locationRepository;
 	}
 
-	ItemServiceImpl() {
-		this(null, null, null);
-	}
-
 	@Override
 	public Optional<InventoryItemModel> createNewItem(InventoryItemModel newItem) {
 		return createNewItem(newItem.getName(), newItem.getCategory(), newItem.getLocation(), newItem.getUnits(), newItem.getUnitsPerCase(), newItem.getItemPrice(), newItem.getCasePrice());
