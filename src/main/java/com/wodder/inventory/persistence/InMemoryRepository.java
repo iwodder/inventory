@@ -8,13 +8,13 @@ import java.util.concurrent.atomic.*;
 import java.util.stream.*;
 
 public abstract class InMemoryRepository<T extends Entity> implements Repository<T> {
-	protected static final AtomicLong id = new AtomicLong(1);
+	protected final AtomicLong id = new AtomicLong(1);
 	protected final Vector<T> items = new Vector<>();
 
 	@Override
 	public final Optional<T> loadById(Long id) {
 		if ((id - 1) < items.size()) {
-			return Optional.of(items.get(id.intValue() - 1));
+			return copy(items.get(id.intValue() - 1));
 		} else {
 			return Optional.empty();
 		}
@@ -22,7 +22,12 @@ public abstract class InMemoryRepository<T extends Entity> implements Repository
 
 	@Override
 	public final Optional<T> loadByItem(T item) {
-		return items.stream().filter(c -> c.equals(item)).findFirst();
+		Optional<T> opt = items.stream().filter(c -> c.equals(item)).findFirst();
+		if (opt.isPresent()) {
+			return copy(opt.get());
+		} else {
+			return opt;
+		}
 	}
 
 	@Override

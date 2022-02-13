@@ -1,8 +1,9 @@
 package com.wodder.inventory.models;
 
+import java.io.*;
 import java.util.*;
 
-public class InventoryItemModel {
+public class InventoryItemModel implements Serializable {
 	private Long id;
 	private String name;
 	private String category;
@@ -11,7 +12,7 @@ public class InventoryItemModel {
 	private String itemPrice;
 	private String casePrice;
 	private boolean active;
-	private int itemsPerCase;
+	private int unitsPerCase;
 
 	private InventoryItemModel(InventoryItemModelBuilder b) {
 		this.id = b.id;
@@ -20,7 +21,7 @@ public class InventoryItemModel {
 		this.location = b.location;
 		this.active = b.active;
 		this.units = b.units;
-		this.itemsPerCase = b.itemsPerCase;
+		this.unitsPerCase = b.itemsPerCase;
 		this.itemPrice = b.itemPrice;
 		this.casePrice = b.casePrice;
 	}
@@ -32,12 +33,12 @@ public class InventoryItemModel {
 		this.active = that.active;
 		this.location = that.location;
 		this.units = that.units;
-		this.itemsPerCase = that.itemsPerCase;
+		this.unitsPerCase = that.unitsPerCase;
 		this.itemPrice = that.itemPrice;
 		this.casePrice = that.casePrice;
 	}
 
-	private InventoryItemModel() {}
+	public InventoryItemModel() {}
 
 	public Long getId() {
 		return id;
@@ -88,11 +89,11 @@ public class InventoryItemModel {
 	}
 
 	public int getUnitsPerCase() {
-		return itemsPerCase;
+		return unitsPerCase;
 	}
 
 	public void setUnitsPerCase(int itemsPerCase) {
-		this.itemsPerCase = itemsPerCase;
+		this.unitsPerCase = itemsPerCase;
 	}
 
 	public String getItemPrice() {
@@ -127,7 +128,7 @@ public class InventoryItemModel {
 		return new InventoryItemModelBuilder();
 	}
 
-	public static class InventoryItemModelBuilder {
+	public static class InventoryItemModelBuilder implements Serializable {
 		private Long id;
 		private String name;
 		private String category;

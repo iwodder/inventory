@@ -26,16 +26,17 @@ class ItemServiceImpl implements ItemService {
 
 	@Override
 	public Optional<InventoryItemModel> createNewItem(String name, String category, String location, String unit, int unitsPerCase, String unitPrice, String casePrice) {
-		Optional<Category> cat = categoryRepository.loadByItem(new Category(category));
-		Optional<Location> loc = locationRepository.loadByItem(new Location(location));
-		if (cat.isPresent() && loc.isPresent()) {
-			InventoryItem item = new InventoryItem(
-					name, cat.get(), loc.get(), new UnitOfMeasurement(unit, unitsPerCase),
-					new Price(unitPrice, casePrice));
-			return inventoryItemRepository.saveItem(item).map(InventoryItem::toItemModel);
-		} else {
-			return Optional.empty();
-		}
+		Category cat = categoryRepository.loadByItem(new Category(category))
+				.orElseGet(() -> categoryRepository.createItem(new Category(category)));
+
+		Location loc = locationRepository.loadByItem(new Location(location))
+				.orElseGet(() -> locationRepository.createItem(new Location(location)));
+
+		InventoryItem item = new InventoryItem(
+				name, cat, loc, new UnitOfMeasurement(unit, unitsPerCase),
+				new Price(unitPrice, casePrice));
+
+		return inventoryItemRepository.saveItem(item).map(InventoryItem::toItemModel);
 	}
 
 	@Override

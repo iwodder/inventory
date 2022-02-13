@@ -5,6 +5,7 @@ import com.wodder.inventory.models.*;
 import com.wodder.inventory.persistence.*;
 
 import java.util.*;
+import java.util.stream.*;
 
 public class CategoryServiceImpl implements CategoryService {
 
@@ -28,5 +29,13 @@ public class CategoryServiceImpl implements CategoryService {
 			//TODO: Warn number couldn't be parsed
 			return Optional.empty();
 		}
+	}
+
+	@Override
+	public List<CategoryModel> loadCategories() {
+		return categoryRepository.loadAllItems()
+				.stream()
+				.map(Category::toModel)
+				.collect(Collectors.toList());
 	}
 }

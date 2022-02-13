@@ -10,4 +10,6 @@ public interface CategoryService {
 
 	Optional<CategoryModel> loadCategory(String id);
 
+	List<CategoryModel> loadCategories();
+
 }

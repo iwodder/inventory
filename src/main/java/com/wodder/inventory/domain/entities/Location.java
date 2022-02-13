@@ -1,5 +1,7 @@
 package com.wodder.inventory.domain.entities;
 
+import com.wodder.inventory.models.*;
+
 public class Location extends Entity {
 	private static final String DEFAULT_VALUE = "unassigned";
 	private String name;
@@ -25,8 +27,8 @@ public class Location extends Entity {
 		return name;
 	}
 
-	public static Location defaultLocation() {
-		return new Location();
+	public LocationModel toModel() {
+		return new LocationModel(this);
 	}
 
 	@Override

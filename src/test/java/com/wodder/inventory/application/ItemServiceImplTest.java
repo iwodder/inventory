@@ -25,78 +25,46 @@ class ItemServiceImplTest {
 	@Mock
 	Repository<Location> locationRepository;
 
-	@InjectMocks
 	private ItemServiceImpl storage;
 
 	@Captor
-	ArgumentCaptor<InventoryItem> argumentCaptor;
+	ArgumentCaptor<InventoryItem> inventoryItemArgumentCaptor;
 
-	@Test
-	@DisplayName("Can add new item")
-	void adds_new_item() {
-		InventoryItemModel itemData = InventoryItemModel.builder()
-				.withName("2% Milk").withCategory("Dairy")
-				.withLocation("Refrigerator").withUnitOfMeasurement("Gallon").withItemsPerCase(4)
-				.withItemPrice("1.99").withCasePrice("4.98").build();
+	@Captor
+	ArgumentCaptor<Category> categoryArgumentCaptor;
 
-		when(store.saveItem(any())).thenReturn(Optional.of(new InventoryItem(1L,"2% Milk", new Category(), new Location())));
-		when(store.loadItem(1L)).thenReturn(Optional.of(new InventoryItem(1L,"2% Milk", new Category(), new Location())));
+	@Captor
+	ArgumentCaptor<Location> locationArgumentCaptor;
 
-		Optional<InventoryItemModel> result = storage.createNewItem(itemData);
-
-		verify(store).saveItem(argumentCaptor.capture());
-
+	@BeforeEach
+	void setup() {
+		storage = new ItemServiceImpl(store, categoryRepository, locationRepository);
 	}
 
 	@Test
 	@DisplayName("Newly created item is active")
 	void new_item_is_active() {
-		when(locationRepository.loadByItem(new Location("Pantry"))).thenReturn(Optional.of(new Location("Pantry")));
-		when(categoryRepository.loadByItem(new Category("Dry Goods"))).thenReturn(Optional.of(new Category("Dry Goods")));
+		when(locationRepository.loadByItem(new Location("Pantry")))
+				.thenReturn(Optional.of(new Location("Pantry")));
+
+		when(categoryRepository.loadByItem(new Category("Dry Goods")))
+				.thenReturn(Optional.of(new Category("Dry Goods")));
+
 		InventoryItemModel model = InventoryItemModel.builder()
 				.withName("Bread")
 				.withLocation("Pantry")
 				.withCategory("Dry Goods")
+				.withUnitOfMeasurement("case")
+				.withItemPrice("5.99")
+				.withCasePrice("20.99")
 				.build();
 		storage.createNewItem(model);
-		verify(store).saveItem(argumentCaptor.capture());
-		InventoryItem i = argumentCaptor.getValue();
+		verify(store).saveItem(inventoryItemArgumentCaptor.capture());
+		InventoryItem i = inventoryItemArgumentCaptor.getValue();
 		assertEquals("Bread", i.getName());
 		assertEquals("Pantry", i.getLocation());
 		assertEquals("Dry Goods", i.getCategory());
 		assertTrue(i.isActive());
-	}
-
-	@Test
-	@DisplayName("Item without a location gets set to \"unassigned\"")
-	void no_location_provided() {
-		InventoryItemModel itemData = InventoryItemModel.builder()
-				.withName("2% Milk").build();
-		when(store.saveItem(any())).thenReturn(Optional.of(new InventoryItem(1L, "2% Milk", new Category(), new Location())));
-
-
-		Optional<InventoryItemModel> result = storage.createNewItem(itemData);
-
-		assertTrue(result.isPresent());
-		InventoryItemModel returned = result.get();
-		assertEquals(1L, returned.getId());
-		assertEquals("unassigned", returned.getLocation());
-	}
-
-	@Test
-	@DisplayName("New item shouldn't have id")
-	void add_item_with_id() {
-		InventoryItemModel itemDTO = InventoryItemModel.builder().withId(1L).build();
-
-		Optional<InventoryItemModel> result = storage.createNewItem(itemDTO);
-		assertFalse(result.isPresent());
-	}
-
-	@Test
-	@DisplayName("New item requires name")
-	void add_item_no_name() {
-		InventoryItemModel itemDTO = InventoryItemModel.builder().build();
-		assertThrows(IllegalArgumentException.class, () -> storage.createNewItem(itemDTO));
 	}
 
 	@Test
@@ -123,8 +91,8 @@ class ItemServiceImplTest {
 
 		storage.updateItemCategory(1L, "Refrigerated");
 
-		verify(store).updateItem(argumentCaptor.capture());
-		InventoryItem item = argumentCaptor.getValue();
+		verify(store).updateItem(inventoryItemArgumentCaptor.capture());
+		InventoryItem item = inventoryItemArgumentCaptor.getValue();
 		assertEquals(1L, item.getId());
 		assertEquals("2% Milk", item.getName());
 		assertEquals("Refrigerated", item.getCategory());
@@ -139,9 +107,9 @@ class ItemServiceImplTest {
 
 		storage.updateItemName(1L, "2% Low-fat Milk");
 
-		verify(store).updateItem(argumentCaptor.capture());
+		verify(store).updateItem(inventoryItemArgumentCaptor.capture());
 
-		InventoryItem item = argumentCaptor.getValue();
+		InventoryItem item = inventoryItemArgumentCaptor.getValue();
 		assertEquals(1L, item.getId());
 		assertEquals("2% Low-fat Milk", item.getName());
 		assertEquals("Dairy", item.getCategory());
@@ -225,5 +193,29 @@ class ItemServiceImplTest {
 		InventoryItemModel result = opt.get();
 		assertEquals("0.68", result.getItemPrice());
 		assertEquals("19.23", result.getCasePrice());
+	}
+
+	@Test
+	@DisplayName("Creates a category when it doesn't exist")
+	void creates_category() {
+		when(categoryRepository.loadByItem(any())).thenReturn(Optional.empty());
+		when(categoryRepository.createItem(any())).thenReturn(new Category("Frozen"));
+		when(locationRepository.loadByItem(any())).thenReturn(Optional.empty());
+		when(locationRepository.createItem(any())).thenReturn(new Location("Freezer"));
+
+		storage.createNewItem("2% Milk", "Frozen", "Refrigerator", "Gallons", 4, "2.98", "5.98");
+		verify(categoryRepository).createItem(categoryArgumentCaptor.capture());
+	}
+
+	@Test
+	@DisplayName("Creates a location when it doesn't exist")
+	void creates_location() {
+		when(categoryRepository.loadByItem(any())).thenReturn(Optional.empty());
+		when(categoryRepository.createItem(any())).thenReturn(new Category("Frozen"));
+		when(locationRepository.loadByItem(any())).thenReturn(Optional.empty());
+		when(locationRepository.createItem(any())).thenReturn(new Location("Freezer"));
+
+		storage.createNewItem("2% Milk", "Frozen", "Freezer", "Quarts", 4, "2.98", "5.98");
+		verify(locationRepository).createItem(locationArgumentCaptor.capture());
 	}
 }

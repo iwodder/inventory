@@ -3,7 +3,9 @@ package com.wodder.inventory.persistence;
 import com.wodder.inventory.domain.entities.*;
 
 public class PersistenceFactoryImpl implements PersistenceFactory {
-	private final InventoryItemRepository inventoryItemStorage = new InMemoryInventoryItemStorage();
+	private static final InventoryItemRepository inventoryItemStorage = new InMemoryInventoryItemStorage();
+	private static final InMemoryCategoryRepository categoryRepository = new InMemoryCategoryRepository();
+	private static final InMemoryLocationRepository locationRepository = new InMemoryLocationRepository();
 
 	@Override
 	public InventoryItemRepository getInventoryDataStore() {
@@ -13,9 +15,13 @@ public class PersistenceFactoryImpl implements PersistenceFactory {
 	@Override
 	public <T extends Entity> Repository<T> getRepository(Class<T> clazz) {
 		if (clazz.isAssignableFrom(Category.class)) {
-			return (Repository<T>) new InMemoryCategoryRepository();
+			@SuppressWarnings("unchecked")
+			Repository<T> c =  (Repository<T>) categoryRepository;
+			return c;
 		} else if (clazz.isAssignableFrom(Location.class)) {
-			return (Repository<T>) new InMemoryLocationRepository();
+			@SuppressWarnings("unchecked")
+			Repository<T> c =  (Repository<T>) locationRepository;
+			return c;
 		}
 		return null;
 	}

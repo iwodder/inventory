@@ -9,44 +9,99 @@
       xmlns:p="http://primefaces.org/ui">
 <ui:composition template="templates/page-template.xhtml">
     <ui:define name="panel-main">
-        <h:form>
-            <h:outputStylesheet library="stylesheets" name="manage-items.css"/>
-            <div class="data-table">
-                <p:dataTable id="itemsTable" editable="true" var="item" value="#{itemsController.allItems()}">
+        <h:form id="form">
+            <div class="card crud-demo">
+                <p:growl id="messages" showDetail="true"/>
+                <p:toolbar>
+                    <p:toolbarGroup>
+                        <p:commandButton value="New" icon="pi pi-plus" actionListener="#{itemsController.newItem}"
+                                         update=":form:manage-product-content" oncomplete="PF('manageProductDialog').show()"
+                                         styleClass="ui-button-success" style="margin-right: .5rem">
+                            <p:resetInput target=":form:manage-product-content"/>
+                        </p:commandButton>
+                    </p:toolbarGroup>
+                </p:toolbar>
+                <p:dataTable id="dt-products" widgetVar="dtProducts" var="item" value="#{itemsController.allItems()}"
+                             reflow="true" styleClass="products-table">
                     <f:facet name="header">
-                        Inventory Items
+                        <div class="products-table-header">
+                            <span style="font-weight: bold">Items</span>
+                        </div>
                     </f:facet>
-                    <p:ajax event="rowEdit" listener="#{itemsController.onRowEdit}"/>
-                    <p:column headerText="Id">
-                        <h:outputText value="#{item.id}"/>
+                    <p:column headerText="Name" sortBy="#{item.name}">
+                        <h:outputText value="#{item.name}"/>
                     </p:column>
-                    <p:column headerText="Name">
-                        <p:cellEditor>
-                            <f:facet name="output">
-                                <h:outputText value="#{item.name}"/>
-                            </f:facet>
-                            <f:facet name="input">
-                                <p:inputText id="nametxt" value="#{item.name}" style="width: 100%"/>
-                            </f:facet>
-                        </p:cellEditor>
+                    <p:column headerText="Category" sortBy="#{item.category}">
+                        <h:outputText value="#{item.category}"/>
                     </p:column>
-                    <p:column headerText="Category">
-                        <p:cellEditor>
-                            <f:facet name="output">
-                                <h:outputText value="#{item.category}" />
-                            </f:facet>
-                            <f:facet name="input">
-                                <p:inputText id="categoryTxt" value="#{item.category}" style="width: 100%"/>
-                            </f:facet>
-                        </p:cellEditor>
+                    <p:column headerText="Location" sortBy="#{item.location}">
+                        <h:outputText value="#{item.location}"/>
                     </p:column>
-                    <p:column style="width: 6em">
-                        <p:rowEditor editTitle="Edit Row" cancelTitle="Cancel" saveTitle="Save Row"/>
+                    <p:column headerText="Unit Price" sortBy="#{item.itemPrice}">
+                        <h:outputText value="#{item.itemPrice}" />
                     </p:column>
-                    <f:facet name="footer">
-                        <p:commandButton id="btnAddItem" value="Add Item"/>
-                    </f:facet>
+                    <p:column headerText="Case Price" sortBy="#{item.casePrice}">
+                        <h:outputText value="#{item.casePrice}" />
+                    </p:column>
+                    <p:column headerText="Units">
+                        <h:outputText value="#{item.units}" />
+                    </p:column>
+                    <p:column headerText="Units Per Case">
+                        <h:outputText value="#{item.unitsPerCase}" />
+                    </p:column>
                 </p:dataTable>
+                <p:dialog header="Product Details" showEffect="fade" modal="true"
+                          widgetVar="manageProductDialog" responsive="true">
+                    <p:outputPanel id="manage-product-content" class="ui-fluid">
+                        <p:outputPanel rendered="#{not empty itemsController.model}">
+                            <div class="p-field">
+                                <p:outputLabel value="Name" for="name" />
+                                <p:inputText id="name" value="#{itemsController.model.name}" required="true"/>
+                            </div>
+                            <div class="p-field">
+                                <p:outputLabel value="Category" for="@next"/>
+                                <p:autoComplete id="acSimple" value="#{itemsController.model.category}"
+                                                completeMethod="#{itemsController.completeCategory}" scrollHeight="250" required="true"/>
+                            </div>
+                            <div class="p-field">
+                                <p:outputLabel for="@next" value="Location" />
+                                <p:autoComplete id="location" value="#{itemsController.model.location}" required="true"
+                                                completeMethod="#{itemsController.completeLocation}" scrollHeight="250"/>
+                            </div>
+                            <div class="p-formgrid p-grid">
+                                <div class="p-field p-col">
+                                    <p:outputLabel for="unitPrice" value="Unit Price" />
+                                    <p:inputNumber id="unitPrice" value="#{itemsController.model.itemPrice}" required="true"
+                                                   decimalSeparator="." thousandSeparator="," decimalPlaces="2" symbol=" USD"
+                                                   symbolPosition="s" />
+                                </div>
+                                <div class="p-field p-col">
+                                    <p:outputLabel for="casePrice" value="Case Price" />
+                                    <p:inputNumber id="casePrice" value="#{itemsController.model.casePrice}" required="true"
+                                                   decimalSeparator="." thousandSeparator="," decimalPlaces="2" symbol=" USD"
+                                                   symbolPosition="s" />
+                                </div>
+                            </div>
+                            <div class="p-formgrid p-grid">
+                                <div class="p-field p-col">
+                                    <p:outputLabel for="units" value="Unit" />
+                                    <p:inputText id="units" value="#{itemsController.model.units}" required="true"/>
+                                </div>
+                                <div class="p-field p-col">
+                                    <p:outputLabel for="unitsPerCase" value="Units Per Case" />
+                                    <p:inputNumber id="unitsPerCase" value="#{itemsController.model.unitsPerCase}" required="true" decimalPlaces="0" />
+                                </div>
+                            </div>
+                        </p:outputPanel>
+                    </p:outputPanel>
+
+                    <f:facet name="footer">
+                        <p:commandButton value="Save" icon="pi pi-check" actionListener="#{itemsController.saveProduct}"
+                                         update="manage-product-content" process="manage-product-content @this"/>
+                        <p:commandButton value="Cancel" icon="pi pi-times" onclick="PF('manageProductDialog').hide()"
+                                         class="ui-button-secondary"/>
+                    </f:facet>
+                </p:dialog>
             </div>
         </h:form>
     </ui:define>

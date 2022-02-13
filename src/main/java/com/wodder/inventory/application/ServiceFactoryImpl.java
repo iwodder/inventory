@@ -17,7 +17,11 @@ public class ServiceFactoryImpl implements ServiceFactory {
 	public <T> T getService(Class<T> service) {
 		try {
 			if (service.isAssignableFrom(ItemServiceImpl.class)) {
-				return (T) new ItemServiceImpl(factory.getInventoryDataStore(), factory.getRepository(Category.class), factory.getRepository(Location.class));
+				return service.cast(new ItemServiceImpl(factory.getInventoryDataStore(), factory.getRepository(Category.class), factory.getRepository(Location.class)));
+			} else if (service.isAssignableFrom(CategoryServiceImpl.class)) {
+				return service.cast(new CategoryServiceImpl(factory.getRepository(Category.class)));
+			} else if (service.isAssignableFrom(LocationServiceImpl.class)) {
+				return service.cast(new LocationServiceImpl(factory.getRepository(Location.class)));
 			}
 		} catch (Exception e) {
 			e.printStackTrace();

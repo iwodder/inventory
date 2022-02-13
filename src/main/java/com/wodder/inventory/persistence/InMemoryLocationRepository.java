@@ -2,7 +2,9 @@ package com.wodder.inventory.persistence;
 
 import com.wodder.inventory.domain.entities.*;
 
-public class InMemoryLocationRepository extends InMemoryRepository<Location> {
+public final class InMemoryLocationRepository extends InMemoryRepository<Location> {
+
+	InMemoryLocationRepository() {};
 
 	@Override
 	public Location createItem(Location item) {

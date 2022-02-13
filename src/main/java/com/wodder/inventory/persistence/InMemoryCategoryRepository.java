@@ -4,6 +4,8 @@ import com.wodder.inventory.domain.entities.*;
 
 public final class InMemoryCategoryRepository extends InMemoryRepository<Category> {
 
+	InMemoryCategoryRepository() {};
+
 	@Override
 	public Category createItem(Category item) {
 		Category c = new Category(getNextId(), item.getName());
