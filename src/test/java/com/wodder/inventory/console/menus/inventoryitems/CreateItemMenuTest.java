@@ -78,9 +78,9 @@ class CreateItemMenuTest extends BaseMenuTest {
 	}
 
 	class TestInventoryItemModel implements com.wodder.inventory.console.models.InventoryItemModel {
-		public InventoryItemModel dto;
+		public ProductModel dto;
 
-		public Result<InventoryItemModel, String> createItem(InventoryItemModel dto) {
+		public Result<ProductModel, String> createItem(ProductModel dto) {
 			this.dto = dto;
 			dto.setId(1L);
 			if (success) {
@@ -91,17 +91,17 @@ class CreateItemMenuTest extends BaseMenuTest {
 		}
 
 		@Override
-		public Result<Boolean, String> deleteItem(InventoryItemModel itemDto) {
+		public Result<Boolean, String> deleteItem(ProductModel itemDto) {
 			return null;
 		}
 
 		@Override
-		public Result<InventoryItemModel, String> updateItem(InventoryItemModel itemDto) {
+		public Result<ProductModel, String> updateItem(ProductModel itemDto) {
 			return null;
 		}
 
 		@Override
-		public Result<List<InventoryItemModel>, String> getItems() {
+		public Result<List<ProductModel>, String> getItems() {
 			return null;
 		}
 	}

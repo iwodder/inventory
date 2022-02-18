@@ -84,9 +84,9 @@ class ViewItemHandlerTest extends BaseMenuTest {
 	}
 
 	private void mockSuccessfulReturn() {
-		List<InventoryItemModel> items = new ArrayList<>();
-		items.add(InventoryItemModel.builder().withId(1L).withName("bread").withCategory("dry").build());
-		items.add(InventoryItemModel.builder().withId(2L).withName("milk").withCategory("refrigerated").build());
+		List<ProductModel> items = new ArrayList<>();
+		items.add(ProductModel.builder().withId(1L).withName("bread").withCategory("dry").build());
+		items.add(ProductModel.builder().withId(2L).withName("milk").withCategory("refrigerated").build());
 		when(inventoryItemModel.getItems()).thenReturn(new Result<>(items, null));
 	}
 }

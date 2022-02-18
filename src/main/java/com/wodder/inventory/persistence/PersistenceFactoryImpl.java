@@ -3,12 +3,12 @@ package com.wodder.inventory.persistence;
 import com.wodder.inventory.domain.entities.*;
 
 public class PersistenceFactoryImpl implements PersistenceFactory {
-	private static final InventoryItemRepository inventoryItemStorage = new InMemoryInventoryItemStorage();
+	private static final ProductRepository inventoryItemStorage = new InMemoryProductRepository();
 	private static final InMemoryCategoryRepository categoryRepository = new InMemoryCategoryRepository();
 	private static final InMemoryLocationRepository locationRepository = new InMemoryLocationRepository();
 
 	@Override
-	public InventoryItemRepository getInventoryDataStore() {
+	public ProductRepository getInventoryDataStore() {
 		return inventoryItemStorage;
 	}
 

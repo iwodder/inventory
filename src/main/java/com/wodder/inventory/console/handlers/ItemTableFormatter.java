@@ -5,26 +5,26 @@ import com.wodder.inventory.models.*;
 import java.util.*;
 
 public class ItemTableFormatter {
-	private final List<InventoryItemModel> items;
+	private final List<ProductModel> items;
 
-	public ItemTableFormatter(List<InventoryItemModel> items) {
+	public ItemTableFormatter(List<ProductModel> items) {
 		this.items = new ArrayList<>(items);
 	}
 
 	public String formatToTable() {
 		StringBuilder output = new StringBuilder();
-		items.sort(Comparator.comparing(InventoryItemModel::getId));
+		items.sort(Comparator.comparing(ProductModel::getId));
 		int maxId = Math.max(items.stream()
-				.map(InventoryItemModel::getId)
+				.map(ProductModel::getId)
 				.mapToInt(Long::intValue)
 				.max().orElseGet(() -> 20), "ID".length());
 		int maxName = Math.max(items.stream()
-				.map(InventoryItemModel::getName)
+				.map(ProductModel::getName)
 				.max(Comparator.comparing(String::length))
 				.map(String::length)
 				.orElseGet(() -> 20), "NAME".length());
 		int maxCategory = Math.max(items.stream()
-				.map(InventoryItemModel::getCategory)
+				.map(ProductModel::getCategory)
 				.max(Comparator.comparing(String::length))
 				.map(String::length)
 				.orElseGet(() -> 20), "CATEGORY".length());
@@ -43,7 +43,7 @@ public class ItemTableFormatter {
 		output.append(System.lineSeparator());
 		output.append(rowSep);
 		output.append(System.lineSeparator());
-		for (InventoryItemModel dto : items) {
+		for (ProductModel dto : items) {
 			output.append(String.format(
 					"|%s|%s|%s|", centerText(dto.getId().toString(), maxId),
 					centerText(dto.getName(), maxName), centerText(dto.getCategory(), maxCategory)));

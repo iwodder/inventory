@@ -26,7 +26,7 @@ public class DeleteItemHandler extends InputHandler {
 			} else {
 				id = Long.parseLong(keyValues.get("ID"));
 			}
-			Result<Boolean, String> result = model.deleteItem(InventoryItemModel.builder().withId(id).build());
+			Result<Boolean, String> result = model.deleteItem(ProductModel.builder().withId(id).build());
 			if (result.isOK()) {
 				out.printf("Successfully deleted item with id of %d.%n", id);
 			} else {

@@ -15,8 +15,8 @@ class ItemTableFormatterTest {
 	@Test
 	@DisplayName("Handles data smaller than column title")
 	void smaller_than_column_title() {
-		List<InventoryItemModel> items = new ArrayList<>();
-		items.add(InventoryItemModel.builder().withId(1L).withName("bread").withCategory("dry").build());
+		List<ProductModel> items = new ArrayList<>();
+		items.add(ProductModel.builder().withId(1L).withName("bread").withCategory("dry").build());
 		ItemTableFormatter formatter = new ItemTableFormatter(items);
 		assertEquals(loadExpectedOutput("smallerColumnValue"), formatter.formatToTable());
 	}

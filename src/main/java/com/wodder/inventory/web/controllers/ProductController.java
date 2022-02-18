@@ -16,9 +16,9 @@ import java.util.stream.*;
 
 @Named
 @ViewScoped
-public class ItemsController implements Serializable {
+public class ProductController implements Serializable {
 
-	private InventoryItemModel model;
+	private ProductModel model;
 
 	transient ItemService itemService;
 	transient CategoryService categoryService;
@@ -31,7 +31,7 @@ public class ItemsController implements Serializable {
 		locationService = new ServiceFactoryImpl(new PersistenceFactoryImpl()).getService(LocationService.class);
 	}
 
-	public List<InventoryItemModel> allItems() {
+	public List<ProductModel> allItems() {
 		return itemService.loadAllActiveItems();
 	}
 
@@ -52,28 +52,28 @@ public class ItemsController implements Serializable {
 	}
 
 	public void newItem() {
-		this.model = new InventoryItemModel();
+		this.model = new ProductModel();
 	}
 
 	public void saveProduct() {
-		Optional<InventoryItemModel> item = itemService.createNewItem(
+		Optional<ProductModel> item = itemService.createNewItem(
 				model.getName(), model.getCategory(), model.getLocation(), model.getUnits(), model.getUnitsPerCase(),
 				model.getItemPrice(), model.getCasePrice());
 		if (item.isPresent()) {
-			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("Item saved successfully."));
+			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("Product saved successfully."));
 		} else {
-			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("Item not saved."));
+			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("Product not saved."));
 		}
 
 		PrimeFaces.current().executeScript("PF('manageProductDialog').hide()");
 		PrimeFaces.current().ajax().update("form:messages", "form:dt-products");
  	}
 
-	public InventoryItemModel getModel() {
+	public ProductModel getModel() {
 		return model;
 	}
 
-	public void setModel(InventoryItemModel model) {
+	public void setModel(ProductModel model) {
 		this.model = model;
 	}
 }

@@ -13,14 +13,14 @@ public class InventoryItemModelImpl implements InventoryItemModel {
 	}
 
 	@Override
-	public Result<com.wodder.inventory.models.InventoryItemModel, String> createItem(com.wodder.inventory.models.InventoryItemModel itemDto) {
-		Optional<com.wodder.inventory.models.InventoryItemModel> result = storage.createNewItem(itemDto);
-		return result.<Result<com.wodder.inventory.models.InventoryItemModel, String>>map(inventoryItemDto -> new Result<>(inventoryItemDto, null))
+	public Result<ProductModel, String> createItem(ProductModel itemDto) {
+		Optional<ProductModel> result = storage.createNewItem(itemDto);
+		return result.<Result<ProductModel, String>>map(inventoryItemDto -> new Result<>(inventoryItemDto, null))
 				.orElseGet(() -> new Result<>(null, "Unable to create new item"));
 	}
 
 	@Override
-	public Result<Boolean, String> deleteItem(com.wodder.inventory.models.InventoryItemModel itemDto) {
+	public Result<Boolean, String> deleteItem(ProductModel itemDto) {
 		boolean result = storage.deleteItem(itemDto);
 		if (result) {
 			return new Result<>(Boolean.TRUE, null);
@@ -30,15 +30,15 @@ public class InventoryItemModelImpl implements InventoryItemModel {
 	}
 
 	@Override
-	public Result<com.wodder.inventory.models.InventoryItemModel, String> updateItem(com.wodder.inventory.models.InventoryItemModel itemDto) {
-		Optional<com.wodder.inventory.models.InventoryItemModel> result = storage.updateItemCategory(itemDto.getId(), itemDto.getCategory());
-		return result.<Result<com.wodder.inventory.models.InventoryItemModel, String>>map(i -> new Result<>(i, null))
+	public Result<ProductModel, String> updateItem(ProductModel itemDto) {
+		Optional<ProductModel> result = storage.updateItemCategory(itemDto.getId(), itemDto.getCategory());
+		return result.<Result<ProductModel, String>>map(i -> new Result<>(i, null))
 				.orElseGet(() -> new Result<>(null, "Unable to update item"));
 	}
 
 	@Override
-	public Result<List<com.wodder.inventory.models.InventoryItemModel>, String> getItems() {
-		List<com.wodder.inventory.models.InventoryItemModel> items = storage.loadAllActiveItems();
+	public Result<List<ProductModel>, String> getItems() {
+		List<ProductModel> items = storage.loadAllActiveItems();
 		return items.isEmpty() ?
 				new Result<>(null, "Unable to access items") :
 				new Result<>(items, null);

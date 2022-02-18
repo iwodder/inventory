@@ -3,7 +3,7 @@ package com.wodder.inventory.models;
 import java.io.*;
 import java.util.*;
 
-public class InventoryItemModel implements Serializable {
+public class ProductModel implements Serializable {
 	private Long id;
 	private String name;
 	private String category;
@@ -14,7 +14,7 @@ public class InventoryItemModel implements Serializable {
 	private boolean active;
 	private int unitsPerCase;
 
-	private InventoryItemModel(InventoryItemModelBuilder b) {
+	private ProductModel(ProductModelBuilder b) {
 		this.id = b.id;
 		this.name = b.name;
 		this.category = b.category;
@@ -26,7 +26,7 @@ public class InventoryItemModel implements Serializable {
 		this.casePrice = b.casePrice;
 	}
 
-	public InventoryItemModel(InventoryItemModel that) {
+	public ProductModel(ProductModel that) {
 		this.id = that.id;
 		this.name = that.name;
 		this.category = that.category;
@@ -38,7 +38,7 @@ public class InventoryItemModel implements Serializable {
 		this.casePrice = that.casePrice;
 	}
 
-	public InventoryItemModel() {}
+	public ProductModel() {}
 
 	public Long getId() {
 		return id;
@@ -112,8 +112,8 @@ public class InventoryItemModel implements Serializable {
 		this.casePrice = casePrice;
 	}
 
-	public static InventoryItemModel fromMap(Map<String, String> values) {
-		InventoryItemModel result = new InventoryItemModel();
+	public static ProductModel fromMap(Map<String, String> values) {
+		ProductModel result = new ProductModel();
 		if (values != null && !values.isEmpty()) {
 			if (values.get("ID") != null) {
 				result.id = Long.parseLong(values.get("ID"));
@@ -124,11 +124,11 @@ public class InventoryItemModel implements Serializable {
 		return result;
 	}
 
-	public static InventoryItemModelBuilder builder() {
-		return new InventoryItemModelBuilder();
+	public static ProductModelBuilder builder() {
+		return new ProductModelBuilder();
 	}
 
-	public static class InventoryItemModelBuilder implements Serializable {
+	public static class ProductModelBuilder implements Serializable {
 		private Long id;
 		private String name;
 		private String category;
@@ -139,57 +139,57 @@ public class InventoryItemModel implements Serializable {
 		private int itemsPerCase;
 		private boolean active;
 
-		private InventoryItemModelBuilder() {
+		private ProductModelBuilder() {
 			//no-op
 		}
 
-		public InventoryItemModelBuilder withId(Long id) {
+		public ProductModelBuilder withId(Long id) {
 			this.id = id;
 			return this;
 		}
 
-		public InventoryItemModelBuilder withName(String name) {
+		public ProductModelBuilder withName(String name) {
 			this.name = name;
 			return this;
 		}
 
-		public InventoryItemModelBuilder withCategory(String category) {
+		public ProductModelBuilder withCategory(String category) {
 			this.category = category;
 			return this;
 		}
 
-		public InventoryItemModelBuilder withLocation(String location) {
+		public ProductModelBuilder withLocation(String location) {
 			this.location = location;
 			return this;
 		}
 
-		public InventoryItemModelBuilder withUnitOfMeasurement(String uom) {
+		public ProductModelBuilder withUnitOfMeasurement(String uom) {
 			this.units = uom;
 			return this;
 		}
 
-		public InventoryItemModelBuilder withItemsPerCase(int itemsPerCase) {
+		public ProductModelBuilder withItemsPerCase(int itemsPerCase) {
 			this.itemsPerCase = itemsPerCase;
 			return this;
 		}
 
-		public InventoryItemModelBuilder withItemPrice(String itemPrice) {
+		public ProductModelBuilder withItemPrice(String itemPrice) {
 			this.itemPrice = itemPrice;
 			return this;
 		}
 
-		public InventoryItemModelBuilder withCasePrice(String casePrice) {
+		public ProductModelBuilder withCasePrice(String casePrice) {
 			this.casePrice = casePrice;
 			return this;
 		}
 
-		public InventoryItemModelBuilder isActive(boolean active) {
+		public ProductModelBuilder isActive(boolean active) {
 			this.active = active;
 			return this;
 		}
 
-		public InventoryItemModel build() {
-			return new InventoryItemModel(this);
+		public ProductModel build() {
+			return new ProductModel(this);
 		}
 	}
 }

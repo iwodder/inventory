@@ -1,7 +1,7 @@
 package com.wodder.inventory.domain.entities;
 
 public abstract class Entity {
-	protected final Long id;
+	protected Long id;
 
 	Entity(Long id) {
 		this.id = id;
@@ -9,5 +9,9 @@ public abstract class Entity {
 
 	public Long getId() {
 		return id;
+	}
+
+	public void setId(Long id) {
+		this.id = id;
 	}
 }

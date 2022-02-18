@@ -25,13 +25,13 @@ public class CreateItemHandler extends InputHandler {
 
 	private void processNewItem(String in, PrintStream out) {
 		Map<String, String> valuesMap = MenuUtils.extractKeyValuePairs(in);
-		InventoryItemModel createdDto = InventoryItemModel.builder()
+		ProductModel createdDto = ProductModel.builder()
 				.withName(valuesMap.get("NAME"))
 				.withCategory(valuesMap.get("CATEGORY"))
 				.build();
-		Result<InventoryItemModel, String> result = itemModel.createItem(createdDto);
+		Result<ProductModel, String> result = itemModel.createItem(createdDto);
 		if (result.isOK()) {
-			InventoryItemModel newItem = result.getOk();
+			ProductModel newItem = result.getOk();
 			out.printf("Successfully created %s with id of %d%n", newItem.getName(), newItem.getId());
 		} else {
 			out.println(result.getErr());

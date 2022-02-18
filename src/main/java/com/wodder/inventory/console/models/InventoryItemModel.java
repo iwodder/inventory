@@ -6,11 +6,11 @@ import java.util.*;
 
 public interface InventoryItemModel {
 
-	Result<com.wodder.inventory.models.InventoryItemModel, String> createItem(com.wodder.inventory.models.InventoryItemModel itemDto);
+	Result<ProductModel, String> createItem(ProductModel itemDto);
 
-	Result<Boolean, String> deleteItem(com.wodder.inventory.models.InventoryItemModel itemDto);
+	Result<Boolean, String> deleteItem(ProductModel itemDto);
 
-	Result<com.wodder.inventory.models.InventoryItemModel, String> updateItem(com.wodder.inventory.models.InventoryItemModel itemDto);
+	Result<ProductModel, String> updateItem(ProductModel itemDto);
 
-	Result<List<com.wodder.inventory.models.InventoryItemModel>, String> getItems();
+	Result<List<ProductModel>, String> getItems();
 }

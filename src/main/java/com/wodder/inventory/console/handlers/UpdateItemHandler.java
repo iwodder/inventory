@@ -25,8 +25,8 @@ public class UpdateItemHandler extends InputHandler {
 
 	private void processInput(PrintStream out, PrintStream err, String line) {
 		Map<String, String> values = MenuUtils.extractKeyValuePairs(line);
-		InventoryItemModel dto = InventoryItemModel.fromMap(values);
-		Result<InventoryItemModel, String> result = model.updateItem(dto);
+		ProductModel dto = ProductModel.fromMap(values);
+		Result<ProductModel, String> result = model.updateItem(dto);
 		if (result.isOK()) {
 			out.println("Item updated successfully");
 		} else {

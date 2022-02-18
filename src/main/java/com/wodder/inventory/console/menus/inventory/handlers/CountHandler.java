@@ -1,18 +1,18 @@
 package com.wodder.inventory.console.menus.inventory.handlers;
 
-import com.wodder.inventory.application.*;
 import com.wodder.inventory.console.handlers.*;
 import com.wodder.inventory.models.*;
 
 import java.io.*;
 import java.util.*;
 
+//TODO Revisit this once the Inventory Service is done
 public class CountHandler extends InputHandler {
-	private InventoryService service;
+//	private InventoryService service;
 	private InventoryModel model;
-	public CountHandler(InventoryService service) {
-		this.service = service;
-	}
+//	public CountHandler(InventoryService service) {
+//		this.service = service;
+//	}
 
 	@Override
 	public void handleInput(Scanner input, PrintStream out, PrintStream err) {
@@ -23,7 +23,7 @@ public class CountHandler extends InputHandler {
 				break;
 			} else {
 				if (model == null) {
-					model = service.createNewInventory();
+//					model = service.createNewInventory();
 				}
 				StringBuilder sb = new StringBuilder(in);
 				sb.setCharAt(0, Character.toUpperCase(sb.charAt(0)));

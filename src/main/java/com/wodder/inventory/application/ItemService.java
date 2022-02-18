@@ -6,23 +6,23 @@ import java.util.*;
 
 public interface ItemService {
 
-	Optional<InventoryItemModel> createNewItem(InventoryItemModel newItem);
+	Optional<ProductModel> createNewItem(ProductModel newItem);
 
-	Optional<InventoryItemModel> createNewItem(String name, String category, String location, String unit, int unitsPerCase, String unitPrice, String casePrice);
+	Optional<ProductModel> createNewItem(String name, String category, String location, String unit, int unitsPerCase, String unitPrice, String casePrice);
 
-	Boolean deleteItem(InventoryItemModel itemToDelete);
+	Boolean deleteItem(ProductModel itemToDelete);
 
-	Optional<InventoryItemModel> updateItemCategory(Long inventoryItemId, String category);
+	Optional<ProductModel> updateItemCategory(Long inventoryItemId, String category);
 
-	Optional<InventoryItemModel> updateItemLocation(Long inventoryItemId, String location);
+	Optional<ProductModel> updateItemLocation(Long inventoryItemId, String location);
 
-	Optional<InventoryItemModel> updateItemName(Long inventoryItemId, String name);
+	Optional<ProductModel> updateItemName(Long inventoryItemId, String name);
 
-	Optional<InventoryItemModel> updateItemUnitOfMeasurement(Long inventoryItemId, String unitOfMeasurement, Integer unitsPerCase);
+	Optional<ProductModel> updateItemUnitOfMeasurement(Long inventoryItemId, String unitOfMeasurement, Integer unitsPerCase);
 
-	Optional<InventoryItemModel> updateItemPrice(Long inventoryItemId, String unitPrice, String casePrice);
+	Optional<ProductModel> updateItemPrice(Long inventoryItemId, String unitPrice, String casePrice);
 
-	Optional<InventoryItemModel> loadItem(Long itemId);
+	Optional<ProductModel> loadItem(Long itemId);
 
-	List<InventoryItemModel> loadAllActiveItems();
+	List<ProductModel> loadAllActiveItems();
 }

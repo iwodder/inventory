@@ -7,3 +7,8 @@ Domain package contains services which perform the business logic/rules
 
 TODO Create perform inventory count menu
 TODO Determine if DTOs should be continued or eliminated
+
+
+
+Note: Inventory - is an aggregate root
+         Unique inventory id maps to a product id which maps to a count

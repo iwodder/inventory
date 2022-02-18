@@ -11,9 +11,17 @@ public class InventoryModel {
 
 	private LocalDate inventoryDate;
 	private final List<InventoryCountModel> inventoryItemModels;
+	private final String state;
+	private final Long id;
+
+	public InventoryModel(Long id, String state) {
+		this.id = id;
+		this.state = state;
+		inventoryItemModels = new ArrayList<>();
+	}
 
 	public InventoryModel() {
-		inventoryItemModels = new ArrayList<>();
+		this(0L, "OPEN");
 	}
 
 	public void addInventoryCountModel(InventoryCountModel itemModel) {
@@ -38,5 +46,13 @@ public class InventoryModel {
 
 	public Iterator<InventoryCountModel> itemsByLocation(String location) {
 		return inventoryItemModels.stream().filter(i -> locationFilter.test(location, i)).iterator();
+	}
+
+	public String getState() {
+		return state;
+	}
+
+	public Long getId() {
+		return id;
 	}
 }

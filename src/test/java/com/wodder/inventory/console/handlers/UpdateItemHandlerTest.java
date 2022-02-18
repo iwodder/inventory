@@ -15,7 +15,7 @@ import static org.mockito.Mockito.*;
 class UpdateItemHandlerTest extends BaseMenuTest {
 
 	@Captor
-	ArgumentCaptor<InventoryItemModel> captor;
+	ArgumentCaptor<ProductModel> captor;
 
 	@Mock
 	com.wodder.inventory.console.models.InventoryItemModel model;
@@ -26,13 +26,13 @@ class UpdateItemHandlerTest extends BaseMenuTest {
 	@Test
 	@DisplayName("Can update an item with only id and name")
 	void updateItem() {
-		when(model.updateItem(any())).thenReturn(new Result<>(InventoryItemModel.builder().build(), null));
+		when(model.updateItem(any())).thenReturn(new Result<>(ProductModel.builder().build(), null));
 		setChars("id=1 name=milk");
 		UpdateItemHandler handler = new UpdateItemHandler(model);
 		handler.handleInput(in, out, err);
 		verify(model).updateItem(captor.capture());
 
-		InventoryItemModel dto = captor.getValue();
+		ProductModel dto = captor.getValue();
 		assertNotNull(dto);
 		assertEquals(1L, dto.getId());
 		assertEquals("milk", dto.getName());
@@ -42,13 +42,13 @@ class UpdateItemHandlerTest extends BaseMenuTest {
 	@Test
 	@DisplayName("Can update an item with only id and category")
 	void updateItem1() {
-		when(model.updateItem(any())).thenReturn(new Result<>(InventoryItemModel.builder().build(), null));
+		when(model.updateItem(any())).thenReturn(new Result<>(ProductModel.builder().build(), null));
 		setChars("id=1 category=refrigerated");
 		UpdateItemHandler handler = new UpdateItemHandler(model);
 		handler.handleInput(in, out, err);
 		verify(model).updateItem(captor.capture());
 
-		InventoryItemModel dto = captor.getValue();
+		ProductModel dto = captor.getValue();
 		assertNotNull(dto);
 		assertEquals(1L, dto.getId());
 		assertEquals("refrigerated", dto.getCategory());

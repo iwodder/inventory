@@ -4,7 +4,7 @@ import com.wodder.inventory.models.*;
 
 import java.math.*;
 
-public class InventoryItem {
+public class Product {
 	private Long id;
 	private String name;
 	private Category category;
@@ -13,31 +13,31 @@ public class InventoryItem {
 	private Price price;
 	private boolean active;
 
-	public InventoryItem(String name, Category category, Location location) {
+	public Product(String name, Category category, Location location) {
 		this(null, name, category, location, true, null, null);
 	}
 
-	public InventoryItem(String name, Category category, Location location, UnitOfMeasurement unitOfMeasurement, Price price) {
+	public Product(String name, Category category, Location location, UnitOfMeasurement unitOfMeasurement, Price price) {
 		this(null, name, category, location, true, unitOfMeasurement, price);
 	}
 
-	public InventoryItem(Long id, String name, Category category, Location location) {
+	public Product(Long id, String name, Category category, Location location) {
 		this(id, name, category, location, true, null, null);
 	}
 
-	public InventoryItem(Long id, String name, Category category, Location location, Boolean active) {
+	public Product(Long id, String name, Category category, Location location, Boolean active) {
 		this(id, name, category, location, active, null, null);
 	}
 	
-	public InventoryItem(Long id, String name, Category category, Location location, UnitOfMeasurement uom) {
+	public Product(Long id, String name, Category category, Location location, UnitOfMeasurement uom) {
 		this(id, name, category, location, true, uom, null);
 	}
 
-	public InventoryItem(Long id, String name, Category category, Location location, UnitOfMeasurement uom, Price price) {
+	public Product(Long id, String name, Category category, Location location, UnitOfMeasurement uom, Price price) {
 		this(id, name, category, location, true, uom, price);
 	}
 
-	public InventoryItem(InventoryItem that) {
+	public Product(Product that) {
 		this.id = that.id;
 		this.name = that.name;
 		this.category = that.category;
@@ -47,7 +47,7 @@ public class InventoryItem {
 		this.price = that.price;
 	}
 
-	private InventoryItem(Long id, String name, Category c, Location l, Boolean a, UnitOfMeasurement u, Price p) {
+	private Product(Long id, String name, Category c, Location l, Boolean a, UnitOfMeasurement u, Price p) {
 		this.id = id;
 		setName(name);
 		setCategory(c);
@@ -156,7 +156,7 @@ public class InventoryItem {
 		if (this == o) return true;
 		if (o == null || getClass() != o.getClass()) return false;
 
-		InventoryItem that = (InventoryItem) o;
+		Product that = (Product) o;
 
 		return getName().equals(that.getName());
 	}
@@ -166,8 +166,8 @@ public class InventoryItem {
 		return name.hashCode();
 	}
 
-	public InventoryItemModel toItemModel() {
-		InventoryItemModel.InventoryItemModelBuilder b = InventoryItemModel.builder()
+	public ProductModel toItemModel() {
+		ProductModel.ProductModelBuilder b = ProductModel.builder()
 				.withId(this.id)
 				.withName(this.name)
 				.withCategory(this.category.getName())

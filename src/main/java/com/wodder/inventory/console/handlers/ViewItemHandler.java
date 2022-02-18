@@ -16,11 +16,11 @@ public class ViewItemHandler extends InputHandler {
 	public void handleInput(Scanner input, PrintStream out, PrintStream err) {
 		String in = input.nextLine();
 		if ("all".equalsIgnoreCase(in)) {
-			Result<List<InventoryItemModel>, String> result = model.getItems();
+			Result<List<ProductModel>, String> result = model.getItems();
 			if (result.isErr()) {
 				err.println(result.getErr());
 			} else {
-				List<InventoryItemModel> items = result.getOk();
+				List<ProductModel> items = result.getOk();
 				ItemTableFormatter formatter = new ItemTableFormatter(items);
 				out.print(formatter.formatToTable());
 			}
