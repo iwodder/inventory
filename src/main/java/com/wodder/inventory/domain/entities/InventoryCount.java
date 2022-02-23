@@ -2,14 +2,14 @@ package com.wodder.inventory.domain.entities;
 
 import com.wodder.inventory.models.*;
 
-public class Count {
+public class InventoryCount {
 	private final Long itemId;
 	private final String name;
 	private final String category;
 	private final String location;
 	private int count;
 
-	public Count(Long itemId, String name, String category, String location, Integer count) {
+	public InventoryCount(Long itemId, String name, String category, String location, Integer count) {
 		this.itemId = itemId;
 		this.name = name;
 		this.category = category;
@@ -17,15 +17,15 @@ public class Count {
 		setCount(count);
 	}
 
-	public Count(Long itemId, String name, String category, String location) {
+	public InventoryCount(Long itemId, String name, String category, String location) {
 		this(itemId, name, category, location, 0);
 	}
 
-	public Count(Count that) {
+	public InventoryCount(InventoryCount that) {
 		this(that.getItemId(), that.getName(), that.getCategory(), that.getLocation(), that.getCount());
 	}
 
-	public Count(InventoryCountModel model) {
+	public InventoryCount(InventoryCountModel model) {
 		this(model.getItemId(), model.getName(), model.getCategory(), model.getLocation(), model.getCount());
 	}
 

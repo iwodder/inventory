@@ -13,14 +13,14 @@ public class PersistenceFactoryImpl implements PersistenceFactory {
 	}
 
 	@Override
-	public <T extends Entity> Repository<T> getRepository(Class<T> clazz) {
+	public <T extends Entity<U>, U> Repository<T, U> getRepository(Class<T> clazz) {
 		if (clazz.isAssignableFrom(Category.class)) {
 			@SuppressWarnings("unchecked")
-			Repository<T> c =  (Repository<T>) categoryRepository;
+			Repository<T, U> c =  (Repository<T, U>) categoryRepository;
 			return c;
 		} else if (clazz.isAssignableFrom(Location.class)) {
 			@SuppressWarnings("unchecked")
-			Repository<T> c =  (Repository<T>) locationRepository;
+			Repository<T, U> c =  (Repository<T, U>) locationRepository;
 			return c;
 		}
 		return null;

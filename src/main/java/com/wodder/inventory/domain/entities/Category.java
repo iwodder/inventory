@@ -4,23 +4,23 @@ import com.wodder.inventory.models.*;
 
 import java.util.*;
 
-public class Category extends Entity {
+public class Category extends Entity<CategoryId> {
 	private static final String DEFAULT_NAME = "unassigned";
 	private String name;
 
 	public Category() {
-		this(0L, DEFAULT_NAME);
+		this(DEFAULT_NAME);
 	}
 
 	public Category(String name) {
-		this(0L, name);
+		this(new CategoryId(), name);
 	}
 
 	public Category(Category that) {
 		this(that.getId(), that.getName());
 	}
 
-	public Category(Long id, String name) {
+	public Category(CategoryId id, String name) {
 		super(id);
 		setName(name);
 	}

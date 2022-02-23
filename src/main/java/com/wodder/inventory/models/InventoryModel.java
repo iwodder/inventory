@@ -12,16 +12,16 @@ public class InventoryModel {
 	private LocalDate inventoryDate;
 	private final List<InventoryCountModel> inventoryItemModels;
 	private final String state;
-	private final Long id;
+	private final String id;
 
-	public InventoryModel(Long id, String state) {
+	public InventoryModel(String id, String state) {
 		this.id = id;
 		this.state = state;
 		inventoryItemModels = new ArrayList<>();
 	}
 
 	public InventoryModel() {
-		this(0L, "OPEN");
+		this("", "OPEN");
 	}
 
 	public void addInventoryCountModel(InventoryCountModel itemModel) {
@@ -52,7 +52,7 @@ public class InventoryModel {
 		return state;
 	}
 
-	public Long getId() {
+	public String getId() {
 		return id;
 	}
 }

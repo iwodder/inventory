@@ -19,7 +19,7 @@ class CountMenuTest extends BaseMenuTest {
 	void printMenu() {
 		CountMenu menu = new CountMenu(countHandler);
 		menu.printMenu(out);
-		String expected = String.format("====== Count Inventory ======%nChoose a location to count, enter on-hand values.%nEnter \"exit\" to leave menu.%n");
+		String expected = String.format("====== InventoryCount Inventory ======%nChoose a location to count, enter on-hand values.%nEnter \"exit\" to leave menu.%n");
 		assertEquals(expected, baosOut.toString());
 	}
 }

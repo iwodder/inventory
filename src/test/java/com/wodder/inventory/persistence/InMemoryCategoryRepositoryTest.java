@@ -9,20 +9,22 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class InMemoryCategoryRepositoryTest {
 
-	static Repository<Category> categoryRepository;
-
+	static Repository<Category, CategoryId> categoryRepository;
+	static Category dairy = new Category("Dairy");
+	static Category dryGoods = new Category("Dry Goods");
+	static Category meats = new Category("Meats");
 	@BeforeAll
 	static void setupAll() {
 		categoryRepository = new InMemoryCategoryRepository();
-		categoryRepository.createItem(new Category("Dairy"));
-		categoryRepository.createItem(new Category("Dry Goods"));
-		categoryRepository.createItem(new Category("Meats"));
+		categoryRepository.createItem(dairy);
+		categoryRepository.createItem(dryGoods);
+		categoryRepository.createItem(meats);
 	}
 
 	@Test
 	@DisplayName("Can load a particular category by id")
 	void load() {
-		Optional<Category> result = categoryRepository.loadById(1L);
+		Optional<Category> result = categoryRepository.loadById(dairy.getId());
 		assertTrue(result.isPresent());
 		assertEquals(new Category("Dairy"), result.get());
 	}
@@ -61,6 +63,6 @@ class InMemoryCategoryRepositoryTest {
 	@Test
 	@DisplayName("Trying to load a category with an invalid id returns empty")
 	void doesnt_exist() {
-		assertTrue(categoryRepository.loadById(5L).isEmpty());
+		assertTrue(categoryRepository.loadById(CategoryId.generateId()).isEmpty());
 	}
 }

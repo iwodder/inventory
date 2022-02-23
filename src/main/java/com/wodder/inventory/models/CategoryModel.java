@@ -4,11 +4,15 @@ import com.wodder.inventory.domain.entities.*;
 
 public class CategoryModel {
 	private String name;
-	private Long id;
+	private String id;
+
+	public CategoryModel() {
+
+	}
 
 	public CategoryModel(Category category) {
 		this.name = category.getName();
-		this.id = category.getId();
+		this.id = category.getId().getId();
 	}
 
 	public String getName() {
@@ -19,11 +23,11 @@ public class CategoryModel {
 		this.name = name;
 	}
 
-	public Long getId() {
+	public String getId() {
 		return id;
 	}
 
-	public void setId(Long id) {
+	public void setId(String id) {
 		this.id = id;
 	}
 

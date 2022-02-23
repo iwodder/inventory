@@ -11,11 +11,11 @@ class CountTest {
 	@DisplayName("Inventory must be created with positive count value")
 	void positive_count() {
 		assertThrows(IllegalArgumentException.class, () -> {
-			new Count(null, null, null, null, -1);
+			new InventoryCount(null, null, null, null, -1);
 		});
 
 		assertThrows(IllegalArgumentException.class, () -> {
-			new Count(new InventoryCountModel(null, null,null,null, -1));
+			new InventoryCount(new InventoryCountModel(null, null,null,null, -1));
 		});
 	}
 }

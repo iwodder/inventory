@@ -1,17 +1,14 @@
 package com.wodder.inventory.domain.entities;
 
-public abstract class Entity {
-	protected Long id;
+public abstract class Entity<T> {
+	protected Long databaseId;
+	protected T id;
 
-	Entity(Long id) {
+	Entity(T id) {
 		this.id = id;
 	}
 
-	public Long getId() {
+	public T getId() {
 		return id;
-	}
-
-	public void setId(Long id) {
-		this.id = id;
 	}
 }

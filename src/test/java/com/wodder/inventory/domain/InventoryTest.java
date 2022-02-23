@@ -21,7 +21,7 @@ class InventoryTest {
 	@DisplayName("Inventory tracks total counted items")
 	void total_items() {
 		Inventory inventory = new Inventory();
-		inventory.addInventoryCount(new Count(1L, "2% Milk", "Refrigerated", "Refrigerator", 1));
+		inventory.addInventoryCount(new InventoryCount(1L, "2% Milk", "Refrigerated", "Refrigerator", 1));
 		assertEquals(1, inventory.numberOfItems());
 	}
 
@@ -29,7 +29,7 @@ class InventoryTest {
 	@DisplayName("Can add count to inventory")
 	void add_item() {
 		Inventory inventory = new Inventory();
-		inventory.addInventoryCount(new Count(1L, "2% Milk", "Refrigerator", "Refrigerator", 5));
+		inventory.addInventoryCount(new InventoryCount(1L, "2% Milk", "Refrigerator", "Refrigerator", 5));
 		assertEquals(1, inventory.numberOfItems());
 	}
 
@@ -37,8 +37,8 @@ class InventoryTest {
 	@DisplayName("Can add multiple counts with same category")
 	void add_items() {
 		Inventory inventory = new Inventory();
-		inventory.addInventoryCount(new Count(1L, "2% Milk", "Refrigerator", "Refrigerator", 3));
-		inventory.addInventoryCount(new Count(1L, "Cheese", "Refrigerator", "Refrigerator", 4));
+		inventory.addInventoryCount(new InventoryCount(1L, "2% Milk", "Refrigerator", "Refrigerator", 3));
+		inventory.addInventoryCount(new InventoryCount(1L, "Cheese", "Refrigerator", "Refrigerator", 4));
 		assertEquals(2, inventory.numberOfItems());
 	}
 
@@ -46,8 +46,8 @@ class InventoryTest {
 	@DisplayName("Can get counts by category")
 	void get_item() {
 		Inventory i = new Inventory();
-		i.addInventoryCount(new Count(1L, "2% Milk", "Refrigerated", "Refrigerator", 0));
-		i.addInventoryCount(new Count(2L, "Bread", "Dry", "Refrigerator", 3));
+		i.addInventoryCount(new InventoryCount(1L, "2% Milk", "Refrigerated", "Refrigerator", 0));
+		i.addInventoryCount(new InventoryCount(2L, "Bread", "Dry", "Refrigerator", 3));
 		assertEquals(1, i.getItemsByCategory("refrigerated").size());
 		assertEquals(1, i.getItemsByCategory("dry").size());
 		assertEquals(0, i.getItemsByCategory("frozen").size());
@@ -57,14 +57,14 @@ class InventoryTest {
 	@DisplayName("Copy constructor makes a deep copy of counts")
 	void deep_copy() {
 		Inventory i = new Inventory();
-		i.addInventoryCount(new Count(1L, "2% Milk", "Refrigerated", "Refrigerator", 4));
-		i.addInventoryCount(new Count(2L, "Bread", "Dry", "Refrigerator", 5));
+		i.addInventoryCount(new InventoryCount(1L, "2% Milk", "Refrigerated", "Refrigerator", 4));
+		i.addInventoryCount(new InventoryCount(2L, "Bread", "Dry", "Refrigerator", 5));
 
 		Inventory i2 = new Inventory(i);
 		assertNotSame(i, i2);
 		assertEquals(i.numberOfItems(), i2.numberOfItems());
-		Count item = i.getCount("2% Milk").get();
-		Count item2 = i2.getCount("2% Milk").get();
+		InventoryCount item = i.getCount("2% Milk").get();
+		InventoryCount item2 = i2.getCount("2% Milk").get();
 		assertNotSame(item, item2);
 	}
 
@@ -101,7 +101,7 @@ class InventoryTest {
 	void add_when_closed() {
 		Inventory i = new Inventory();
 		i.finish();
-		assertThrows(IllegalStateException.class, () -> i.addInventoryCount(new Count(1L, "2% Milk", "Refrigerated", "Refrigerator", 4)));
+		assertThrows(IllegalStateException.class, () -> i.addInventoryCount(new InventoryCount(1L, "2% Milk", "Refrigerated", "Refrigerator", 4)));
 	}
 
 }

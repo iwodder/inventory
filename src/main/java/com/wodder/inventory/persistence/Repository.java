@@ -4,9 +4,9 @@ import com.wodder.inventory.domain.entities.*;
 
 import java.util.*;
 
-public interface Repository<T extends Entity> {
+public interface Repository<T extends Entity<U>, U> {
 
-	Optional<T> loadById(Long id);
+	Optional<T> loadById(U id);
 
 	Optional<T> loadByItem(T item);
 
@@ -16,7 +16,7 @@ public interface Repository<T extends Entity> {
 
 	T createItem(T item);
 
-	void deleteItem(Long id);
+	void deleteItem(U id);
 
 	void deleteItem(T item);
 }

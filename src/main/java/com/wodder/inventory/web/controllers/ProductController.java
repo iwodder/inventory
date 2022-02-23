@@ -19,6 +19,7 @@ import java.util.stream.*;
 public class ProductController implements Serializable {
 
 	private ProductModel model;
+	private CategoryModel categoryModel;
 
 	transient ItemService itemService;
 	transient CategoryService categoryService;
@@ -55,6 +56,10 @@ public class ProductController implements Serializable {
 		this.model = new ProductModel();
 	}
 
+	public void newCategory() {
+		this.categoryModel = new CategoryModel();
+	}
+
 	public void saveProduct() {
 		Optional<ProductModel> item = itemService.createNewItem(
 				model.getName(), model.getCategory(), model.getLocation(), model.getUnits(), model.getUnitsPerCase(),
@@ -67,7 +72,20 @@ public class ProductController implements Serializable {
 
 		PrimeFaces.current().executeScript("PF('manageProductDialog').hide()");
 		PrimeFaces.current().ajax().update("form:messages", "form:dt-products");
- 	}
+	}
+
+	public void saveCategory() {
+		Optional<CategoryModel> category = categoryService.createCategory(categoryModel.getName());
+
+		if (category.isPresent()) {
+			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("Category saved successfully."));
+		} else {
+			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("Category not saved."));
+		}
+
+		PrimeFaces.current().executeScript("PF('manageCategoryDialog').hide()");
+		PrimeFaces.current().ajax().update("form:messages");
+	}
 
 	public ProductModel getModel() {
 		return model;
@@ -75,5 +93,13 @@ public class ProductController implements Serializable {
 
 	public void setModel(ProductModel model) {
 		this.model = model;
+	}
+
+	public CategoryModel getCategoryModel() {
+		return categoryModel;
+	}
+
+	public void setCategoryModel(CategoryModel categoryModel) {
+		this.categoryModel = categoryModel;
 	}
 }

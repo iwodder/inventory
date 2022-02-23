@@ -9,9 +9,9 @@ import java.util.stream.*;
 
 public class LocationServiceImpl implements LocationService {
 
-	private final Repository<Location> locationRepository;
+	private final Repository<Location, LocationId> locationRepository;
 
-	LocationServiceImpl(Repository<Location> locationRepository) {
+	LocationServiceImpl(Repository<Location, LocationId> locationRepository) {
 		this.locationRepository = locationRepository;
 	}
 
@@ -23,12 +23,7 @@ public class LocationServiceImpl implements LocationService {
 
 	@Override
 	public Optional<LocationModel> loadLocation(String id) {
-		try {
-			return locationRepository.loadById(Long.parseLong(id)).map(Location::toModel);
-		} catch (NumberFormatException e) {
-			//TODO: Warn number couldn't be parsed
-			return Optional.empty();
-		}
+		return locationRepository.loadById(LocationId.LocationIdOf(id)).map(Location::toModel);
 	}
 
 	@Override

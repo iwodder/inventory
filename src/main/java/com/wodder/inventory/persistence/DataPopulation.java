@@ -12,13 +12,13 @@ public class DataPopulation {
 	@PostConstruct
 	void init() {
 		PersistenceFactoryImpl impl = new PersistenceFactoryImpl();
-		Repository<Location> locationRepo = impl.getRepository(Location.class);
+		Repository<Location, LocationId> locationRepo = impl.getRepository(Location.class);
 		locationRepo.createItem(new Location("Pantry"));
 		locationRepo.createItem(new Location("Refrigerator"));
 		locationRepo.createItem(new Location("Freezer"));
 		locationRepo.createItem(new Location("Laundry Room"));
 
-		Repository<Category> categoryRepo = impl.getRepository(Category.class);
+		Repository<Category, CategoryId> categoryRepo = impl.getRepository(Category.class);
 		categoryRepo.createItem(new Category("Frozen"));
 		categoryRepo.createItem(new Category("Dairy"));
 		categoryRepo.createItem(new Category("Meats"));

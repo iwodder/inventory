@@ -6,10 +6,10 @@ import java.time.*;
 import java.util.*;
 import java.util.function.*;
 
-public class Inventory extends Entity {
+public class Inventory extends Entity<InventoryId> {
 	private final LocalDate date;
-	private final Map<String, List<Count>> items;
-	private final BiPredicate<Count, String> nameFilter = (Count i, String name) -> {
+	private final Map<String, List<InventoryCount>> items;
+	private final BiPredicate<InventoryCount, String> nameFilter = (InventoryCount i, String name) -> {
 		if (i.getName() != null) {
 			return i.getName().equals(name);
 		} else {
@@ -19,14 +19,14 @@ public class Inventory extends Entity {
 	private InventoryState state;
 
 	public Inventory() {
-		this(0L, LocalDate.now(), InventoryState.OPEN);
+		this(LocalDate.now());
 	}
 
 	public Inventory(LocalDate date) {
-		this(0L, date, null);
+		this(new InventoryId(), date, InventoryState.OPEN);
 	}
 
-	private Inventory(Long id, LocalDate date, InventoryState state) {
+	private Inventory(InventoryId id, LocalDate date, InventoryState state) {
 		super(id);
 		items = new HashMap<>();
 		this.date = date;
@@ -34,11 +34,11 @@ public class Inventory extends Entity {
 	}
 
 	public Inventory(InventoryModel model) {
-		super(model.getId());
+		super(InventoryId.inventoryIdOf(model.getId()));
 		this.state = InventoryState.valueOf(model.getState());
 		this.date = model.getInventoryDate();
 		this.items = new HashMap<>();
-		model.items().map(Count::new).forEach(this::addInventoryCount);
+		model.items().map(InventoryCount::new).forEach(this::addInventoryCount);
 	}
 
 	public Inventory(Inventory that) {
@@ -46,9 +46,9 @@ public class Inventory extends Entity {
 		this.date = that.date;
 		this.items = new HashMap<>();
 		for (String i : that.items.keySet()) {
-			List<Count> newItems = new ArrayList<>();
-			for (Count cnt : that.items.get(i)) {
-				newItems.add(new Count(cnt));
+			List<InventoryCount> newItems = new ArrayList<>();
+			for (InventoryCount cnt : that.items.get(i)) {
+				newItems.add(new InventoryCount(cnt));
 			}
 			this.items.put(i, newItems);
 		}
@@ -58,7 +58,7 @@ public class Inventory extends Entity {
 		return date;
 	}
 
-	public void addInventoryCount(Count item) {
+	public void addInventoryCount(InventoryCount item) {
 		state.addCount(items, item);
 	}
 
@@ -66,7 +66,7 @@ public class Inventory extends Entity {
 		return items.values().stream().mapToInt(List::size).sum();
 	}
 
-	public List<Count> getItemsByCategory(String category) {
+	public List<InventoryCount> getItemsByCategory(String category) {
 		if (items.containsKey(category.toUpperCase())) {
 			return Collections.unmodifiableList(items.get(category.toUpperCase()));
 		} else {
@@ -74,7 +74,7 @@ public class Inventory extends Entity {
 		}
 	}
 
-	public Optional<Count> getCount(String name) {
+	public Optional<InventoryCount> getCount(String name) {
 		return items.values().stream()
 				.flatMap(List::stream)
 				.filter(item -> nameFilter.test(item, name))
@@ -94,11 +94,11 @@ public class Inventory extends Entity {
 	}
 
 	public InventoryModel toModel() {
-		InventoryModel result = new InventoryModel(id, state.name());
+		InventoryModel result = new InventoryModel(id.getId(), state.name());
 		result.setInventoryDate(date);
 		items.values().stream()
 				.flatMap(List::stream)
-				.map(Count::toModel)
+				.map(InventoryCount::toModel)
 				.forEach(result::addInventoryCountModel);
 
 		return result;
@@ -125,13 +125,13 @@ public class Inventory extends Entity {
 			}
 
 			@Override
-			void addCount(Map<String, List<Count>> items, Count item) {
+			void addCount(Map<String, List<InventoryCount>> items, InventoryCount item) {
 				if (item == null) return;
 				String key = item.getCategory().toUpperCase();
 				if (items.containsKey(key)) {
 					items.get(key).add(item);
 				} else {
-					List<Count> i = new ArrayList<>();
+					List<InventoryCount> i = new ArrayList<>();
 					i.add(item);
 					items.put(key, i);
 				}
@@ -144,13 +144,13 @@ public class Inventory extends Entity {
 			}
 
 			@Override
-			void addCount(Map<String, List<Count>> items, Count item) {
+			void addCount(Map<String, List<InventoryCount>> items, InventoryCount item) {
 				throw new IllegalStateException("Cannot add a new count to a closed inventory");
 			}
 		};
 
 		abstract boolean isOpen();
 
-		abstract void addCount(Map<String, List<Count>> items, Count item);
+		abstract void addCount(Map<String, List<InventoryCount>> items, InventoryCount item);
 	}
 }

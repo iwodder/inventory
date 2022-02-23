@@ -2,7 +2,7 @@ package com.wodder.inventory.domain.entities;
 
 import com.wodder.inventory.models.*;
 
-public class Location extends Entity {
+public class Location extends Entity<LocationId> {
 	private static final String DEFAULT_VALUE = "unassigned";
 	private String name;
 
@@ -11,14 +11,14 @@ public class Location extends Entity {
 	}
 
 	public Location(String name) {
-		this(0L, name);
+		this(new LocationId(), name);
 	}
 
 	public Location(Location that) {
 		this(that.getId(), that.getName());
 	}
 
-	public Location(Long id, String name) {
+	public Location(LocationId id, String name) {
 		super(id);
 		setName(name);
 	}

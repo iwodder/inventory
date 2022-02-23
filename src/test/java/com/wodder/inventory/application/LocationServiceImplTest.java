@@ -17,7 +17,7 @@ import static org.mockito.Mockito.*;
 class LocationServiceImplTest {
 
 	@Mock
-	Repository<Location> locationRepository;
+	Repository<Location, LocationId> locationRepository;
 
 	@InjectMocks
 	LocationServiceImpl locationService;
@@ -37,7 +37,7 @@ class LocationServiceImplTest {
 	@Test
 	void load_location() {
 		locationService.loadLocation("1");
-		verify(locationRepository).loadById(1L);
+		verify(locationRepository).loadById(LocationId.LocationIdOf("1"));
 	}
 
 	@Test

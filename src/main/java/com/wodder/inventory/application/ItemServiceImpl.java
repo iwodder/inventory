@@ -10,10 +10,10 @@ import java.util.stream.*;
 class ItemServiceImpl implements ItemService {
 
 	private final ProductRepository productRepository;
-	private final Repository<Category> categoryRepository;
-	private final Repository<Location> locationRepository;
+	private final Repository<Category, CategoryId> categoryRepository;
+	private final Repository<Location, LocationId> locationRepository;
 
-	ItemServiceImpl(ProductRepository itemRepository, Repository<Category> categoryRepository, Repository<Location> locationRepository) {
+	ItemServiceImpl(ProductRepository itemRepository, Repository<Category, CategoryId> categoryRepository, Repository<Location, LocationId> locationRepository) {
 		this.productRepository = itemRepository;
 		this.categoryRepository = categoryRepository;
 		this.locationRepository = locationRepository;

@@ -20,7 +20,7 @@ class PersistenceFactoryImplTest {
 	@DisplayName("Providing the class returns the correct data store")
 	void data_store() {
 		PersistenceFactory factory = new PersistenceFactoryImpl();
-		Repository<Category> c = factory.getRepository(Category.class);
+		Repository<Category, CategoryId> c = factory.getRepository(Category.class);
 		assertNotNull(c);
 		assertTrue(c instanceof InMemoryCategoryRepository);
 	}

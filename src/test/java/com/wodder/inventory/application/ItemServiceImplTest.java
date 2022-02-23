@@ -20,10 +20,10 @@ class ItemServiceImplTest {
 	private ProductRepository store;
 
 	@Mock
-	Repository<Category> categoryRepository;
+	Repository<Category, CategoryId> categoryRepository;
 
 	@Mock
-	Repository<Location> locationRepository;
+	Repository<Location, LocationId> locationRepository;
 
 	private ItemServiceImpl storage;
 

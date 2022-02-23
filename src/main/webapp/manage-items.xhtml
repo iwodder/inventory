@@ -14,10 +14,19 @@
                 <p:growl id="messages" showDetail="true"/>
                 <p:toolbar>
                     <p:toolbarGroup>
-                        <p:commandButton value="New" icon="pi pi-plus" actionListener="#{productController.newItem}"
-                                         update=":form:manage-product-content" oncomplete="PF('manageProductDialog').show()"
+                        <p:commandButton value="New Product" icon="pi pi-plus"
+                                         actionListener="#{productController.newItem}"
+                                         update=":product:manage-product-content"
+                                         oncomplete="PF('addProduct').show()"
                                          styleClass="ui-button-success" style="margin-right: .5rem">
-                            <p:resetInput target=":form:manage-product-content"/>
+                            <p:resetInput target=":product:manage-product-content"/>
+                        </p:commandButton>
+                        <p:commandButton value="New Category" icon="pi pi-plus"
+                                         actionListener="#{productController.newCategory}"
+                                         update=":category:manage-category-content"
+                                         oncomplete="PF('addCategory').show()"
+                                         styleClass="ui-button-success" style="margin-right: .5rem">
+                            <p:resetInput target=":category:manage-category-content"/>
                         </p:commandButton>
                     </p:toolbarGroup>
                 </p:toolbar>
@@ -38,72 +47,115 @@
                         <h:outputText value="#{item.location}"/>
                     </p:column>
                     <p:column headerText="Unit Price" sortBy="#{item.itemPrice}">
-                        <h:outputText value="#{item.itemPrice}" />
+                        <h:outputText value="#{item.itemPrice}"/>
                     </p:column>
                     <p:column headerText="Case Price" sortBy="#{item.casePrice}">
-                        <h:outputText value="#{item.casePrice}" />
+                        <h:outputText value="#{item.casePrice}"/>
                     </p:column>
                     <p:column headerText="Units">
-                        <h:outputText value="#{item.units}" />
+                        <h:outputText value="#{item.units}"/>
                     </p:column>
                     <p:column headerText="Units Per Case">
-                        <h:outputText value="#{item.unitsPerCase}" />
+                        <h:outputText value="#{item.unitsPerCase}"/>
                     </p:column>
                 </p:dataTable>
-                <p:dialog header="Product Details" showEffect="fade" modal="true"
-                          widgetVar="manageProductDialog" responsive="true">
+            </div>
+        </h:form>
+        <div>
+            <h:form id="product">
+                <p:dialog id="product-dialog" header="Product Details" showEffect="fade" modal="true"
+                          widgetVar="addProduct" responsive="true">
                     <p:outputPanel id="manage-product-content" class="ui-fluid">
                         <p:outputPanel rendered="#{not empty productController.model}">
                             <div class="p-field">
-                                <p:outputLabel value="Name" for="name" />
+                                <p:outputLabel value="Name" for="name"/>
                                 <p:inputText id="name" value="#{productController.model.name}" required="true"/>
                             </div>
                             <div class="p-field">
                                 <p:outputLabel value="Category" for="@next"/>
                                 <p:autoComplete id="acSimple" value="#{productController.model.category}"
-                                                completeMethod="#{productController.completeCategory}" scrollHeight="250" required="true"/>
+                                                completeMethod="#{productController.completeCategory}"
+                                                scrollHeight="250" required="true"/>
                             </div>
                             <div class="p-field">
-                                <p:outputLabel for="@next" value="Location" />
-                                <p:autoComplete id="location" value="#{productController.model.location}" required="true"
-                                                completeMethod="#{productController.completeLocation}" scrollHeight="250"/>
+                                <p:outputLabel for="@next" value="Location"/>
+                                <p:autoComplete id="location" value="#{productController.model.location}"
+                                                required="true"
+                                                completeMethod="#{productController.completeLocation}"
+                                                scrollHeight="250"/>
                             </div>
                             <div class="p-formgrid p-grid">
                                 <div class="p-field p-col">
-                                    <p:outputLabel for="unitPrice" value="Unit Price" />
-                                    <p:inputNumber id="unitPrice" value="#{productController.model.itemPrice}" required="true"
-                                                   decimalSeparator="." thousandSeparator="," decimalPlaces="2" symbol=" USD"
-                                                   symbolPosition="s" />
+                                    <p:outputLabel for="unitPrice" value="Unit Price"/>
+                                    <p:inputNumber id="unitPrice" value="#{productController.model.itemPrice}"
+                                                   required="true"
+                                                   decimalSeparator="." thousandSeparator="," decimalPlaces="2"
+                                                   symbol=" USD"
+                                                   symbolPosition="s"/>
                                 </div>
                                 <div class="p-field p-col">
-                                    <p:outputLabel for="casePrice" value="Case Price" />
-                                    <p:inputNumber id="casePrice" value="#{productController.model.casePrice}" required="true"
-                                                   decimalSeparator="." thousandSeparator="," decimalPlaces="2" symbol=" USD"
-                                                   symbolPosition="s" />
+                                    <p:outputLabel for="casePrice" value="Case Price"/>
+                                    <p:inputNumber id="casePrice" value="#{productController.model.casePrice}"
+                                                   required="true"
+                                                   decimalSeparator="." thousandSeparator="," decimalPlaces="2"
+                                                   symbol=" USD"
+                                                   symbolPosition="s"/>
                                 </div>
                             </div>
                             <div class="p-formgrid p-grid">
                                 <div class="p-field p-col">
-                                    <p:outputLabel for="units" value="Unit" />
+                                    <p:outputLabel for="units" value="Unit"/>
                                     <p:inputText id="units" value="#{productController.model.units}" required="true"/>
                                 </div>
                                 <div class="p-field p-col">
-                                    <p:outputLabel for="unitsPerCase" value="Units Per Case" />
-                                    <p:inputNumber id="unitsPerCase" value="#{productController.model.unitsPerCase}" required="true" decimalPlaces="0" />
+                                    <p:outputLabel for="unitsPerCase" value="Units Per Case"/>
+                                    <p:inputNumber id="unitsPerCase" value="#{productController.model.unitsPerCase}"
+                                                   required="true" decimalPlaces="0"/>
                                 </div>
                             </div>
                         </p:outputPanel>
                     </p:outputPanel>
-
                     <f:facet name="footer">
-                        <p:commandButton value="Save" icon="pi pi-check" actionListener="#{productController.saveProduct}"
-                                         update="manage-product-content" process="manage-product-content @this"/>
-                        <p:commandButton value="Cancel" icon="pi pi-times" onclick="PF('manageProductDialog').hide()"
-                                         class="ui-button-secondary"/>
+                        <p:commandButton value="Save" icon="pi pi-check"
+                                         actionListener="#{productController.saveProduct}"
+                                         update=":product:manage-product-content"
+                                         process="manage-product-content @this">
+                        </p:commandButton>
+                        <p:commandButton value="Cancel" icon="pi pi-times" onclick="PF('addProduct').hide()"
+                                         class="ui-button-secondary" process="@this">
+                            <p:resetInput target=":product:manage-product-content"/>
+                        </p:commandButton>
                     </f:facet>
                 </p:dialog>
-            </div>
-        </h:form>
+            </h:form>
+        </div>
+        <div>
+            <h:form id="category">
+                <p:dialog id="category-dialog" header="Category Details" showEffect="fade" modal="true"
+                          widgetVar="addCategory" responsive="true">
+                    <p:outputPanel id="manage-category-content" class="ui-fluid">
+                        <p:outputPanel rendered="#{not empty productController.categoryModel}">
+                            <div class="p-field">
+                                <p:outputLabel value="Name" for="categoryName"/>
+                                <p:inputText id="categoryName" value="#{productController.categoryModel.name}"
+                                             required="true"/>
+                            </div>
+                        </p:outputPanel>
+                    </p:outputPanel>
+                    <f:facet name="footer">
+                        <p:commandButton value="Save" icon="pi pi-check"
+                                         actionListener="#{productController.saveCategory}"
+                                         update=":category:manage-category-content"
+                                         process="manage-category-content @this">
+                        </p:commandButton>
+                        <p:commandButton value="Cancel" icon="pi pi-times" onclick="PF('addCategory').hide()"
+                                         class="ui-button-secondary" process="@this">
+                            <p:resetInput target=":category:manage-category-content"/>
+                        </p:commandButton>
+                    </f:facet>
+                </p:dialog>
+            </h:form>
+        </div>
     </ui:define>
 </ui:composition>
 </html>

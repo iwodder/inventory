@@ -9,26 +9,25 @@ import java.util.stream.*;
 
 public class CategoryServiceImpl implements CategoryService {
 
-	private final Repository<Category> categoryRepository;
+	private final Repository<Category, CategoryId> categoryRepository;
 
-	CategoryServiceImpl(Repository<Category> categoryRepository) {
+	CategoryServiceImpl(Repository<Category, CategoryId> categoryRepository) {
 		this.categoryRepository = categoryRepository;
 	}
 
 	@Override
 	public Optional<CategoryModel> createCategory(String name) {
-		Category c = categoryRepository.createItem(new Category(name));
-		return c == null ? Optional.empty() : Optional.of(c.toModel());
+		if (categoryRepository.loadByItem(new Category(name)).isEmpty()) {
+			Category c = categoryRepository.createItem(new Category(name));
+			return c == null ? Optional.empty() : Optional.of(c.toModel());
+		} else {
+			return Optional.empty();
+		}
 	}
 
 	@Override
 	public Optional<CategoryModel> loadCategory(String id) {
-		try {
-			return categoryRepository.loadById(Long.parseLong(id)).map(Category::toModel);
-		} catch (NumberFormatException e) {
-			//TODO: Warn number couldn't be parsed
-			return Optional.empty();
-		}
+		return categoryRepository.loadById(CategoryId.categoryIdOf(id)).map(Category::toModel);
 	}
 
 	@Override

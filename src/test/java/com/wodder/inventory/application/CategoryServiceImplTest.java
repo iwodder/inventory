@@ -17,7 +17,7 @@ import static org.mockito.Mockito.*;
 class CategoryServiceImplTest {
 
 	@Mock
-	Repository<Category> categoryRepository;
+	Repository<Category, CategoryId> categoryRepository;
 
 	@InjectMocks
 	CategoryServiceImpl service;
@@ -25,7 +25,7 @@ class CategoryServiceImplTest {
 	@Test
 	@DisplayName("Is able to create a category")
 	void createCategory() {
-		when(categoryRepository.createItem(any())).thenReturn(new Category(1L, "Dry Goods"));
+		when(categoryRepository.createItem(any())).thenReturn(new Category( "Dry Goods"));
 		CategoryModel model = service.createCategory("Dry Goods").get();
 		assertNotNull(model);
 		assertNotNull(model.getId());
@@ -42,9 +42,8 @@ class CategoryServiceImplTest {
 	@Test
 	@DisplayName("Loads a category that exists")
 	void loadCategory() {
-		when(categoryRepository.loadById(1L)).thenReturn(Optional.of(new Category(1L, "Dry Goods")));
-		CategoryModel result = service.loadCategory("1").get();
-		assertEquals(1L, result.getId());
+		when(categoryRepository.loadById(any())).thenReturn(Optional.of(new Category( "Dry Goods")));
+		CategoryModel result = service.loadCategory("abc-def-af").get();
 		assertEquals("Dry Goods", result.getName());
 	}
 
@@ -59,5 +58,12 @@ class CategoryServiceImplTest {
 	void no_category() {
 		when(categoryRepository.loadById(any())).thenReturn(Optional.empty());
 		assertTrue(service.loadCategory("1").isEmpty());
+	}
+
+	@Test
+	@DisplayName("If category exists with supplied name, empty optional is returned")
+	void exists() {
+		when(categoryRepository.loadByItem(new Category("Dry Goods"))).thenReturn(Optional.of(new Category("Dry Goods")));
+		assertTrue(service.createCategory("Dry Goods").isEmpty());
 	}
 }

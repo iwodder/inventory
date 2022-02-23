@@ -6,5 +6,5 @@ public interface PersistenceFactory {
 
 	ProductRepository getInventoryDataStore();
 
-	<T extends Entity> Repository<T> getRepository(Class<T> clazz);
+	<T extends Entity<U>, U> Repository<T, U> getRepository(Class<T> clazz);
 }

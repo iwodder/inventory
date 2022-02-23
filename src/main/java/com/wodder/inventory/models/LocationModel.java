@@ -4,11 +4,13 @@ import com.wodder.inventory.domain.entities.*;
 
 public class LocationModel {
 	private String name;
-	private Long id;
+	private String id;
+
+	public LocationModel() {}
 
 	public LocationModel(Location location) {
 		this.name = location.getName();
-		this.id = location.getId();
+		this.id = location.getId().getId();
 	}
 
 	public String getName() {
@@ -19,11 +21,11 @@ public class LocationModel {
 		this.name = name;
 	}
 
-	public Long getId() {
+	public String getId() {
 		return id;
 	}
 
-	public void setId(Long id) {
+	public void setId(String id) {
 		this.id = id;
 	}
 

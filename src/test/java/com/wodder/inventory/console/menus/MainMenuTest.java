@@ -28,7 +28,7 @@ class MainMenuTest extends BaseMenuTest {
 	void test1() {
 		setChars("1\n");
 		main.process(in, out, err);
-		assertEquals(String.format("Please choose a menu%n> "), baosOut.toString());
+		assertTrue(baosErr.toString().startsWith("Unknown menu for choice 1"));
 	}
 
 	@Test

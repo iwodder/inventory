@@ -8,7 +8,7 @@ import java.io.*;
 public class CountMenu extends SubMenu {
 
 	public CountMenu(CountHandler itemHandler) {
-		this("Count Inventory", itemHandler);
+		this("InventoryCount Inventory", itemHandler);
 	}
 
 	private CountMenu(String name, CountHandler handler) {

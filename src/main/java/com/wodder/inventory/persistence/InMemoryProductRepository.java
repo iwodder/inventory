@@ -9,7 +9,7 @@ import java.util.stream.*;
 final class InMemoryProductRepository implements ProductRepository {
 	private static final AtomicLong itemId = new AtomicLong(0);
 	private final Map<Long, Product> db;
-	private final Map<Product, Count> counts;
+	private final Map<Product, InventoryCount> counts;
 
 	InMemoryProductRepository() {
 		db = new HashMap<>();
@@ -42,7 +42,7 @@ final class InMemoryProductRepository implements ProductRepository {
 		Product newItem = new Product(item);
 		newItem.setId(id);
 		db.put(id, newItem);
-		counts.put(newItem, new Count(newItem.getId(), newItem.getName(), newItem.getCategory(), item.getLocation()));
+		counts.put(newItem, new InventoryCount(newItem.getId(), newItem.getName(), newItem.getCategory(), item.getLocation()));
 		return Optional.of(new Product(newItem));
 	}
 

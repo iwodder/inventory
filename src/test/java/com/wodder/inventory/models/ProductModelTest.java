@@ -56,8 +56,16 @@ class ProductModelTest {
 		Method[] methods = ProductModel.class.getDeclaredMethods();
 		for (Method m : methods) {
 			if (m.getName().startsWith("get")) {
-				assertNull(m.invoke(result));
+				assertNullOrZero(m.invoke(result));
 			}
+		}
+	}
+
+	private void assertNullOrZero(Object o) {
+		try {
+			assertNull(o);
+		} catch (AssertionError e) {
+			assertEquals(0, o);
 		}
 	}
 }

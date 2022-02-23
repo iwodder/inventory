@@ -7,17 +7,13 @@ import java.util.*;
 import java.util.concurrent.atomic.*;
 import java.util.stream.*;
 
-public abstract class InMemoryRepository<T extends Entity> implements Repository<T> {
+public abstract class InMemoryRepository<T extends Entity<U>, U> implements Repository<T, U> {
 	protected final AtomicLong id = new AtomicLong(1);
 	protected final Vector<T> items = new Vector<>();
 
 	@Override
-	public final Optional<T> loadById(Long id) {
-		if ((id - 1) < items.size()) {
-			return copy(items.get(id.intValue() - 1));
-		} else {
-			return Optional.empty();
-		}
+	public final Optional<T> loadById(U id) {
+		return items.stream().filter(i -> i.getId().equals(id)).findFirst();
 	}
 
 	@Override
@@ -28,6 +24,12 @@ public abstract class InMemoryRepository<T extends Entity> implements Repository
 		} else {
 			return opt;
 		}
+	}
+
+	@Override
+	public T createItem(T item) {
+		addItem(item);
+		return copy(item).orElseThrow(() -> new RuntimeException());
 	}
 
 	@Override
@@ -44,7 +46,7 @@ public abstract class InMemoryRepository<T extends Entity> implements Repository
 	}
 
 	@Override
-	public void deleteItem(Long id) {
+	public void deleteItem(U id) {
 		//categories cannot be deleted
 	}
 
@@ -54,7 +56,26 @@ public abstract class InMemoryRepository<T extends Entity> implements Repository
 	}
 
 	final void addItem(T item) {
-		items.add(item.getId().intValue() - 1, item);
+		Long dbId;
+		try {
+			dbId = getNextId();
+			Field databaseId = item.getClass().getSuperclass().getDeclaredField("databaseId");
+			databaseId.setAccessible(true);
+			databaseId.set(item, dbId);
+		} catch (NoSuchFieldException e) {
+			throw new RuntimeException(
+					String.format("Field databaseId didn't exist in parent class of %s", item.getClass().getName())
+			);
+		} catch (IllegalAccessException e) {
+			throw new RuntimeException(
+					String.format("Unable to access field databaseId in class of %s", item.getClass().getName())
+			);
+		} catch (Exception e) {
+			throw new RuntimeException(
+					String.format("Unexpected exception occurred when setting field, %s", e.getMessage())
+			);
+		}
+		items.add(dbId.intValue() - 1, item);
 	}
 
 	final long getNextId() {
