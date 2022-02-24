@@ -9,12 +9,12 @@ import java.util.stream.*;
 
 class ItemServiceImpl implements ItemService {
 
-	private final ProductRepository productRepository;
+	private final Repository<Product, ProductId> productRepository;
 	private final Repository<Category, CategoryId> categoryRepository;
 	private final Repository<Location, LocationId> locationRepository;
 
-	ItemServiceImpl(ProductRepository itemRepository, Repository<Category, CategoryId> categoryRepository, Repository<Location, LocationId> locationRepository) {
-		this.productRepository = itemRepository;
+	ItemServiceImpl(Repository<Product, ProductId> productRepository, Repository<Category, CategoryId> categoryRepository, Repository<Location, LocationId> locationRepository) {
+		this.productRepository = productRepository;
 		this.categoryRepository = categoryRepository;
 		this.locationRepository = locationRepository;
 	}
@@ -36,17 +36,17 @@ class ItemServiceImpl implements ItemService {
 				name, cat, loc, new UnitOfMeasurement(unit, unitsPerCase),
 				new Price(unitPrice, casePrice));
 
-		return productRepository.saveItem(item).map(Product::toItemModel);
+		return Optional.of(productRepository.createItem(item)).map(Product::toItemModel);
 	}
 
 	@Override
 	public Boolean deleteItem(ProductModel itemToDelete) {
 		if (itemToDelete.getId() == null) return false;
-		return productRepository.deleteItem(itemToDelete.getId());
+		return productRepository.deleteItem(ProductId.productIdOf(itemToDelete.getId()));
 	}
 
 	@Override
-	public Optional<ProductModel> updateItemCategory(Long inventoryItemId, String category) {
+	public Optional<ProductModel> updateItemCategory(String inventoryItemId, String category) {
 		if (inventoryItemId == null) {
 			return Optional.empty();
 		} else {
@@ -55,8 +55,8 @@ class ItemServiceImpl implements ItemService {
 	}
 
 	@Override
-	public Optional<ProductModel> updateItemLocation(Long inventoryItemId, String location) {
-		Optional<Product> opt = productRepository.loadItem(inventoryItemId);
+	public Optional<ProductModel> updateItemLocation(String inventoryItemId, String location) {
+		Optional<Product> opt = productRepository.loadById(ProductId.productIdOf(inventoryItemId));
 		Optional<Location> loc = locationRepository.loadByItem(new Location(location));
 		if (opt.isPresent() && loc.isPresent()) {
 			Product item = opt.get();
@@ -69,8 +69,8 @@ class ItemServiceImpl implements ItemService {
 	}
 
 	@Override
-	public Optional<ProductModel> updateItemName(Long inventoryItemId, String name) {
-		Optional<Product> opt = productRepository.loadItem(1L);
+	public Optional<ProductModel> updateItemName(String inventoryItemId, String name) {
+		Optional<Product> opt = productRepository.loadById(ProductId.productIdOf(inventoryItemId));
 		if (opt.isPresent()) {
 			Product item = opt.get();
 			item.updateName(name);
@@ -82,8 +82,8 @@ class ItemServiceImpl implements ItemService {
 	}
 
 	@Override
-	public Optional<ProductModel> updateItemUnitOfMeasurement(Long inventoryItemId, String unitOfMeasurement, Integer unitsPerCase) {
-		Optional<Product> opt = productRepository.loadItem(inventoryItemId);
+	public Optional<ProductModel> updateItemUnitOfMeasurement(String inventoryItemId, String unitOfMeasurement, Integer unitsPerCase) {
+		Optional<Product> opt = productRepository.loadById(ProductId.productIdOf(inventoryItemId));;
 		if (opt.isPresent()) {
 			Product item = opt.get();
 			item.updateUnitOfMeasurement(new UnitOfMeasurement(unitOfMeasurement, unitsPerCase));
@@ -95,8 +95,8 @@ class ItemServiceImpl implements ItemService {
 	}
 
 	@Override
-	public Optional<ProductModel> updateItemPrice(Long inventoryItemId, String unitPrice, String casePrice) {
-		Optional<Product> opt = productRepository.loadItem(inventoryItemId);
+	public Optional<ProductModel> updateItemPrice(String inventoryItemId, String unitPrice, String casePrice) {
+		Optional<Product> opt = productRepository.loadById(ProductId.productIdOf(inventoryItemId));
 		if (opt.isPresent()) {
 			Product i = opt.get();
 			i.updatePrice(new Price(unitPrice, casePrice));
@@ -107,22 +107,22 @@ class ItemServiceImpl implements ItemService {
 		}
 	}
 
-	private Optional<ProductModel> processCategoryUpdate(Long inventoryItemId, String category) {
-		Optional<Product> inventoryItem = productRepository.loadItem(inventoryItemId);
+	private Optional<ProductModel> processCategoryUpdate(String inventoryItemId, String category) {
+		Optional<Product> inventoryItem = productRepository.loadById(ProductId.productIdOf(inventoryItemId));
 		Optional<Category> c = categoryRepository.loadByItem(new Category(category));
 		if (inventoryItem.isPresent() && c.isPresent()) {
 			Product item = inventoryItem.get();
 			item.updateCategory(c.get());
-			return productRepository.updateItem(item).map(Product::toItemModel);
+			return Optional.of(productRepository.updateItem(item)).map(Product::toItemModel);
 		} else {
 			return Optional.empty();
 		}
 	}
 
 	@Override
-	public Optional<ProductModel> loadItem(Long itemId) {
+	public Optional<ProductModel> loadItem(String itemId) {
 		if (itemId == null) return Optional.empty();
-		return productRepository.loadItem(itemId).map(Product::toItemModel);
+		return productRepository.loadById(ProductId.productIdOf(itemId)).map(Product::toItemModel);
 	}
 
 	@Override

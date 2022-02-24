@@ -17,7 +17,7 @@ import static org.mockito.Mockito.*;
 class ItemServiceImplTest {
 
 	@Mock
-	private ProductRepository store;
+	private InMemoryRepository<Product, ProductId> store;
 
 	@Mock
 	Repository<Category, CategoryId> categoryRepository;
@@ -59,7 +59,7 @@ class ItemServiceImplTest {
 				.withCasePrice("20.99")
 				.build();
 		storage.createNewItem(model);
-		verify(store).saveItem(inventoryItemArgumentCaptor.capture());
+		verify(store).createItem(inventoryItemArgumentCaptor.capture());
 		Product i = inventoryItemArgumentCaptor.getValue();
 		assertEquals("Bread", i.getName());
 		assertEquals("Pantry", i.getLocation());
@@ -70,8 +70,8 @@ class ItemServiceImplTest {
 	@Test
 	@DisplayName("Can delete an item")
 	void delete_item() {
-		when(store.deleteItem(1L)).thenReturn(true);
-		ProductModel itemDTO = ProductModel.builder().withId(1L).withName("2% Milk").build();
+		when(store.deleteItem(ProductId.productIdOf("1L"))).thenReturn(true);
+		ProductModel itemDTO = ProductModel.builder().withId("1L").withName("2% Milk").build();
 		assertTrue(storage.deleteItem(itemDTO));
 	}
 
@@ -85,11 +85,11 @@ class ItemServiceImplTest {
 	@Test
 	@DisplayName("Able to update item category")
 	void update_item_category() {
-		when(store.loadItem(1L)).thenReturn(Optional.of(
-				new Product(1L, "2% Milk", new Category("Dairy"), new Location("Refrigerator"), true)));
+		when(store.loadById(ProductId.productIdOf("abc123"))).thenReturn(Optional.of(
+				new Product(ProductId.productIdOf("abc123"), "2% Milk", new Category("Dairy"), new Location("Refrigerator"), true)));
 		when(categoryRepository.loadByItem(new Category("Refrigerated"))).thenReturn(Optional.of(new Category("Refrigerated")));
 
-		storage.updateItemCategory(1L, "Refrigerated");
+		storage.updateItemCategory("1L", "Refrigerated");
 
 		verify(store).updateItem(inventoryItemArgumentCaptor.capture());
 		Product item = inventoryItemArgumentCaptor.getValue();
@@ -102,15 +102,15 @@ class ItemServiceImplTest {
 	@Test
 	@DisplayName("Able to update item name")
 	void update_item_name() {
-		when(store.loadItem(1L)).thenReturn(
-				Optional.of(new Product(1L, "2% Milk", new Category("Dairy"), new Location("Refrigerator"), true)));
+		when(store.loadById(ProductId.productIdOf("abc123"))).thenReturn(
+				Optional.of(new Product(ProductId.productIdOf("abc123"), "2% Milk", new Category("Dairy"), new Location("Refrigerator"), true)));
 
-		storage.updateItemName(1L, "2% Low-fat Milk");
+		storage.updateItemName("1L", "2% Low-fat Milk");
 
 		verify(store).updateItem(inventoryItemArgumentCaptor.capture());
 
 		Product item = inventoryItemArgumentCaptor.getValue();
-		assertEquals(1L, item.getId());
+		assertEquals("1L", item.getId());
 		assertEquals("2% Low-fat Milk", item.getName());
 		assertEquals("Dairy", item.getCategory());
 		assertEquals("Refrigerator", item.getLocation());
@@ -125,7 +125,7 @@ class ItemServiceImplTest {
 	@Test
 	@DisplayName("Can load existing item")
 	void read_item() {
-		when(store.loadItem(1L)).thenReturn(Optional.of(new Product(1L, "Bread", new Category("Dry Goods"), new Location("Pantry"))));
+		when(store.loadById(ProductId.productIdOf("abc123"))).thenReturn(Optional.of(new Product(ProductId.productIdOf("abc123"), "Bread", new Category("Dry Goods"), new Location("Pantry"))));
 		Optional<ProductModel> item = storage.loadItem(1L);
 		assertTrue(item.isPresent());
 		ProductModel result = item.get();
@@ -135,10 +135,10 @@ class ItemServiceImplTest {
 	@Test
 	@DisplayName("Can update an item's location")
 	void update_location() {
-		when(store.loadItem(1L)).thenReturn(Optional.of(new Product(1L, "2% Milk", new Category("Refrigerated"), new Location("Refrigerator"))));
+		when(store.loadById(ProductId.productIdOf("1L"))).thenReturn(Optional.of(new Product(ProductId.productIdOf("abc123"), "2% Milk", new Category("Refrigerated"), new Location("Refrigerator"))));
 		when(locationRepository.loadByItem(new Location("Pantry"))).thenReturn(Optional.of(new Location("Pantry")));
-		ProductModel model = storage.updateItemLocation(1L, "Pantry").get();
-		assertEquals(1L, model.getId());
+		ProductModel model = storage.updateItemLocation("1L", "Pantry").get();
+		assertEquals("1L", model.getId());
 		assertEquals("Pantry", model.getLocation());
 	}
 
@@ -154,9 +154,9 @@ class ItemServiceImplTest {
 	void read_all_items() {
 		when(store.loadAllItems()).thenReturn(
 				Arrays.asList(
-						new Product(1L, "Bread", new Category("Dry Goods"), new Location("Refrigerator")),
-						new Product(2L, "Yogurt", new Category("Dairy"), new Location("Refrigerator")),
-						new Product(3L, "Cereal", new Category("Dry Goods"), new Location("Pantry"))));
+						new Product( "Bread", new Category("Dry Goods"), new Location("Refrigerator")),
+						new Product( "Yogurt", new Category("Dairy"), new Location("Refrigerator")),
+						new Product( "Cereal", new Category("Dry Goods"), new Location("Pantry"))));
 		List<ProductModel> result = storage.loadAllActiveItems();
 		assertNotNull(result);
 		assertFalse(result.isEmpty());
@@ -166,7 +166,7 @@ class ItemServiceImplTest {
 	@Test
 	@DisplayName("Can update the Unit of Measurement for an item")
 	void update_uom() {
-		when(store.loadItem(1L)).thenReturn(Optional.of(new Product(1L, "2% Milk", new Category("Refrigerated"), new Location("Refrigerator"), new UnitOfMeasurement("Quarts", 4))));
+		when(store.loadItem(1L)).thenReturn(Optional.of(new Product(ProductId.productIdOf("abc123"), "2% Milk", new Category("Refrigerated"), new Location("Refrigerator"), new UnitOfMeasurement("Quarts", 4))));
 		Optional<ProductModel> opt = storage.updateItemUnitOfMeasurement(1L, "Gallons", 4);
 		assertTrue(opt.isPresent());
 		ProductModel result = opt.get();
@@ -186,7 +186,7 @@ class ItemServiceImplTest {
 	@DisplayName("Can update the price for an item")
 	void update_price() {
 		when(store.loadItem(1L)).thenReturn(Optional.of(new Product(
-				1L, "2% Milk", new Category("Refrigerated"), new Location("Refrigerator"),
+				ProductId.productIdOf("abc123"), "2% Milk", new Category("Refrigerated"), new Location("Refrigerator"),
 				new UnitOfMeasurement("Quarts", 4), new Price("0.99", "1.99"))));
 		Optional<ProductModel> opt = storage.updateItemPrice(1L, "0.68", "19.23");
 		assertTrue(opt.isPresent());

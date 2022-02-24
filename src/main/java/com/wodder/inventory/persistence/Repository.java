@@ -16,7 +16,7 @@ public interface Repository<T extends Entity<U>, U> {
 
 	T createItem(T item);
 
-	void deleteItem(U id);
+	boolean deleteItem(U id);
 
-	void deleteItem(T item);
+	boolean deleteItem(T item);
 }

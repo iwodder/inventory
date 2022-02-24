@@ -82,7 +82,7 @@ class CreateItemMenuTest extends BaseMenuTest {
 
 		public Result<ProductModel, String> createItem(ProductModel dto) {
 			this.dto = dto;
-			dto.setId(1L);
+			dto.setId("1L");
 			if (success) {
 				return new Result<>(dto, null);
 			} else {

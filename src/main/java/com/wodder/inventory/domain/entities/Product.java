@@ -4,8 +4,7 @@ import com.wodder.inventory.models.*;
 
 import java.math.*;
 
-public class Product {
-	private Long id;
+public class Product extends Entity<ProductId> {
 	private String name;
 	private Category category;
 	private Location location;
@@ -21,24 +20,24 @@ public class Product {
 		this(null, name, category, location, true, unitOfMeasurement, price);
 	}
 
-	public Product(Long id, String name, Category category, Location location) {
+	public Product(ProductId id, String name, Category category, Location location) {
 		this(id, name, category, location, true, null, null);
 	}
 
-	public Product(Long id, String name, Category category, Location location, Boolean active) {
+	public Product(ProductId id, String name, Category category, Location location, Boolean active) {
 		this(id, name, category, location, active, null, null);
 	}
 	
-	public Product(Long id, String name, Category category, Location location, UnitOfMeasurement uom) {
+	public Product(ProductId id, String name, Category category, Location location, UnitOfMeasurement uom) {
 		this(id, name, category, location, true, uom, null);
 	}
 
-	public Product(Long id, String name, Category category, Location location, UnitOfMeasurement uom, Price price) {
+	public Product(ProductId id, String name, Category category, Location location, UnitOfMeasurement uom, Price price) {
 		this(id, name, category, location, true, uom, price);
 	}
 
 	public Product(Product that) {
-		this.id = that.id;
+		super(that.id);
 		this.name = that.name;
 		this.category = that.category;
 		this.active = that.active;
@@ -47,22 +46,14 @@ public class Product {
 		this.price = that.price;
 	}
 
-	private Product(Long id, String name, Category c, Location l, Boolean a, UnitOfMeasurement u, Price p) {
-		this.id = id;
+	private Product(ProductId id, String name, Category c, Location l, Boolean a, UnitOfMeasurement u, Price p) {
+		super(id);
 		setName(name);
 		setCategory(c);
 		this.location = l;
 		this.active = a;
 		this.uom = u;
 		this.price = p;
-	}
-
-	public Long getId() {
-		return id;
-	}
-
-	public void setId(Long id) {
-		this.id = id;
 	}
 
 	public String getName() {
@@ -168,7 +159,7 @@ public class Product {
 
 	public ProductModel toItemModel() {
 		ProductModel.ProductModelBuilder b = ProductModel.builder()
-				.withId(this.id)
+				.withId(this.id.getId())
 				.withName(this.name)
 				.withCategory(this.category.getName())
 				.withLocation(this.location.getName())

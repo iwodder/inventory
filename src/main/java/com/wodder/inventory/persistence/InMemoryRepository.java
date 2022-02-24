@@ -46,13 +46,13 @@ public abstract class InMemoryRepository<T extends Entity<U>, U> implements Repo
 	}
 
 	@Override
-	public void deleteItem(U id) {
-		//categories cannot be deleted
+	public boolean deleteItem(U id) {
+		items.removeIf(item -> item.getId().equals(id));
 	}
 
 	@Override
-	public void deleteItem(T item) {
-		//categories cannot be deleted
+	public boolean deleteItem(T item) {
+		items.removeIf(i -> i.equals(item));
 	}
 
 	final void addItem(T item) {

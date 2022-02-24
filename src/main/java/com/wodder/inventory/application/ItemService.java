@@ -12,17 +12,21 @@ public interface ItemService {
 
 	Boolean deleteItem(ProductModel itemToDelete);
 
-	Optional<ProductModel> updateItemCategory(Long inventoryItemId, String category);
+	Optional<ProductModel> updateItemCategory(String inventoryItemId, String category);
 
-	Optional<ProductModel> updateItemLocation(Long inventoryItemId, String location);
+	Optional<ProductModel> updateItemLocation(String inventoryItemId, String location);
 
-	Optional<ProductModel> updateItemName(Long inventoryItemId, String name);
+	Optional<ProductModel> updateItemName(String inventoryItemId, String name);
 
-	Optional<ProductModel> updateItemUnitOfMeasurement(Long inventoryItemId, String unitOfMeasurement, Integer unitsPerCase);
+	Optional<ProductModel> updateItemUnitOfMeasurement(String inventoryItemId, String unitOfMeasurement, Integer unitsPerCase);
 
-	Optional<ProductModel> updateItemPrice(Long inventoryItemId, String unitPrice, String casePrice);
+	Optional<ProductModel> updateItemPrice(String inventoryItemId, String unitPrice, String casePrice);
 
-	Optional<ProductModel> loadItem(Long itemId);
+	default Optional<ProductModel> loadItem(Long itemId) {
+		return loadItem(itemId);
+	}
+
+	Optional<ProductModel> loadItem(String itemId);
 
 	List<ProductModel> loadAllActiveItems();
 }

@@ -1,11 +1,18 @@
 * {
     box-sizing: border-box;
-    font-family: sans-serif;
 }
 
-html, body {
+html {
+    font-size: 14px;
+}
+
+body {
     margin: 0;
     height: 100%;
+    background-color: var(--surface-a);
+    font-family: var(--font-family);
+    font-weight: normal;
+    color: var(--text-color);
 }
 
 footer {

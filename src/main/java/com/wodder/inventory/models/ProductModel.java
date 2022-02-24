@@ -4,7 +4,7 @@ import java.io.*;
 import java.util.*;
 
 public class ProductModel implements Serializable {
-	private Long id;
+	private String id;
 	private String name;
 	private String category;
 	private String location;
@@ -40,11 +40,11 @@ public class ProductModel implements Serializable {
 
 	public ProductModel() {}
 
-	public Long getId() {
+	public String getId() {
 		return id;
 	}
 
-	public void setId(Long id) {
+	public void setId(String id) {
 		this.id = id;
 	}
 
@@ -115,9 +115,7 @@ public class ProductModel implements Serializable {
 	public static ProductModel fromMap(Map<String, String> values) {
 		ProductModel result = new ProductModel();
 		if (values != null && !values.isEmpty()) {
-			if (values.get("ID") != null) {
-				result.id = Long.parseLong(values.get("ID"));
-			}
+			result.id = values.get("ID");
 			result.name = values.get("NAME");
 			result.category = values.get("CATEGORY");
 		}
@@ -129,7 +127,7 @@ public class ProductModel implements Serializable {
 	}
 
 	public static class ProductModelBuilder implements Serializable {
-		private Long id;
+		private String id;
 		private String name;
 		private String category;
 		private String location;
@@ -143,7 +141,7 @@ public class ProductModel implements Serializable {
 			//no-op
 		}
 
-		public ProductModelBuilder withId(Long id) {
+		public ProductModelBuilder withId(String id) {
 			this.id = id;
 			return this;
 		}

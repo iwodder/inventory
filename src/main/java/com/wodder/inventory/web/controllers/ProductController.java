@@ -20,6 +20,7 @@ public class ProductController implements Serializable {
 
 	private ProductModel model;
 	private CategoryModel categoryModel;
+	private LocationModel locationModel;
 
 	transient ItemService itemService;
 	transient CategoryService categoryService;
@@ -60,6 +61,10 @@ public class ProductController implements Serializable {
 		this.categoryModel = new CategoryModel();
 	}
 
+	public void newLocation() {
+		this.locationModel = new LocationModel();
+	}
+
 	public void saveProduct() {
 		Optional<ProductModel> item = itemService.createNewItem(
 				model.getName(), model.getCategory(), model.getLocation(), model.getUnits(), model.getUnitsPerCase(),
@@ -70,7 +75,7 @@ public class ProductController implements Serializable {
 			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("Product not saved."));
 		}
 
-		PrimeFaces.current().executeScript("PF('manageProductDialog').hide()");
+		PrimeFaces.current().executeScript("PF('addProduct').hide()");
 		PrimeFaces.current().ajax().update("form:messages", "form:dt-products");
 	}
 
@@ -83,7 +88,20 @@ public class ProductController implements Serializable {
 			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("Category not saved."));
 		}
 
-		PrimeFaces.current().executeScript("PF('manageCategoryDialog').hide()");
+		PrimeFaces.current().executeScript("PF('addCategory').hide()");
+		PrimeFaces.current().ajax().update("form:messages");
+	}
+
+	public void saveLocation() {
+		Optional<LocationModel> category = locationService.createLocation(locationModel.getName());
+
+		if (category.isPresent()) {
+			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("Location saved successfully."));
+		} else {
+			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("Location not saved."));
+		}
+
+		PrimeFaces.current().executeScript("PF('addLocation').hide()");
 		PrimeFaces.current().ajax().update("form:messages");
 	}
 
@@ -101,5 +119,13 @@ public class ProductController implements Serializable {
 
 	public void setCategoryModel(CategoryModel categoryModel) {
 		this.categoryModel = categoryModel;
+	}
+
+	public LocationModel getLocationModel() {
+		return locationModel;
+	}
+
+	public void setLocationModel(LocationModel locationModel) {
+		this.locationModel = locationModel;
 	}
 }

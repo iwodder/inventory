@@ -46,4 +46,10 @@ class LocationServiceImplTest {
 		List<LocationModel> locations = locationService.loadLocations();
 		assertEquals(2, locations.size());
 	}
+
+	@Test
+	void creating_existing_location_returns_empty_optional() {
+		when(locationRepository.loadByItem(new Location("Pantry"))).thenReturn(Optional.of(new Location("Pantry")));
+		assertTrue(locationService.createLocation("Pantry").isEmpty());
+	}
 }

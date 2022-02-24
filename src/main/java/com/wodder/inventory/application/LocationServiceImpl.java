@@ -17,8 +17,12 @@ public class LocationServiceImpl implements LocationService {
 
 	@Override
 	public Optional<LocationModel> createLocation(String name) {
-		Location l = locationRepository.createItem(new Location(name));
-		return l == null ? Optional.empty() : Optional.of(l.toModel());
+		if (locationRepository.loadByItem(new Location(name)).isEmpty()) {
+			Location l = locationRepository.createItem(new Location(name));
+			return l == null ? Optional.empty() : Optional.of(l.toModel());
+		} else {
+			return Optional.empty();
+		}
 	}
 
 	@Override

@@ -28,6 +28,13 @@
                                          styleClass="ui-button-success" style="margin-right: .5rem">
                             <p:resetInput target=":category:manage-category-content"/>
                         </p:commandButton>
+                        <p:commandButton value="New Location" icon="pi pi-plus"
+                                         actionListener="#{productController.newLocation}"
+                                         update=":location:manage-location-content"
+                                         oncomplete="PF('addLocation').show()"
+                                         styleClass="ui-button-success" style="margin-right: .5rem">
+                            <p:resetInput target=":location:manage-location-content"/>
+                        </p:commandButton>
                     </p:toolbarGroup>
                 </p:toolbar>
                 <p:dataTable id="dt-products" widgetVar="dtProducts" var="item" value="#{productController.allItems()}"
@@ -73,13 +80,13 @@
                             </div>
                             <div class="p-field">
                                 <p:outputLabel value="Category" for="@next"/>
-                                <p:autoComplete id="acSimple" value="#{productController.model.category}"
+                                <p:autoComplete id="productCategory" value="#{productController.model.category}"
                                                 completeMethod="#{productController.completeCategory}"
                                                 scrollHeight="250" required="true"/>
                             </div>
                             <div class="p-field">
                                 <p:outputLabel for="@next" value="Location"/>
-                                <p:autoComplete id="location" value="#{productController.model.location}"
+                                <p:autoComplete id="productLocation" value="#{productController.model.location}"
                                                 required="true"
                                                 completeMethod="#{productController.completeLocation}"
                                                 scrollHeight="250"/>
@@ -151,6 +158,33 @@
                         <p:commandButton value="Cancel" icon="pi pi-times" onclick="PF('addCategory').hide()"
                                          class="ui-button-secondary" process="@this">
                             <p:resetInput target=":category:manage-category-content"/>
+                        </p:commandButton>
+                    </f:facet>
+                </p:dialog>
+            </h:form>
+        </div>
+        <div>
+            <h:form id="location">
+                <p:dialog id="location-dialog" header="Location Details" showEffect="fade" modal="true"
+                          widgetVar="addLocation" responsive="true">
+                    <p:outputPanel id="manage-location-content" class="ui-fluid">
+                        <p:outputPanel rendered="#{not empty productController.locationModel}">
+                            <div class="p-field">
+                                <p:outputLabel value="Name" for="locationName"/>
+                                <p:inputText id="locationName" valued="#{productController.locationModel.name}"
+                                             required="true"/>
+                            </div>
+                        </p:outputPanel>
+                    </p:outputPanel>
+                    <f:facet name="footer">
+                        <p:commandButton value="Save" icon="pi pi-check"
+                                         actionListener="#{productController.saveLocation}"
+                                         update=":location:manage-location-content"
+                                         process="manage-location-content @this">
+                        </p:commandButton>
+                        <p:commandButton value="Cancel" icon="pi pi-times" onclick="PF('addLocation').hide()"
+                                         class="ui-button-secondary" process="@this">
+                            <p:resetInput target=":location:manage-location-content"/>
                         </p:commandButton>
                     </f:facet>
                 </p:dialog>
