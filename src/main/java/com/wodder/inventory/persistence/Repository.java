@@ -10,7 +10,7 @@ public interface Repository<T extends Entity<U>, U> {
 
 	Optional<T> loadByItem(T item);
 
-	void updateItem(T item);
+	Optional<T> updateItem(T item);
 
 	List<T> loadAllItems();
 

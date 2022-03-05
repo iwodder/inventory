@@ -33,8 +33,15 @@ public abstract class InMemoryRepository<T extends Entity<U>, U> implements Repo
 	}
 
 	@Override
-	public void updateItem(T item) {
-		//no-op
+	public Optional<T> updateItem(T item) {
+		int idx = items.indexOf(item);
+		if (idx > -1) {
+			items.removeElementAt(idx);
+			items.insertElementAt(item, idx);
+			return copy(item);
+		} else {
+			return Optional.empty();
+		}
 	}
 
 	@Override
@@ -47,12 +54,12 @@ public abstract class InMemoryRepository<T extends Entity<U>, U> implements Repo
 
 	@Override
 	public boolean deleteItem(U id) {
-		items.removeIf(item -> item.getId().equals(id));
+		return items.removeIf(item -> item.getId().equals(id));
 	}
 
 	@Override
 	public boolean deleteItem(T item) {
-		items.removeIf(i -> i.equals(item));
+		return items.removeIf(i -> i.equals(item));
 	}
 
 	final void addItem(T item) {

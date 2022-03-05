@@ -13,11 +13,11 @@ public class Product extends Entity<ProductId> {
 	private boolean active;
 
 	public Product(String name, Category category, Location location) {
-		this(null, name, category, location, true, null, null);
+		this(ProductId.generateId(), name, category, location, true, null, null);
 	}
 
 	public Product(String name, Category category, Location location, UnitOfMeasurement unitOfMeasurement, Price price) {
-		this(null, name, category, location, true, unitOfMeasurement, price);
+		this(ProductId.generateId(), name, category, location, true, unitOfMeasurement, price);
 	}
 
 	public Product(ProductId id, String name, Category category, Location location) {

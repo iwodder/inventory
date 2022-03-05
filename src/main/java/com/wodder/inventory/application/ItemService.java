@@ -22,10 +22,6 @@ public interface ItemService {
 
 	Optional<ProductModel> updateItemPrice(String inventoryItemId, String unitPrice, String casePrice);
 
-	default Optional<ProductModel> loadItem(Long itemId) {
-		return loadItem(itemId);
-	}
-
 	Optional<ProductModel> loadItem(String itemId);
 
 	List<ProductModel> loadAllActiveItems();

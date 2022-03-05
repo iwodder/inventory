@@ -29,9 +29,9 @@ class DeleteItemHandlerTest extends BaseMenuTest {
 	private DeleteItemHandler deleteItemHandler;
 
 	@ParameterizedTest
-	@ValueSource(longs = { 1L, 2L, 3L })
+	@ValueSource(strings = { "1", "2", "3" })
 	@DisplayName("Can delete an existing item.")
-	void handleInput(Long id) {
+	void handleInput(String id) {
 		when(model.deleteItem(any(ProductModel.class))).thenReturn(new Result<>(Boolean.TRUE, null));
 		setChars("id=" + id);
 		deleteItemHandler.handleInput(in, out, err);

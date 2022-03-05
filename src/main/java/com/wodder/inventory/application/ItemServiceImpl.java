@@ -113,7 +113,7 @@ class ItemServiceImpl implements ItemService {
 		if (inventoryItem.isPresent() && c.isPresent()) {
 			Product item = inventoryItem.get();
 			item.updateCategory(c.get());
-			return Optional.of(productRepository.updateItem(item)).map(Product::toItemModel);
+			return productRepository.updateItem(item).map(Product::toItemModel);
 		} else {
 			return Optional.empty();
 		}

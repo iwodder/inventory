@@ -18,7 +18,7 @@ class ProductModelTest {
 		values.put("CATEGORY", "refrigerated");
 		ProductModel result = ProductModel.fromMap(values);
 		assertNotNull(result);
-		assertEquals(1L, result.getId());
+		assertEquals("1", result.getId());
 		assertEquals("bread", result.getName());
 		assertEquals("refrigerated", result.getCategory());
 	}

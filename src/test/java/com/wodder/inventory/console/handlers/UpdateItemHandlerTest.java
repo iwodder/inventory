@@ -34,7 +34,7 @@ class UpdateItemHandlerTest extends BaseMenuTest {
 
 		ProductModel dto = captor.getValue();
 		assertNotNull(dto);
-		assertEquals(1L, dto.getId());
+		assertEquals("1", dto.getId());
 		assertEquals("milk", dto.getName());
 		assertEquals(String.format("Item updated successfully%n"), baosOut.toString());
 	}
@@ -50,7 +50,7 @@ class UpdateItemHandlerTest extends BaseMenuTest {
 
 		ProductModel dto = captor.getValue();
 		assertNotNull(dto);
-		assertEquals(1L, dto.getId());
+		assertEquals("1", dto.getId());
 		assertEquals("refrigerated", dto.getCategory());
 		assertEquals(String.format("Item updated successfully%n"), baosOut.toString());
 	}

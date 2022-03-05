@@ -20,17 +20,17 @@ public class DeleteItemHandler extends InputHandler {
 			menu.exitMenu();
 		} else {
 			Map<String, String> keyValues = MenuUtils.extractKeyValuePairs(line);
-			long id;
+			String id;
 			if (keyValues.isEmpty()) {
-				id = Long.parseLong(line);
+				id = line;
 			} else {
-				id = Long.parseLong(keyValues.get("ID"));
+				id = keyValues.get("ID");
 			}
 			Result<Boolean, String> result = model.deleteItem(ProductModel.builder().withId(id).build());
 			if (result.isOK()) {
-				out.printf("Successfully deleted item with id of %d.%n", id);
+				out.printf("Successfully deleted item with id of %s.%n", id);
 			} else {
-				err.printf("Unable to delete item with id of %d.%n", id);
+				err.printf("Unable to delete item with id of %s.%n", id);
 			}
 		}
 	}

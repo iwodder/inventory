@@ -17,7 +17,7 @@ import static org.mockito.Mockito.*;
 class ItemServiceImplTest {
 
 	@Mock
-	private InMemoryRepository<Product, ProductId> store;
+	Repository<Product, ProductId> productRepository;
 
 	@Mock
 	Repository<Category, CategoryId> categoryRepository;
@@ -38,7 +38,7 @@ class ItemServiceImplTest {
 
 	@BeforeEach
 	void setup() {
-		storage = new ItemServiceImpl(store, categoryRepository, locationRepository);
+		storage = new ItemServiceImpl(productRepository, categoryRepository, locationRepository);
 	}
 
 	@Test
@@ -46,10 +46,9 @@ class ItemServiceImplTest {
 	void new_item_is_active() {
 		when(locationRepository.loadByItem(new Location("Pantry")))
 				.thenReturn(Optional.of(new Location("Pantry")));
-
 		when(categoryRepository.loadByItem(new Category("Dry Goods")))
 				.thenReturn(Optional.of(new Category("Dry Goods")));
-
+		when(productRepository.createItem(any())).thenReturn(new Product(ProductId.productIdOf("1"),"2% Milk", new Category("Dairy"), new Location("Refrigerator")));
 		ProductModel model = ProductModel.builder()
 				.withName("Bread")
 				.withLocation("Pantry")
@@ -59,7 +58,7 @@ class ItemServiceImplTest {
 				.withCasePrice("20.99")
 				.build();
 		storage.createNewItem(model);
-		verify(store).createItem(inventoryItemArgumentCaptor.capture());
+		verify(productRepository).createItem(inventoryItemArgumentCaptor.capture());
 		Product i = inventoryItemArgumentCaptor.getValue();
 		assertEquals("Bread", i.getName());
 		assertEquals("Pantry", i.getLocation());
@@ -70,7 +69,7 @@ class ItemServiceImplTest {
 	@Test
 	@DisplayName("Can delete an item")
 	void delete_item() {
-		when(store.deleteItem(ProductId.productIdOf("1L"))).thenReturn(true);
+		when(productRepository.deleteItem(ProductId.productIdOf("1L"))).thenReturn(true);
 		ProductModel itemDTO = ProductModel.builder().withId("1L").withName("2% Milk").build();
 		assertTrue(storage.deleteItem(itemDTO));
 	}
@@ -85,15 +84,15 @@ class ItemServiceImplTest {
 	@Test
 	@DisplayName("Able to update item category")
 	void update_item_category() {
-		when(store.loadById(ProductId.productIdOf("abc123"))).thenReturn(Optional.of(
+		when(productRepository.loadById(ProductId.productIdOf("abc123"))).thenReturn(Optional.of(
 				new Product(ProductId.productIdOf("abc123"), "2% Milk", new Category("Dairy"), new Location("Refrigerator"), true)));
 		when(categoryRepository.loadByItem(new Category("Refrigerated"))).thenReturn(Optional.of(new Category("Refrigerated")));
 
-		storage.updateItemCategory("1L", "Refrigerated");
+		storage.updateItemCategory("abc123", "Refrigerated");
 
-		verify(store).updateItem(inventoryItemArgumentCaptor.capture());
+		verify(productRepository).updateItem(inventoryItemArgumentCaptor.capture());
 		Product item = inventoryItemArgumentCaptor.getValue();
-		assertEquals(1L, item.getId());
+		assertEquals(ProductId.productIdOf("abc123"), item.getId());
 		assertEquals("2% Milk", item.getName());
 		assertEquals("Refrigerated", item.getCategory());
 		assertEquals("Refrigerator", item.getLocation());
@@ -102,15 +101,15 @@ class ItemServiceImplTest {
 	@Test
 	@DisplayName("Able to update item name")
 	void update_item_name() {
-		when(store.loadById(ProductId.productIdOf("abc123"))).thenReturn(
+		when(productRepository.loadById(ProductId.productIdOf("abc123"))).thenReturn(
 				Optional.of(new Product(ProductId.productIdOf("abc123"), "2% Milk", new Category("Dairy"), new Location("Refrigerator"), true)));
 
-		storage.updateItemName("1L", "2% Low-fat Milk");
+		storage.updateItemName("abc123", "2% Low-fat Milk");
 
-		verify(store).updateItem(inventoryItemArgumentCaptor.capture());
+		verify(productRepository).updateItem(inventoryItemArgumentCaptor.capture());
 
 		Product item = inventoryItemArgumentCaptor.getValue();
-		assertEquals("1L", item.getId());
+		assertEquals(ProductId.productIdOf("abc123"), item.getId());
 		assertEquals("2% Low-fat Milk", item.getName());
 		assertEquals("Dairy", item.getCategory());
 		assertEquals("Refrigerator", item.getLocation());
@@ -125,20 +124,20 @@ class ItemServiceImplTest {
 	@Test
 	@DisplayName("Can load existing item")
 	void read_item() {
-		when(store.loadById(ProductId.productIdOf("abc123"))).thenReturn(Optional.of(new Product(ProductId.productIdOf("abc123"), "Bread", new Category("Dry Goods"), new Location("Pantry"))));
-		Optional<ProductModel> item = storage.loadItem(1L);
+		when(productRepository.loadById(ProductId.productIdOf("abc123"))).thenReturn(Optional.of(new Product(ProductId.productIdOf("abc123"), "Bread", new Category("Dry Goods"), new Location("Pantry"))));
+		Optional<ProductModel> item = storage.loadItem("abc123");
 		assertTrue(item.isPresent());
 		ProductModel result = item.get();
-		assertEquals(1L, result.getId());
+		assertEquals("abc123", result.getId());
 	}
 
 	@Test
 	@DisplayName("Can update an item's location")
 	void update_location() {
-		when(store.loadById(ProductId.productIdOf("1L"))).thenReturn(Optional.of(new Product(ProductId.productIdOf("abc123"), "2% Milk", new Category("Refrigerated"), new Location("Refrigerator"))));
+		when(productRepository.loadById(ProductId.productIdOf("1"))).thenReturn(Optional.of(new Product(ProductId.productIdOf("1"), "2% Milk", new Category("Refrigerated"), new Location("Refrigerator"))));
 		when(locationRepository.loadByItem(new Location("Pantry"))).thenReturn(Optional.of(new Location("Pantry")));
-		ProductModel model = storage.updateItemLocation("1L", "Pantry").get();
-		assertEquals("1L", model.getId());
+		ProductModel model = storage.updateItemLocation("1", "Pantry").get();
+		assertEquals("1", model.getId());
 		assertEquals("Pantry", model.getLocation());
 	}
 
@@ -152,7 +151,7 @@ class ItemServiceImplTest {
 	@Test
 	@DisplayName("Can load all available items")
 	void read_all_items() {
-		when(store.loadAllItems()).thenReturn(
+		when(productRepository.loadAllItems()).thenReturn(
 				Arrays.asList(
 						new Product( "Bread", new Category("Dry Goods"), new Location("Refrigerator")),
 						new Product( "Yogurt", new Category("Dairy"), new Location("Refrigerator")),
@@ -166,8 +165,8 @@ class ItemServiceImplTest {
 	@Test
 	@DisplayName("Can update the Unit of Measurement for an item")
 	void update_uom() {
-		when(store.loadItem(1L)).thenReturn(Optional.of(new Product(ProductId.productIdOf("abc123"), "2% Milk", new Category("Refrigerated"), new Location("Refrigerator"), new UnitOfMeasurement("Quarts", 4))));
-		Optional<ProductModel> opt = storage.updateItemUnitOfMeasurement(1L, "Gallons", 4);
+		when(productRepository.loadById(ProductId.productIdOf("1"))).thenReturn(Optional.of(new Product(ProductId.productIdOf("abc123"), "2% Milk", new Category("Refrigerated"), new Location("Refrigerator"), new UnitOfMeasurement("Quarts", 4))));
+		Optional<ProductModel> opt = storage.updateItemUnitOfMeasurement("1", "Gallons", 4);
 		assertTrue(opt.isPresent());
 		ProductModel result = opt.get();
 		assertEquals("Gallons", result.getUnits());
@@ -177,18 +176,18 @@ class ItemServiceImplTest {
 	@Test
 	@DisplayName("If item is not present then empty is returned")
 	void item_not_found() {
-		when(store.loadItem(1L)).thenReturn(Optional.empty());
-		Optional<ProductModel> opt = storage.updateItemUnitOfMeasurement(1L, "Gallons", 4);
+		when(productRepository.loadById(ProductId.productIdOf("1"))).thenReturn(Optional.empty());
+		Optional<ProductModel> opt = storage.updateItemUnitOfMeasurement("1", "Gallons", 4);
 		assertFalse(opt.isPresent());
 	}
 
 	@Test
 	@DisplayName("Can update the price for an item")
 	void update_price() {
-		when(store.loadItem(1L)).thenReturn(Optional.of(new Product(
+		when(productRepository.loadById(ProductId.productIdOf("1"))).thenReturn(Optional.of(new Product(
 				ProductId.productIdOf("abc123"), "2% Milk", new Category("Refrigerated"), new Location("Refrigerator"),
 				new UnitOfMeasurement("Quarts", 4), new Price("0.99", "1.99"))));
-		Optional<ProductModel> opt = storage.updateItemPrice(1L, "0.68", "19.23");
+		Optional<ProductModel> opt = storage.updateItemPrice("1", "0.68", "19.23");
 		assertTrue(opt.isPresent());
 		ProductModel result = opt.get();
 		assertEquals("0.68", result.getItemPrice());
@@ -202,7 +201,7 @@ class ItemServiceImplTest {
 		when(categoryRepository.createItem(any())).thenReturn(new Category("Frozen"));
 		when(locationRepository.loadByItem(any())).thenReturn(Optional.empty());
 		when(locationRepository.createItem(any())).thenReturn(new Location("Freezer"));
-
+		when(productRepository.createItem(any())).thenReturn(new Product(ProductId.productIdOf("1"),"2% Milk", new Category("Dairy"), new Location("Refrigerator")));
 		storage.createNewItem("2% Milk", "Frozen", "Refrigerator", "Gallons", 4, "2.98", "5.98");
 		verify(categoryRepository).createItem(categoryArgumentCaptor.capture());
 	}
@@ -214,7 +213,7 @@ class ItemServiceImplTest {
 		when(categoryRepository.createItem(any())).thenReturn(new Category("Frozen"));
 		when(locationRepository.loadByItem(any())).thenReturn(Optional.empty());
 		when(locationRepository.createItem(any())).thenReturn(new Location("Freezer"));
-
+		when(productRepository.createItem(any())).thenReturn(new Product(ProductId.productIdOf("1"),"2% Milk", new Category("Dairy"), new Location("Refrigerator")));
 		storage.createNewItem("2% Milk", "Frozen", "Freezer", "Quarts", 4, "2.98", "5.98");
 		verify(locationRepository).createItem(locationArgumentCaptor.capture());
 	}

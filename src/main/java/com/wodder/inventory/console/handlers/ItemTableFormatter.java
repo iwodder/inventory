@@ -16,7 +16,7 @@ public class ItemTableFormatter {
 		items.sort(Comparator.comparing(ProductModel::getId));
 		int maxId = Math.max(items.stream()
 				.map(ProductModel::getId)
-				.mapToInt(Long::intValue)
+				.mapToInt(String::length)
 				.max().orElseGet(() -> 20), "ID".length());
 		int maxName = Math.max(items.stream()
 				.map(ProductModel::getName)

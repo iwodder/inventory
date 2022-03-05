@@ -32,7 +32,7 @@ public class CreateItemHandler extends InputHandler {
 		Result<ProductModel, String> result = itemModel.createItem(createdDto);
 		if (result.isOK()) {
 			ProductModel newItem = result.getOk();
-			out.printf("Successfully created %s with id of %d%n", newItem.getName(), newItem.getId());
+			out.printf("Successfully created %s with id of %s%n", newItem.getName(), newItem.getId());
 		} else {
 			out.println(result.getErr());
 		}
