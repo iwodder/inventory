@@ -32,10 +32,10 @@ class CountHandlerTest extends BaseMenuTest {
 	private void setupInventoryModel() {
 		model = new InventoryModel();
 		model.setInventoryDate(LocalDate.now());
-		model.addInventoryCountModel(new InventoryCountModel(1L, "Bananas", "Fruit", "Pantry"));
-		model.addInventoryCountModel(new InventoryCountModel(2L, "Apples", "Fruit", "Pantry"));
-		model.addInventoryCountModel(new InventoryCountModel(3L, "Spinach", "Vegetables", "Refrigerator"));
-		model.addInventoryCountModel(new InventoryCountModel(4L, "Frozen Broccoli", "Frozen", "Freezer"));
+//		model.addInventoryCountModel(new InventoryCountModel(1L, "Bananas", "Fruit", "Pantry"));
+//		model.addInventoryCountModel(new InventoryCountModel(2L, "Apples", "Fruit", "Pantry"));
+//		model.addInventoryCountModel(new InventoryCountModel(3L, "Spinach", "Vegetables", "Refrigerator"));
+//		model.addInventoryCountModel(new InventoryCountModel(4L, "Frozen Broccoli", "Frozen", "Freezer"));
 	}
 
 	@Test

@@ -28,10 +28,10 @@ public class CountHandler extends InputHandler {
 				StringBuilder sb = new StringBuilder(in);
 				sb.setCharAt(0, Character.toUpperCase(sb.charAt(0)));
 				out.printf("---- Counting %s ----%n", sb.toString());
-				Iterator<InventoryCountModel> itr = model.itemsByLocation(in);
+				/*Iterator<InventoryCountModel> itr = model.itemsByLocation(in);
 				for (int i = 1; itr.hasNext(); i++) {
-					out.printf("%d) %s%n", i, itr.next().getName());
-				}
+					out.printf("%d) %s%n", i, itr.next().getProductId());
+				}*/
 			}
 		}
 	}

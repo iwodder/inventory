@@ -2,12 +2,9 @@ package com.wodder.inventory.models;
 
 import java.time.*;
 import java.util.*;
-import java.util.function.*;
 import java.util.stream.*;
 
 public class InventoryModel {
-	private final BiPredicate<String, InventoryCountModel> locationFilter =
-			(String location, InventoryCountModel model) -> location != null && location.equalsIgnoreCase(model.getLocation());
 
 	private LocalDate inventoryDate;
 	private final List<InventoryCountModel> inventoryItemModels;
@@ -42,10 +39,6 @@ public class InventoryModel {
 
 	public Stream<InventoryCountModel> items() {
 		return inventoryItemModels.stream();
-	}
-
-	public Iterator<InventoryCountModel> itemsByLocation(String location) {
-		return inventoryItemModels.stream().filter(i -> locationFilter.test(location, i)).iterator();
 	}
 
 	public String getState() {

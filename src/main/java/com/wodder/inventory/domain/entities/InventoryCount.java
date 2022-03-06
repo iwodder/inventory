@@ -3,60 +3,61 @@ package com.wodder.inventory.domain.entities;
 import com.wodder.inventory.models.*;
 
 public class InventoryCount {
-	private final Long itemId;
-	private final String name;
-	private final String category;
-	private final String location;
-	private int count;
+	private final InventoryId inventoryId;
+	private final ProductId productId;
+	private int units;
+	private int cases;
 
-	public InventoryCount(Long itemId, String name, String category, String location, Integer count) {
-		this.itemId = itemId;
-		this.name = name;
-		this.category = category;
-		this.location = location;
-		setCount(count);
-	}
-
-	public InventoryCount(Long itemId, String name, String category, String location) {
-		this(itemId, name, category, location, 0);
+	public InventoryCount(InventoryId inventoryId, ProductId productId, int units, int cases) {
+		this.inventoryId = inventoryId;
+		this.productId = productId;
+		setUnits(units);
+		setCases(cases);
 	}
 
 	public InventoryCount(InventoryCount that) {
-		this(that.getItemId(), that.getName(), that.getCategory(), that.getLocation(), that.getCount());
+		this(that.getInventoryId(), that.getProductId(), that.getUnits(), that.getCases());
 	}
 
 	public InventoryCount(InventoryCountModel model) {
-		this(model.getItemId(), model.getName(), model.getCategory(), model.getLocation(), model.getCount());
+		this(
+			InventoryId.inventoryIdOf(model.getInventoryId()), ProductId.productIdOf(model.getProductId()),
+			model.getUnits(), model.getCases());
 	}
 
-	public Long getItemId() {
-		return itemId;
+	public InventoryId getInventoryId() {
+		return inventoryId;
 	}
 
-	public String getName() {
-		return name;
+	public ProductId getProductId() {
+		return productId;
 	}
 
-	public String getCategory() {
-		return category;
+	public int getUnits() {
+		return units;
 	}
 
-	public String getLocation() {
-		return location;
+	public int getCases() {
+		return cases;
 	}
 
-	public int getCount() {
-		return count;
+	private void setUnits(int count) {
+		isGreaterThanZero(count);
+		this.units = count;
 	}
 
-	private void setCount(int count) {
+	private void setCases(int count) {
+		isGreaterThanZero(count);
+		this.cases = count;
+	}
+
+	private void isGreaterThanZero(int count) {
 		if (count < 0) {
 			throw new IllegalArgumentException();
 		}
-		this.count = count;
 	}
 
 	public InventoryCountModel toModel() {
-		return new InventoryCountModel(itemId, name, category, location,count);
+		return new InventoryCountModel(inventoryId.getId(), productId.getId(), units, cases);
 	}
 }

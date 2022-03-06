@@ -8,10 +8,11 @@ import java.util.function.*;
 
 public class Inventory extends Entity<InventoryId> {
 	private final LocalDate date;
-	private final Map<String, List<InventoryCount>> items;
-	private final BiPredicate<InventoryCount, String> nameFilter = (InventoryCount i, String name) -> {
-		if (i.getName() != null) {
-			return i.getName().equals(name);
+	private final List<InventoryCount> counts = new ArrayList<>();
+
+	private final BiPredicate<InventoryCount, ProductId> idFilter = (InventoryCount i, ProductId id) -> {
+		if (i.getProductId() != null) {
+			return i.getProductId().equals(id);
 		} else {
 			return false;
 		}
@@ -28,7 +29,6 @@ public class Inventory extends Entity<InventoryId> {
 
 	private Inventory(InventoryId id, LocalDate date, InventoryState state) {
 		super(id);
-		items = new HashMap<>();
 		this.date = date;
 		this.state = state;
 	}
@@ -37,21 +37,13 @@ public class Inventory extends Entity<InventoryId> {
 		super(InventoryId.inventoryIdOf(model.getId()));
 		this.state = InventoryState.valueOf(model.getState());
 		this.date = model.getInventoryDate();
-		this.items = new HashMap<>();
 		model.items().map(InventoryCount::new).forEach(this::addInventoryCount);
 	}
 
 	public Inventory(Inventory that) {
 		super(that.id);
 		this.date = that.date;
-		this.items = new HashMap<>();
-		for (String i : that.items.keySet()) {
-			List<InventoryCount> newItems = new ArrayList<>();
-			for (InventoryCount cnt : that.items.get(i)) {
-				newItems.add(new InventoryCount(cnt));
-			}
-			this.items.put(i, newItems);
-		}
+		that.counts.stream().map(InventoryCount::new).forEach(this.counts::add);
 	}
 
 	public LocalDate date() {
@@ -59,25 +51,16 @@ public class Inventory extends Entity<InventoryId> {
 	}
 
 	public void addInventoryCount(InventoryCount item) {
-		state.addCount(items, item);
+		state.addCount(counts, item);
 	}
 
 	public int numberOfItems() {
-		return items.values().stream().mapToInt(List::size).sum();
+		return counts.size();
 	}
 
-	public List<InventoryCount> getItemsByCategory(String category) {
-		if (items.containsKey(category.toUpperCase())) {
-			return Collections.unmodifiableList(items.get(category.toUpperCase()));
-		} else {
-			return Collections.emptyList();
-		}
-	}
-
-	public Optional<InventoryCount> getCount(String name) {
-		return items.values().stream()
-				.flatMap(List::stream)
-				.filter(item -> nameFilter.test(item, name))
+	public Optional<InventoryCount> getCount(ProductId productId) {
+		return counts.stream()
+				.filter(item -> idFilter.test(item, productId))
 				.findAny();
 	}
 
@@ -96,11 +79,9 @@ public class Inventory extends Entity<InventoryId> {
 	public InventoryModel toModel() {
 		InventoryModel result = new InventoryModel(id.getId(), state.name());
 		result.setInventoryDate(date);
-		items.values().stream()
-				.flatMap(List::stream)
+		counts.stream()
 				.map(InventoryCount::toModel)
 				.forEach(result::addInventoryCountModel);
-
 		return result;
 	}
 
@@ -125,16 +106,9 @@ public class Inventory extends Entity<InventoryId> {
 			}
 
 			@Override
-			void addCount(Map<String, List<InventoryCount>> items, InventoryCount item) {
+			void addCount(List<InventoryCount> items, InventoryCount item) {
 				if (item == null) return;
-				String key = item.getCategory().toUpperCase();
-				if (items.containsKey(key)) {
-					items.get(key).add(item);
-				} else {
-					List<InventoryCount> i = new ArrayList<>();
-					i.add(item);
-					items.put(key, i);
-				}
+				items.add(item);
 			}
 		},
 		CLOSED {
@@ -144,13 +118,13 @@ public class Inventory extends Entity<InventoryId> {
 			}
 
 			@Override
-			void addCount(Map<String, List<InventoryCount>> items, InventoryCount item) {
+			void addCount(List<InventoryCount> items, InventoryCount item) {
 				throw new IllegalStateException("Cannot add a new count to a closed inventory");
 			}
 		};
 
 		abstract boolean isOpen();
 
-		abstract void addCount(Map<String, List<InventoryCount>> items, InventoryCount item);
+		abstract void addCount(List<InventoryCount> items, InventoryCount item);
 	}
 }
