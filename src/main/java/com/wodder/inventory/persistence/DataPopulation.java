@@ -10,7 +10,7 @@ import javax.ejb.*;
 public class DataPopulation {
 
 	@PostConstruct
-	void init() {
+	public void init() {
 		Location l1 = new Location("Pantry");
 		Location l2 = new Location("Refrigerator");
 		Location l3 = new Location("Freezer");
@@ -36,5 +36,10 @@ public class DataPopulation {
 		categoryRepo.createItem(c4);
 		categoryRepo.createItem(c5);
 
+		Repository<Product, ProductId> productRepo = impl.getRepository(Product.class);
+		productRepo.createItem(new Product("2% Milk", c2, l2, new UnitOfMeasurement("Gallons", 2), new Price("2.98", "5.96")));
+		productRepo.createItem(new Product("Greek Yogurt", c2, l2, new UnitOfMeasurement("Quarts", 2), new Price("1.99", "4.98")));
+		productRepo.createItem(new Product("Ice", c2, l2, new UnitOfMeasurement("Fluid Ounces", 12), new Price("0.99", "10.99")));
+		productRepo.createItem(new Product("Pistachios", c4, l1, new UnitOfMeasurement("Pounds", 1), new Price("10.29", "10.29")));
 	}
 }

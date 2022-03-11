@@ -23,4 +23,11 @@ class ServiceFactoryImplTest {
 		ItemService itemService = impl.getService(ItemService.class);
 		assertNotNull(itemService);
 	}
+
+	@Test
+	@DisplayName("Can load the Inventory Service")
+	void inventory_service() {
+		InventoryService svc = impl.getService(InventoryService.class);
+		assertNotNull(svc);
+	}
 }

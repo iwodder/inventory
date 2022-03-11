@@ -1,12 +1,14 @@
 package com.wodder.inventory.models;
 
-public class InventoryCountModel {
+import java.io.*;
+
+public class InventoryCountModel implements Serializable {
 	private final String inventoryId;
 	private final String productId;
-	private int units;
-	private int cases;
+	private double units;
+	private double cases;
 
-	public InventoryCountModel(String inventoryId, String productId, int units, int cases) {
+	public InventoryCountModel(String inventoryId, String productId, double units, double cases) {
 		this.inventoryId = inventoryId;
 		this.productId = productId;
 		this.units = units;
@@ -25,7 +27,7 @@ public class InventoryCountModel {
 		return productId;
 	}
 
-	public int getUnits() {
+	public double getUnits() {
 		return units;
 	}
 
@@ -33,7 +35,7 @@ public class InventoryCountModel {
 		this.units = units;
 	}
 
-	public int getCases() {
+	public double getCases() {
 		return cases;
 	}
 

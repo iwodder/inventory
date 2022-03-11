@@ -43,6 +43,7 @@ public class Inventory extends Entity<InventoryId> {
 	public Inventory(Inventory that) {
 		super(that.id);
 		this.date = that.date;
+		this.state = that.state;
 		that.counts.stream().map(InventoryCount::new).forEach(this.counts::add);
 	}
 
@@ -52,6 +53,11 @@ public class Inventory extends Entity<InventoryId> {
 
 	public void addInventoryCount(InventoryCount item) {
 		state.addCount(counts, item);
+	}
+
+	public void addInventoryCount(ProductId id, double units, double cases) {
+		InventoryCount count = new InventoryCount(this.id, id, units, cases);
+		state.addCount(counts, count);
 	}
 
 	public int numberOfItems() {

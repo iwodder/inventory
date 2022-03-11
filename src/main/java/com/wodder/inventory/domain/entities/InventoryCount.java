@@ -5,10 +5,10 @@ import com.wodder.inventory.models.*;
 public class InventoryCount {
 	private final InventoryId inventoryId;
 	private final ProductId productId;
-	private int units;
-	private int cases;
+	private double units;
+	private double cases;
 
-	public InventoryCount(InventoryId inventoryId, ProductId productId, int units, int cases) {
+	public InventoryCount(InventoryId inventoryId, ProductId productId, double units, double cases) {
 		this.inventoryId = inventoryId;
 		this.productId = productId;
 		setUnits(units);
@@ -33,26 +33,26 @@ public class InventoryCount {
 		return productId;
 	}
 
-	public int getUnits() {
+	public double getUnits() {
 		return units;
 	}
 
-	public int getCases() {
+	public double getCases() {
 		return cases;
 	}
 
-	private void setUnits(int count) {
+	private void setUnits(double count) {
 		isGreaterThanZero(count);
 		this.units = count;
 	}
 
-	private void setCases(int count) {
+	private void setCases(double count) {
 		isGreaterThanZero(count);
 		this.cases = count;
 	}
 
-	private void isGreaterThanZero(int count) {
-		if (count < 0) {
+	private void isGreaterThanZero(double count) {
+		if (count < 0.0) {
 			throw new IllegalArgumentException();
 		}
 	}

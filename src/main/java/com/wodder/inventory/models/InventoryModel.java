@@ -1,10 +1,11 @@
 package com.wodder.inventory.models;
 
+import java.io.*;
 import java.time.*;
 import java.util.*;
 import java.util.stream.*;
 
-public class InventoryModel {
+public class InventoryModel implements Serializable {
 
 	private LocalDate inventoryDate;
 	private final List<InventoryCountModel> inventoryItemModels;

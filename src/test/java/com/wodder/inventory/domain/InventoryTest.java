@@ -71,6 +71,14 @@ class InventoryTest {
 	}
 
 	@Test
+	@DisplayName("Copy constructor makes sure that InventoryState is set")
+	void copy_state() {
+		Inventory i = new Inventory();
+		Inventory i2 = new Inventory(i);
+		assertTrue(i2.isOpen());
+	}
+
+	@Test
 	@DisplayName("Inventory is created in the OPEN state")
 	void open_state() {
 		Inventory i = new Inventory();
