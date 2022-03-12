@@ -28,7 +28,7 @@ footer > p {
 
 .card {
     width: 100%;
-    display: block;
+    display: flex;
 }
 
 .main-panel {
