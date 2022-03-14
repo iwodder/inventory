@@ -19,7 +19,7 @@ class InventoryControllerTest {
 	void init() {
 		InventoryController c = new InventoryController();
 		c.init();
-		assertNotNull(c.getItems());
+		assertNotNull(c.getItemMap());
 	}
 
 	@Test

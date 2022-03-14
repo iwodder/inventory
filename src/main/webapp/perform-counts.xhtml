@@ -5,16 +5,24 @@
       xmlns="http://www.w3.org/1999/xhtml"
       xmlns:h="http://xmlns.jcp.org/jsf/html"
       xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui"
 >
 <ui:composition template="templates/page-template.xhtml">
     <ui:define name="panel-main">
         <div class="right-main">
-            <div class="text-left p-1">
+            <div class="card text-left p-1">
                 <h:outputText value="Inventory Date - #{inventoryController.inventoryDate}"
                               styleClass="text-2xl"/>
             </div>
-            <h:form id="inventoryForm">
-            </h:form>
+            <p:accordionPanel styleClass="count-grid" value="#{inventoryController.locations}" var="location">
+                <p:tab title="#{location}">
+                    <p:dataTable value="#{inventoryController.getItems(location)}" var="item">
+                         <p:column headerText="Name">
+                             <h:outputText value="#{item.name}" />
+                         </p:column>
+                    </p:dataTable>
+                </p:tab>
+            </p:accordionPanel>
         </div>
     </ui:define>
 </ui:composition>

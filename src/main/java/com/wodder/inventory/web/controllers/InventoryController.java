@@ -27,18 +27,22 @@ public class InventoryController implements Serializable {
 		itemService = new ServiceFactoryImpl(new PersistenceFactoryImpl()).getService(ItemService.class);
 		model = inventoryService.createInventory();
 		items = itemService.loadAllActiveItems().stream()
-				.collect(Collectors.groupingBy(ProductModel::getCategory, Collectors.toList()));
+				.collect(Collectors.groupingBy(ProductModel::getLocation, Collectors.toList()));
 	}
 
 	public String getInventoryDate() {
 		return model.getInventoryDate().format(DateTimeFormatter.ofLocalizedDate(FormatStyle.MEDIUM));
 	}
 
-	public Map<String, List<ProductModel>> getItems() {
+	public Map<String, List<ProductModel>> getItemMap() {
 		return items;
 	}
 
-	public List<String> getCategories() {
+	public List<ProductModel> getItems(String location) {
+		return Collections.unmodifiableList(items.getOrDefault(location, Collections.emptyList()));
+	}
+
+	public List<String> getLocations() {
 		return new ArrayList<>(items.keySet());
 	}
 }

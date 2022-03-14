@@ -3,20 +3,18 @@
       xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
       xmlns:p="http://primefaces.org/ui">
 <ui:composition>
-    <h:outputStylesheet name="stylesheets/links.css"/>
     <div class="link-container">
-        <div class="nav">
-            <ul>
-                <li>
-                    <p:link outcome="index" value="Home"/>
-                </li>
-                <li>
-                    <p:link outcome="manage-items" value="Manage Items"/>
-                </li>
-            </ul>
-        </div>
-        <br/>
-        <p:link outcome="perform-counts" value="Perform Counts" />
+        <ul class="nav">
+            <li>
+                <p:link styleClass="nav-item" outcome="index" value="Home"/>
+            </li>
+            <li>
+                <p:link styleClass="nav-item" outcome="manage-items" value="Manage Items"/>
+            </li>
+            <li>
+                <p:link styleClass="nav-item" outcome="perform-counts" value="Perform Counts"/>
+            </li>
+        </ul>
     </div>
 </ui:composition>
 </html>
