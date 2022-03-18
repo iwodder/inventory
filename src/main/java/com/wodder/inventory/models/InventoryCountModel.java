@@ -31,7 +31,7 @@ public class InventoryCountModel implements Serializable {
 		return units;
 	}
 
-	public void setUnits(int units) {
+	public void setUnits(double units) {
 		this.units = units;
 	}
 
@@ -39,7 +39,7 @@ public class InventoryCountModel implements Serializable {
 		return cases;
 	}
 
-	public void setCases(int cases) {
+	public void setCases(double cases) {
 		this.cases = cases;
 	}
 }

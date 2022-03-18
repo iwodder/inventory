@@ -30,7 +30,7 @@ footer > p {
 }
 
 .card {
-    width: 100%;
+    padding: 0.5%;
     display: flex;
 }
 
@@ -57,7 +57,7 @@ a.nav-item:hover {
     color: #212529;
 }
 
-.main-panel {
+main {
     width: 90%;
     height: 85%;
     min-height: 85%;
@@ -65,18 +65,27 @@ a.nav-item:hover {
     display: flex;
 }
 
-main {
-    width: 90%;
-    height: 85%;
-    min-height: 85%;
+.right-border {
+    border-right: 1px solid var(--surface-d);
+}
+
+.left-border {
+    border-left: 1px solid var(--surface-d);
+}
+
+.top-border {
+    border-top: 1px solid var(--surface-d);
+}
+
+.bottom-border {
+    border-bottom: 1px solid var(--surface-d);
 }
 
 .link-container {
-    margin: 0.5em;
     padding: 0.5em;
     min-width: 15%;
-    min-height: 100%;
-    border-right: 1px solid var(--surface-d);
+    width: 15%;
+    height: 100%;
 }
 
 .right-main {
@@ -92,7 +101,6 @@ header {
     height: 10%;
 
 }
-
 header > h1 {
     width: 80%;
     height: 80%;

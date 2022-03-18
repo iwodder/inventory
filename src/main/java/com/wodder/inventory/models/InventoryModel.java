@@ -8,14 +8,14 @@ import java.util.stream.*;
 public class InventoryModel implements Serializable {
 
 	private LocalDate inventoryDate;
-	private final List<InventoryCountModel> inventoryItemModels;
+	private final Map<String, InventoryCountModel> inventoryItemModels;
 	private final String state;
 	private final String id;
 
 	public InventoryModel(String id, String state) {
 		this.id = id;
 		this.state = state;
-		inventoryItemModels = new ArrayList<>();
+		inventoryItemModels = new HashMap<>();
 	}
 
 	public InventoryModel() {
@@ -23,7 +23,7 @@ public class InventoryModel implements Serializable {
 	}
 
 	public void addInventoryCountModel(InventoryCountModel itemModel) {
-		inventoryItemModels.add(itemModel);
+		inventoryItemModels.put(itemModel.getProductId(), itemModel);
 	}
 
 	public LocalDate getInventoryDate() {
@@ -39,7 +39,13 @@ public class InventoryModel implements Serializable {
 	}
 
 	public Stream<InventoryCountModel> items() {
-		return inventoryItemModels.stream();
+		return inventoryItemModels.values().stream();
+	}
+
+	public void updateCount(String productId, double units, double cases) {
+		InventoryCountModel m = inventoryItemModels.get(productId);
+		m.setUnits(units);
+		m.setCases(cases);
 	}
 
 	public String getState() {

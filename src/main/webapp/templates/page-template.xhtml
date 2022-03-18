@@ -13,8 +13,10 @@
     <h:body>
         <ui:include src="page-header.xhtml"/>
         <main>
-            <div class="main-panel">
-                <ui:include src="links.xhtml" />
+            <div class="link-container right-border">
+                <ui:include src="links.xhtml"/>
+            </div>
+            <div class="right-main">
                 <ui:insert name="panel-main">
                     <p>Add Content Here</p>
                 </ui:insert>
