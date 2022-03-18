@@ -9,9 +9,11 @@ import java.util.*;
 public class InventoryServiceImpl implements InventoryService {
 
 	private final Repository<Inventory, InventoryId> repository;
+	private final Repository<Product, ProductId> productRepository;
 
-	InventoryServiceImpl(Repository<Inventory, InventoryId> repository) {
+	InventoryServiceImpl(Repository<Inventory, InventoryId> repository, Repository<Product, ProductId> productRepository) {
 		this.repository = repository;
+		this.productRepository = productRepository;
 	}
 
 	@Override
@@ -25,6 +27,21 @@ public class InventoryServiceImpl implements InventoryService {
 		if (opt.isPresent()) {
 			Inventory i = opt.get();
 			i.addInventoryCount(ProductId.productIdOf(productId), units, cases);
+			return Optional.of(i.toModel());
+		} else {
+			return Optional.empty();
+		}
+	}
+
+	@Override
+	public Optional<InventoryModel> addInventoryCounts(String inventoryId, Collection<InventoryCountModel> counts) {
+		Optional<Inventory> opt = repository.loadById(InventoryId.inventoryIdOf(inventoryId));
+		if (opt.isPresent()) {
+			Inventory i = opt.get();
+			for (InventoryCountModel m : counts) {
+				Product p = productRepository.loadById(ProductId.productIdOf(m.getProductId())).get();
+				i.addInventoryCount(p.getId(), m.getUnits(), m.getCases());
+			}
 			return Optional.of(i.toModel());
 		} else {
 			return Optional.empty();

@@ -21,7 +21,7 @@ public class InventoryController implements Serializable {
 	private transient ItemService itemService;
 	private InventoryModel model;
 	private Map<String, ProductModel> products;
-	private Map<String, List<InventoryCountModel>> items;
+	private Map<String, List<InventoryCountModel>> counts;
 
 	@PostConstruct
 	void init() {
@@ -31,27 +31,13 @@ public class InventoryController implements Serializable {
 		products = itemService.loadAllActiveItems()
 				.stream()
 				.collect(Collectors.toMap(ProductModel::getId, Function.identity()));
-		items = itemService.loadAllActiveItems().stream()
-				.collect(HashMap::new,
-						(map, val) -> {
-							if (map.containsKey(val.getLocation())) {
-								List<InventoryCountModel> l = map.get(val.getLocation());
-								InventoryCountModel m = new InventoryCountModel(model.getId(), val.getId());
-								l.add(m);
-								model.addInventoryCountModel(m);
-							} else {
-								List<InventoryCountModel> l = new ArrayList<>();
-								InventoryCountModel m = new InventoryCountModel(model.getId(), val.getId());
-								l.add(m);
-								model.addInventoryCountModel(m);
-								map.put(val.getLocation(), l);
-							}
-						},
-						(map1, map2) -> {
-							map2.forEach((k,v) -> {
-								map1.merge(k, v, (v1, v2) -> { v1.addAll(v2); return v1; });
-							});
-				});
+		counts = products.values().stream()
+				.collect(
+						Collectors.groupingBy(
+								ProductModel::getLocation,
+								Collectors.mapping(p -> new InventoryCountModel(p.getId()), Collectors.toList())
+						)
+				);
 	}
 
 	public String getInventoryDate() {
@@ -59,11 +45,11 @@ public class InventoryController implements Serializable {
 	}
 
 	public Map<String, List<InventoryCountModel>> getItemMap() {
-		return items;
+		return counts;
 	}
 
 	public List<InventoryCountModel> getItems(String location) {
-		return Collections.unmodifiableList(items.getOrDefault(location, Collections.emptyList()));
+		return Collections.unmodifiableList(counts.getOrDefault(location, Collections.emptyList()));
 	}
 
 	public String getName(String productId) {
@@ -71,10 +57,11 @@ public class InventoryController implements Serializable {
 	}
 
 	public List<String> getLocations() {
-		return new ArrayList<>(items.keySet());
+		return new ArrayList<>(counts.keySet());
 	}
 
 	public void save() {
-		System.out.println("Saved");
+		List<InventoryCountModel> l = counts.values().stream().flatMap(Collection::stream).collect(Collectors.toList());
+		inventoryService.addInventoryCounts(model.getId(), l);
 	}
 }

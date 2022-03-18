@@ -21,8 +21,15 @@ class InventoryServiceImplTest {
 	@Mock
 	Repository<Inventory, InventoryId> inventoryRepo;
 
-	@InjectMocks
+	@Mock
+	Repository<Product, ProductId> productRepo;
+
 	InventoryServiceImpl svc;
+
+	@BeforeEach
+	void setup() {
+		svc = new InventoryServiceImpl(inventoryRepo, productRepo);
+	}
 
 	@Test
 	@DisplayName("Can create a new inventory")
@@ -55,5 +62,21 @@ class InventoryServiceImplTest {
 	void addInventoryCountUnknown() {
 		when(inventoryRepo.loadById(InventoryId.inventoryIdOf("123"))).thenReturn(Optional.empty());
 		assertTrue(svc.addInventoryCount("123", "abc", 2.0, 0.25).isEmpty());
+	}
+
+	@Test
+	@DisplayName("Can add multiple inventory counts to single inventory")
+	void addInventoryCounts() {
+		when(inventoryRepo.loadById(InventoryId.inventoryIdOf("123"))).thenReturn(Optional.of(new Inventory()));
+		when(productRepo.loadById(any())).thenReturn(
+				Optional.of(new Product("2% Milk", new Category("Dairy"), new Location("Refrigerator"))),
+				Optional.of(new Product("Cheese", new Category("Dairy"), new Location("Refrigerator"))),
+				Optional.of(new Product("Pistachios", new Category("Dry Goods"), new Location("Pantry")))
+		);
+		InventoryModel m = svc.addInventoryCounts("123", Arrays.asList(
+				new InventoryCountModel("234", 1.0, 1.0),
+				new InventoryCountModel("234", .23, 0.25),
+				new InventoryCountModel("234", 1.1, 1.23))).get();
+		assertEquals(3, m.numberOfItems());
 	}
 }

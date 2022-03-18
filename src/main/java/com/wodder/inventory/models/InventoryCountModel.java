@@ -19,6 +19,14 @@ public class InventoryCountModel implements Serializable {
 		this(inventoryId, productId, 0, 0);
 	}
 
+	public InventoryCountModel(String productId, double units, double cases) {
+		this ("", productId, units, cases);
+	}
+
+	public InventoryCountModel(String productId) {
+		this("", productId, 0.0, 0.0);
+	}
+
 	public String getInventoryId() {
 		return inventoryId;
 	}
