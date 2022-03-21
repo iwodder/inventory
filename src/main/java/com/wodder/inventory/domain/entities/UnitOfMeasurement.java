@@ -13,6 +13,10 @@ public class UnitOfMeasurement {
 		this(unit, 0);
 	}
 
+	UnitOfMeasurement(UnitOfMeasurement that) {
+		this(that.unit, that.itemsPerCase);
+	}
+
 	public String getUnit() {
 		return unit;
 	}

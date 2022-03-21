@@ -42,12 +42,6 @@ public class InventoryModel implements Serializable {
 		return inventoryItemModels.values().stream();
 	}
 
-	public void updateCount(String productId, double units, double cases) {
-		InventoryCountModel m = inventoryItemModels.get(productId);
-		m.setUnits(units);
-		m.setCases(cases);
-	}
-
 	public String getState() {
 		return state;
 	}

@@ -14,3 +14,5 @@ Note: Inventory - is an aggregate root
          Unique inventory id maps to a product id which maps to a count
 
 Note: Inventory should be able to know its total worth
+Note: Inventory is an aggregate root, it is composed of InventoryItems, InventoryItems have counts
+Creating a new inventory adds all active products as inventory items.

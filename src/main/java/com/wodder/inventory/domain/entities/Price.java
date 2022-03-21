@@ -20,6 +20,10 @@ public class Price {
 		this(unitPrice, null);
 	}
 
+	Price(Price that) {
+		this(that.getUnitPrice(), that.getCasePrice());
+	}
+
 	public BigDecimal getUnitPrice() {
 		return unitPrice;
 	}

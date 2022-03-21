@@ -142,6 +142,10 @@ public class Product extends Entity<ProductId> {
 		return price.getCasePrice();
 	}
 
+	public Price getPrice() {
+		return price;
+	}
+
 	@Override
 	public boolean equals(Object o) {
 		if (this == o) return true;

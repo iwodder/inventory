@@ -3,36 +3,33 @@ package com.wodder.inventory.models;
 import java.io.*;
 
 public class InventoryCountModel implements Serializable {
-	private final String inventoryId;
-	private final String productId;
+	private String productId;
 	private double units;
 	private double cases;
 
-	public InventoryCountModel(String inventoryId, String productId, double units, double cases) {
-		this.inventoryId = inventoryId;
+	public InventoryCountModel(double units, double cases) {
+		this.units = units;
+		this.cases = cases;
+	}
+
+	public InventoryCountModel(String productId) {
+		this.productId = productId;
+		this.units = 0.0;
+		this.cases = 0.0;
+	}
+
+	public InventoryCountModel(String productId, double units, double cases) {
 		this.productId = productId;
 		this.units = units;
 		this.cases = cases;
 	}
 
-	public InventoryCountModel(String inventoryId, String productId) {
-		this(inventoryId, productId, 0, 0);
-	}
-
-	public InventoryCountModel(String productId, double units, double cases) {
-		this ("", productId, units, cases);
-	}
-
-	public InventoryCountModel(String productId) {
-		this("", productId, 0.0, 0.0);
-	}
-
-	public String getInventoryId() {
-		return inventoryId;
-	}
-
 	public String getProductId() {
 		return productId;
+	}
+
+	public void setProductId(String productId) {
+		this.productId = productId;
 	}
 
 	public double getUnits() {

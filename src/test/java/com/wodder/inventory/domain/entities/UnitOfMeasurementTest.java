@@ -9,7 +9,7 @@ class UnitOfMeasurementTest {
 	@Test
 	@DisplayName("Creating a unit of measurement requires a unit")
 	void unit_required() {
-		assertThrows(IllegalArgumentException.class, () -> new UnitOfMeasurement(null));
+		assertThrows(IllegalArgumentException.class, () -> new UnitOfMeasurement((String) null));
 		assertThrows(IllegalArgumentException.class, () -> new UnitOfMeasurement(""));
 	}
 }

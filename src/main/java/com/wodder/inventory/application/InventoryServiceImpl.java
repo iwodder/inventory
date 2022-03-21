@@ -18,15 +18,19 @@ public class InventoryServiceImpl implements InventoryService {
 
 	@Override
 	public InventoryModel createInventory() {
+
 		return repository.createItem(new Inventory()).toModel();
 	}
 
 	@Override
 	public Optional<InventoryModel> addInventoryCount(String inventoryId, String productId, double units, double cases) {
 		Optional<Inventory> opt = repository.loadById(InventoryId.inventoryIdOf(inventoryId));
-		if (opt.isPresent()) {
+		Optional<Product> productOpt = productRepository.loadById(ProductId.productIdOf(productId));
+		if (opt.isPresent() && productOpt.isPresent()) {
 			Inventory i = opt.get();
-			i.addInventoryCount(ProductId.productIdOf(productId), units, cases);
+			i.updateInventoryCount(
+					InventoryItem.fromProduct(productOpt.get()),
+					new InventoryCount(units, cases));
 			return Optional.of(i.toModel());
 		} else {
 			return Optional.empty();
@@ -40,7 +44,7 @@ public class InventoryServiceImpl implements InventoryService {
 			Inventory i = opt.get();
 			for (InventoryCountModel m : counts) {
 				Product p = productRepository.loadById(ProductId.productIdOf(m.getProductId())).get();
-				i.addInventoryCount(p.getId(), m.getUnits(), m.getCases());
+				i.updateInventoryCount(InventoryItem.fromProduct(p), new InventoryCount(m.getUnits(), m.getCases()));
 			}
 			return Optional.of(i.toModel());
 		} else {
