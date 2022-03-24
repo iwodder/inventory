@@ -1,10 +1,11 @@
 package com.wodder.inventory.domain.entities;
 
+import com.wodder.inventory.models.*;
+
 import java.util.*;
 
 public class InventoryItem {
 
-	private Integer id;
 	private final String name;
 	private final String location;
 	private final String category;
@@ -29,7 +30,7 @@ public class InventoryItem {
 		this(that.name, that.location, that.category, new UnitOfMeasurement(that.uom), new Price(that.price), new InventoryCount(that.count));
 	}
 
-	InventoryItem updateCount(InventoryCount count) {
+	public InventoryItem updateCount(InventoryCount count) {
 		return new InventoryItem(this.name, this.location, this.category, this.uom, this.price, count);
 	}
 
@@ -37,12 +38,11 @@ public class InventoryItem {
 		return new InventoryItem(p.getName(), p.getLocation(), p.getCategory(), p.getUnits(), p.getPrice(), InventoryCount.countOfZero());
 	}
 
-	public void setId(int id) {
-		if (this.id == null) {
-			this.id = id;
-		} else {
-			throw new IllegalArgumentException("Cannot set id twice");
-		}
+	public static InventoryItem fromModel(ItemModel model) {
+		return new InventoryItem(model.getName(), model.getLocation(), model.getCategory(),
+				new UnitOfMeasurement(model.getUnits(), Integer.parseInt(model.getItemsPerCase())),
+				new Price(model.getUnitPrice(), model.getCasePrice()),
+				new InventoryCount(Double.parseDouble(model.getNumberOfUnits()), Double.parseDouble(model.getNumberOfCases())));
 	}
 
 	public String getName() {
@@ -67,6 +67,10 @@ public class InventoryItem {
 
 	public InventoryCount getCount() {
 		return count;
+	}
+
+	public ItemModel toModel() {
+		return new ItemModel(this);
 	}
 
 	@Override

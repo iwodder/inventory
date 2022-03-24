@@ -31,7 +31,11 @@ public class Inventory extends Entity<InventoryId> {
 		super(InventoryId.inventoryIdOf(model.getId()));
 		this.state = InventoryState.valueOf(model.getState());
 		this.date = model.getInventoryDate();
-//		model.items().map(InventoryCount::new).forEach(this::addInventoryCount);
+		model.getItems().stream()
+				.map(InventoryItem::fromModel)
+				.forEach(m -> {
+					counts.putIfAbsent(generateKey(m), m);
+				});
 	}
 
 	public Inventory(Inventory that) {
@@ -55,8 +59,17 @@ public class Inventory extends Entity<InventoryId> {
 		state.updateCount(counts, name, location, count);
 	}
 
-	private void addProductToInventory(Product item) {
-		state.addItemToInventory(counts, itemId++, InventoryItem.fromProduct(item));
+	public void addItemToInventory(InventoryItem item) {
+		state.addItemToInventory(counts, generateKey(item), item);
+	}
+
+	private void addProductToInventory(Product product) {
+		InventoryItem item = InventoryItem.fromProduct(product);
+		counts.put(generateKey(item), item);
+	}
+
+	private int generateKey(InventoryItem item) {
+		return Objects.hash(item.getName().toLowerCase(), item.getLocation().toLowerCase());
 	}
 
 	public List<InventoryItem> getItemsByLocation(String location) {
@@ -80,7 +93,7 @@ public class Inventory extends Entity<InventoryId> {
 	public Optional<InventoryCount> getCount(String name) {
 		return counts.values().stream()
 				.filter(entry -> entry.getName().equalsIgnoreCase(name))
-				.map(e -> e.getCount())
+				.map(InventoryItem::getCount)
 				.findAny();
 	}
 
@@ -99,9 +112,9 @@ public class Inventory extends Entity<InventoryId> {
 	public InventoryModel toModel() {
 		InventoryModel result = new InventoryModel(id.getId(), state.name());
 		result.setInventoryDate(date);
-//		items.stream()
-//				.map(InventoryItem::toModel)
-//				.forEach(result::addInventoryCountModel);
+		counts.values().stream()
+				.map(InventoryItem::toModel)
+				.forEach(result::addInventoryItem);
 		return result;
 	}
 
@@ -127,7 +140,7 @@ public class Inventory extends Entity<InventoryId> {
 
 			@Override
 			void updateCount(Map<Integer, InventoryItem> counts, String name, String location, InventoryCount count){
-				int key = Objects.hash(name, location);
+				int key = Objects.hash(name.toLowerCase(), location.toLowerCase());
 				counts.computeIfPresent(key, (k, v) -> v.updateCount(count));
 			}
 

@@ -3,27 +3,26 @@ package com.wodder.inventory.models;
 import java.io.*;
 import java.time.*;
 import java.util.*;
-import java.util.stream.*;
 
 public class InventoryModel implements Serializable {
 
 	private LocalDate inventoryDate;
-	private final Map<String, InventoryCountModel> inventoryItemModels;
+	private final List<ItemModel> items;
 	private final String state;
 	private final String id;
 
 	public InventoryModel(String id, String state) {
 		this.id = id;
 		this.state = state;
-		inventoryItemModels = new HashMap<>();
+		items = new ArrayList<>();
 	}
 
 	public InventoryModel() {
 		this("", "OPEN");
 	}
 
-	public void addInventoryCountModel(InventoryCountModel itemModel) {
-		inventoryItemModels.put(itemModel.getProductId(), itemModel);
+	public void addInventoryItem(ItemModel itemModel) {
+		items.add(itemModel);
 	}
 
 	public LocalDate getInventoryDate() {
@@ -35,11 +34,7 @@ public class InventoryModel implements Serializable {
 	}
 
 	public int numberOfItems() {
-		return inventoryItemModels.size();
-	}
-
-	public Stream<InventoryCountModel> items() {
-		return inventoryItemModels.values().stream();
+		return items.size();
 	}
 
 	public String getState() {
@@ -48,5 +43,9 @@ public class InventoryModel implements Serializable {
 
 	public String getId() {
 		return id;
+	}
+
+	public List<ItemModel> getItems() {
+		return items;
 	}
 }
