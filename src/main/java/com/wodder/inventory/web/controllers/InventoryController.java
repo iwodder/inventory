@@ -10,7 +10,6 @@ import javax.inject.*;
 import java.io.*;
 import java.time.format.*;
 import java.util.*;
-import java.util.function.*;
 import java.util.stream.*;
 
 @Named
@@ -20,48 +19,35 @@ public class InventoryController implements Serializable {
 	private transient InventoryService inventoryService;
 	private transient ItemService itemService;
 	private InventoryModel model;
-	private Map<String, ProductModel> products;
-	private Map<String, List<InventoryCountModel>> counts;
+	private Map<String, List<ItemModel>> items;
 
 	@PostConstruct
 	void init() {
 		inventoryService = new ServiceFactoryImpl(new PersistenceFactoryImpl()).getService(InventoryService.class);
 		itemService = new ServiceFactoryImpl(new PersistenceFactoryImpl()).getService(ItemService.class);
 		model = inventoryService.createInventory();
-		products = itemService.loadAllActiveItems()
+		items = model.getItems()
 				.stream()
-				.collect(Collectors.toMap(ProductModel::getId, Function.identity()));
-		counts = products.values().stream()
-				.collect(
-						Collectors.groupingBy(
-								ProductModel::getLocation,
-								Collectors.mapping(p -> new InventoryCountModel(p.getId()), Collectors.toList())
-						)
-				);
+				.collect(Collectors.groupingBy(ItemModel::getLocation, Collectors.toList()));
 	}
 
 	public String getInventoryDate() {
 		return model.getInventoryDate().format(DateTimeFormatter.ofLocalizedDate(FormatStyle.MEDIUM));
 	}
 
-	public Map<String, List<InventoryCountModel>> getItemMap() {
-		return counts;
+	public Map<String, List<ItemModel>> getItemMap() {
+		return items;
 	}
 
-	public List<InventoryCountModel> getItems(String location) {
-		return Collections.unmodifiableList(counts.getOrDefault(location, Collections.emptyList()));
-	}
-
-	public String getName(String productId) {
-		return products.get(productId).getName();
+	public List<ItemModel> getItems(String location) {
+		return Collections.unmodifiableList(items.getOrDefault(location, Collections.emptyList()));
 	}
 
 	public List<String> getLocations() {
-		return new ArrayList<>(counts.keySet());
+		return new ArrayList<>(items.keySet());
 	}
 
 	public void save() {
-		List<InventoryCountModel> l = counts.values().stream().flatMap(Collection::stream).collect(Collectors.toList());
-		inventoryService.addInventoryCounts(model.getId(), l);
+		inventoryService.saveInventory(model);
 	}
 }

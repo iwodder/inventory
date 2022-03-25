@@ -24,6 +24,9 @@ class InventoryServiceImplTest {
 	@Mock
 	Repository<Product, ProductId> productRepo;
 
+	@Captor
+	ArgumentCaptor<Inventory> captor;
+
 	InventoryServiceImpl svc;
 
 	@BeforeEach
@@ -51,10 +54,15 @@ class InventoryServiceImplTest {
 	@Test
 	@DisplayName("Can add new count to inventory")
 	void addInventoryCount() {
+		when(productRepo.loadById(ProductId.productIdOf("abc")))
+				.thenReturn(Optional.of(
+							new Product("2% Milk", new Category("Dairy"), new Location("Refrigerator"),
+									new UnitOfMeasurement("Gallon", 4), new Price("0.99", "4.98"))
+						));
 		when(inventoryRepo.loadById(InventoryId.inventoryIdOf("123"))).thenReturn(Optional.of(new Inventory()));
 		InventoryModel model = svc.addInventoryCount("123", "abc", 2.0, 0.25).get();
 		assertEquals(1, model.numberOfItems());
-//		assertTrue(model.items().anyMatch(c -> c.getProductId().equals("abc")));
+		assertTrue(model.getItems().stream().anyMatch(c -> c.getName().equals("2% Milk")));
 	}
 
 	@Test
@@ -69,14 +77,35 @@ class InventoryServiceImplTest {
 	void addInventoryCounts() {
 		when(inventoryRepo.loadById(InventoryId.inventoryIdOf("123"))).thenReturn(Optional.of(new Inventory()));
 		when(productRepo.loadById(any())).thenReturn(
-				Optional.of(new Product("2% Milk", new Category("Dairy"), new Location("Refrigerator"))),
-				Optional.of(new Product("Cheese", new Category("Dairy"), new Location("Refrigerator"))),
-				Optional.of(new Product("Pistachios", new Category("Dry Goods"), new Location("Pantry")))
+				Optional.of(new Product("2% Milk", new Category("Dairy"), new Location("Refrigerator"),
+						new UnitOfMeasurement("Gallon", 4), new Price("0.99", "4.98"))),
+				Optional.of(new Product("Cheese", new Category("Dairy"), new Location("Refrigerator"),
+						new UnitOfMeasurement("Gallon", 4), new Price("0.99", "4.98"))),
+				Optional.of(new Product("Pistachios", new Category("Dry Goods"), new Location("Pantry"),
+						new UnitOfMeasurement("Gallon", 4), new Price("0.99", "4.98")))
 		);
 		InventoryModel m = svc.addInventoryCounts("123", Arrays.asList(
 				new InventoryCountModel("234", 1.0, 1.0),
 				new InventoryCountModel("234", .23, 0.25),
 				new InventoryCountModel("234", 1.1, 1.23))).get();
 		assertEquals(3, m.numberOfItems());
+	}
+
+	@Test
+	@DisplayName("Inventory is created with active products")
+	void new_inventory() {
+		List<Product> products = new ArrayList<>();
+		products.add(new Product("2% Milk", new Category("Dairy"), new Location("Refrigerator"),
+				new UnitOfMeasurement("Gallon", 4), new Price("0.99", "4.98")));
+		products.add(new Product("Cheese", new Category("Dairy"), new Location("Refrigerator"),
+				new UnitOfMeasurement("Gallon", 4), new Price("0.99", "4.98")));
+		products.add(new Product("Pistachios", new Category("Dry Goods"), new Location("Pantry"),
+				new UnitOfMeasurement("Gallon", 4), new Price("0.99", "4.98")));
+		when(productRepo.loadAllItems()).thenReturn(products);
+		when(inventoryRepo.createItem(any())).thenReturn(new Inventory());
+		svc.createInventory();
+		verify(inventoryRepo).createItem(captor.capture());
+		Inventory i = captor.getValue();
+		assertEquals(3, i.numberOfItems());
 	}
 }
