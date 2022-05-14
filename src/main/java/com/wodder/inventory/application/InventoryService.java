@@ -11,4 +11,6 @@ public interface InventoryService {
 	Optional<InventoryModel> addInventoryCount(String inventoryId, String productId, double units, double cases);
 
 	Optional<InventoryModel> addInventoryCounts(String inventoryId, Collection<InventoryCountModel> counts);
+
+	void saveInventory(InventoryModel model);
 }

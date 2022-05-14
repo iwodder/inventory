@@ -6,6 +6,7 @@ import com.wodder.inventory.models.*;
 import com.wodder.inventory.persistence.*;
 
 import java.util.*;
+import java.util.stream.*;
 
 public class InventoryServiceImpl implements InventoryService {
 
@@ -19,8 +20,10 @@ public class InventoryServiceImpl implements InventoryService {
 
 	@Override
 	public InventoryModel createInventory() {
-
-		return repository.createItem(new Inventory()).toModel();
+		Inventory i = Inventory.createNewInventoryWithProducts(
+				this.productRepository.loadAllItems().stream()
+						.filter(Product::isActive).collect(Collectors.toList()));
+		return repository.createItem(i).toModel();
 	}
 
 	@Override
@@ -44,11 +47,22 @@ public class InventoryServiceImpl implements InventoryService {
 			Inventory i = opt.get();
 			for (InventoryCountModel m : counts) {
 				Product p = productRepository.loadById(ProductId.productIdOf(m.getProductId())).get();
-//				i.updateInventoryCount(InventoryItem.fromProduct(p), new InventoryCount(m.getUnits(), m.getCases()));
+				i.addItemToInventory(InventoryItem.fromProduct(p).updateCount(new InventoryCount(m.getUnits(), m.getCases())));
 			}
 			return Optional.of(i.toModel());
 		} else {
 			return Optional.empty();
 		}
+	}
+
+	@Override
+	public void saveInventory(InventoryModel model) {
+		Inventory i = repository.loadById(InventoryId.inventoryIdOf(model.getId())).get();
+		model.getItems()
+				.forEach(itemModel -> {
+					i.updateInventoryCount(itemModel.getName(), itemModel.getLocation(),
+							InventoryCount.countFrom(itemModel.getNumberOfUnits(), itemModel.getNumberOfCases()));
+				});
+		repository.updateItem(i);
 	}
 }

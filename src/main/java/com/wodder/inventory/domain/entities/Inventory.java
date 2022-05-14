@@ -28,9 +28,10 @@ public class Inventory extends Entity<InventoryId> {
 	}
 
 	public Inventory(InventoryModel model) {
-		super(InventoryId.inventoryIdOf(model.getId()));
-		this.state = InventoryState.valueOf(model.getState());
-		this.date = model.getInventoryDate();
+		this(
+				InventoryId.inventoryIdOf(model.getId()), model.getInventoryDate(),
+				InventoryState.valueOf(model.getState())
+		);
 		model.getItems().stream()
 				.map(InventoryItem::fromModel)
 				.forEach(m -> {
@@ -39,9 +40,7 @@ public class Inventory extends Entity<InventoryId> {
 	}
 
 	public Inventory(Inventory that) {
-		super(that.id);
-		this.date = that.date;
-		this.state = that.state;
+		this(that.id, that.date, that.state);
 		that.counts.forEach((k, v) -> this.counts.put(k, new InventoryItem(v)));
 	}
 
@@ -49,10 +48,6 @@ public class Inventory extends Entity<InventoryId> {
 		Inventory i = new Inventory();
 		products.forEach(i::addProductToInventory);
 		return i;
-	}
-
-	public LocalDate date() {
-		return date;
 	}
 
 	public void updateInventoryCount(String name, String location, InventoryCount count) {
@@ -95,6 +90,10 @@ public class Inventory extends Entity<InventoryId> {
 				.filter(entry -> entry.getName().equalsIgnoreCase(name))
 				.map(InventoryItem::getCount)
 				.findAny();
+	}
+
+	public LocalDate date() {
+		return date;
 	}
 
 	public LocalDate getInventoryDate() {

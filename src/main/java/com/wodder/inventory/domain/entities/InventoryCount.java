@@ -19,8 +19,12 @@ public class InventoryCount {
 		this(model.getUnits(), model.getCases());
 	}
 
-	static InventoryCount countOfZero() {
+	public static InventoryCount countOfZero() {
 		return new InventoryCount(0.0, 0.0);
+	}
+
+	public static InventoryCount countFrom(String units, String cases) {
+		return new InventoryCount(Double.parseDouble(units), Double.parseDouble(cases));
 	}
 
 	public double getUnits() {
