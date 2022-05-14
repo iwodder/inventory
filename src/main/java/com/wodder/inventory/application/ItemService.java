@@ -10,7 +10,7 @@ public interface ItemService {
 
 	Optional<ProductModel> createNewItem(String name, String category, String location, String unit, int unitsPerCase, String unitPrice, String casePrice);
 
-	Boolean deleteItem(ProductModel itemToDelete);
+	Boolean deleteItem(String productId);
 
 	Optional<ProductModel> updateItemCategory(String inventoryItemId, String category);
 

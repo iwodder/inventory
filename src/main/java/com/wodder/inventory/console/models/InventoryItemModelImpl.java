@@ -21,7 +21,7 @@ public class InventoryItemModelImpl implements InventoryItemModel {
 
 	@Override
 	public Result<Boolean, String> deleteItem(ProductModel itemDto) {
-		boolean result = storage.deleteItem(itemDto);
+		boolean result = storage.deleteItem(itemDto.getId());
 		if (result) {
 			return new Result<>(Boolean.TRUE, null);
 		} else {

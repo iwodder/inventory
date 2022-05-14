@@ -1,5 +1,6 @@
-package com.wodder.inventory.application;
+package com.wodder.inventory.application.implementations;
 
+import com.wodder.inventory.application.*;
 import com.wodder.inventory.domain.entities.*;
 import com.wodder.inventory.models.*;
 import com.wodder.inventory.persistence.*;

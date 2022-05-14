@@ -42,7 +42,6 @@ class ProductModelImplTest {
 	@Test
 	@DisplayName("Delete item returns ok on success")
 	void deleteItemSuccess() {
-		when(itemService.deleteItem(any(ProductModel.class))).thenReturn(Boolean.TRUE);
 		Result<Boolean, String> result = inventoryItemModel.deleteItem(ProductModel.builder().build());
 		assertTrue(result.isOK());
 		assertFalse(result.isErr());

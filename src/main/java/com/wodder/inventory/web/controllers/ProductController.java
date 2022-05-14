@@ -1,6 +1,7 @@
 package com.wodder.inventory.web.controllers;
 
 import com.wodder.inventory.application.*;
+import com.wodder.inventory.application.implementations.*;
 import com.wodder.inventory.models.*;
 import com.wodder.inventory.persistence.*;
 import org.primefaces.*;

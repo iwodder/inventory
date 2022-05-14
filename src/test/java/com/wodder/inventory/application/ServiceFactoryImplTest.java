@@ -1,5 +1,6 @@
 package com.wodder.inventory.application;
 
+import com.wodder.inventory.application.implementations.*;
 import com.wodder.inventory.persistence.*;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.*;

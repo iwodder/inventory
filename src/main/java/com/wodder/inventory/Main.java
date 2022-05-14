@@ -1,6 +1,6 @@
 package com.wodder.inventory;
 
-import com.wodder.inventory.application.*;
+import com.wodder.inventory.application.implementations.*;
 import com.wodder.inventory.console.*;
 import com.wodder.inventory.console.menus.*;
 import com.wodder.inventory.persistence.*;
