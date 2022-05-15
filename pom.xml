@@ -17,7 +17,7 @@
         <junit.version>5.8.0</junit.version>
         <javaee.version>8.0.1</javaee.version>
         <hibernate.version>5.2.10.Final</hibernate.version>
-        <h2.version>1.4.200</h2.version>
+        <h2.version>2.1.212</h2.version>
         <primefaces.version>10.0.0</primefaces.version>
         <mockito.version>4.0.0</mockito.version>
     </properties>
@@ -87,6 +87,17 @@
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-war-plugin</artifactId>
                 <version>3.3.1</version>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.8.1</version>
+                <configuration>
+                    <compilerArgs>
+                        <arg>-Werror</arg>
+                        <arg>-Xlint:all</arg>
+                    </compilerArgs>
+                </configuration>
             </plugin>
         </plugins>
     </build>

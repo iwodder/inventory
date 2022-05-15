@@ -3,6 +3,7 @@ package com.wodder.inventory.models;
 import java.io.*;
 
 public class InventoryCountModel implements Serializable {
+	private static final long serialVersionUID = 1L;
 	private String productId;
 	private double units;
 	private double cases;

@@ -4,6 +4,8 @@ import java.io.*;
 import java.util.*;
 
 public class ProductModel implements Serializable {
+	private static final long serialVersionUID = 1L;
+
 	private String id;
 	private String name;
 	private String category;
@@ -126,7 +128,7 @@ public class ProductModel implements Serializable {
 		return new ProductModelBuilder();
 	}
 
-	public static class ProductModelBuilder implements Serializable {
+	public static class ProductModelBuilder {
 		private String id;
 		private String name;
 		private String category;

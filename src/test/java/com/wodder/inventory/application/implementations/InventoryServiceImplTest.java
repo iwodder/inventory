@@ -15,7 +15,7 @@ import static org.junit.jupiter.api.Assertions.*;
 @ExtendWith(MockitoExtension.class)
 class InventoryServiceImplTest {
 
-	private static final ServiceFactory svc = new ServiceFactoryImpl(new PersistenceFactoryImpl());
+	private static final ServiceFactory svc = new ServiceFactoryImpl(TestPersistenceFactory.getPopulated());
 	InventoryService invSvc;
 
 	@BeforeEach

@@ -17,8 +17,8 @@ public class ServiceFactoryImpl implements ServiceFactory {
 	@Override
 	public <T> T getService(Class<T> service) {
 		try {
-			if (service.isAssignableFrom(ItemServiceImpl.class)) {
-				return service.cast(new ItemServiceImpl(factory.getRepository(Product.class), factory.getRepository(Category.class), factory.getRepository(Location.class)));
+			if (service.isAssignableFrom(ProductServiceImpl.class)) {
+				return service.cast(new ProductServiceImpl(factory.getRepository(Product.class), factory.getRepository(Category.class), factory.getRepository(Location.class)));
 			} else if (service.isAssignableFrom(CategoryServiceImpl.class)) {
 				return service.cast(new CategoryServiceImpl(factory.getRepository(Category.class)));
 			} else if (service.isAssignableFrom(LocationServiceImpl.class)) {

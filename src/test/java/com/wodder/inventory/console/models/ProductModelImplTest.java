@@ -16,7 +16,7 @@ import static org.mockito.Mockito.*;
 class ProductModelImplTest {
 
 	@Mock
-	ItemService itemService;
+	ProductService productService;
 
 	@InjectMocks
 	InventoryItemModelImpl inventoryItemModel;
@@ -24,7 +24,7 @@ class ProductModelImplTest {
 	@Test
 	@DisplayName("Create item returns ok on success")
 	void createItemSuccess() {
-		when(itemService.createNewItem(any(ProductModel.class))).thenReturn(Optional.of(ProductModel.builder().build()));
+		when(productService.createNewProduct(any(ProductModel.class))).thenReturn(Optional.of(ProductModel.builder().build()));
 		Result<ProductModel, String> r = inventoryItemModel.createItem(ProductModel.builder().build());
 		assertTrue(r.isOK());
 		assertFalse(r.isErr());
@@ -33,7 +33,7 @@ class ProductModelImplTest {
 	@Test
 	@DisplayName("Create item returns error result on failure")
 	void createItemFailure() {
-		when(itemService.createNewItem(any(ProductModel.class))).thenReturn(Optional.empty());
+		when(productService.createNewProduct(any(ProductModel.class))).thenReturn(Optional.empty());
 		Result<ProductModel, String> r = inventoryItemModel.createItem(ProductModel.builder().build());
 		assertFalse(r.isOK());
 		assertTrue(r.isErr());
@@ -58,7 +58,7 @@ class ProductModelImplTest {
 	@Test
 	@DisplayName("Update item returns ok on success")
 	void updateItemSuccess() {
-		when(itemService.updateItemCategory(any(), any())).thenReturn(Optional.of(ProductModel.builder().build()));
+		when(productService.updateProductCategory(any(), any())).thenReturn(Optional.of(ProductModel.builder().build()));
 		Result<ProductModel, String> result = inventoryItemModel.updateItem(ProductModel.builder().build());
 		assertTrue(result.isOK());
 		assertFalse(result.isErr());
@@ -83,7 +83,7 @@ class ProductModelImplTest {
 	@Test
 	@DisplayName("Get items returns err on empty items list")
 	void getItemsFailure1() {
-		when(itemService.loadAllActiveItems()).thenReturn(Collections.emptyList());
+		when(productService.loadAllActiveProducts()).thenReturn(Collections.emptyList());
 		Result<List<ProductModel>, String> result = inventoryItemModel.getItems();
 		assertFalse(result.isOK());
 		assertTrue(result.isErr());
@@ -94,7 +94,7 @@ class ProductModelImplTest {
 	void getItemsSuccess() {
 		List<ProductModel> items = new ArrayList<>();
 		items.add(ProductModel.builder().build());
-		when(itemService.loadAllActiveItems()).thenReturn(items);
+		when(productService.loadAllActiveProducts()).thenReturn(items);
 		Result<List<ProductModel>, String> result = inventoryItemModel.getItems();
 		assertFalse(result.isErr());
 		assertTrue(result.isOK());

@@ -16,16 +16,16 @@ import java.util.stream.*;
 @Named
 @ViewScoped
 public class InventoryController implements Serializable {
-
+	private static final long serialVersionUID = 1L;
 	private transient InventoryService inventoryService;
-	private transient ItemService itemService;
+	private transient ProductService productService;
 	private InventoryModel model;
 	private Map<String, List<ItemModel>> items;
 
 	@PostConstruct
 	void init() {
 		inventoryService = new ServiceFactoryImpl(new PersistenceFactoryImpl()).getService(InventoryService.class);
-		itemService = new ServiceFactoryImpl(new PersistenceFactoryImpl()).getService(ItemService.class);
+		productService = new ServiceFactoryImpl(new PersistenceFactoryImpl()).getService(ProductService.class);
 		model = inventoryService.createInventory();
 		items = model.getItems()
 				.stream()

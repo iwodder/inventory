@@ -18,24 +18,25 @@ import java.util.stream.*;
 @Named
 @ViewScoped
 public class ProductController implements Serializable {
+	private static final long serialVersionUID = 1L;
 
 	private ProductModel model;
 	private CategoryModel categoryModel;
 	private LocationModel locationModel;
 
-	transient ItemService itemService;
+	transient ProductService productService;
 	transient CategoryService categoryService;
 	transient LocationService locationService;
 
 	@PostConstruct
 	void init() {
-		itemService = new ServiceFactoryImpl(new PersistenceFactoryImpl()).getService(ItemService.class);
+		productService = new ServiceFactoryImpl(new PersistenceFactoryImpl()).getService(ProductService.class);
 		categoryService = new ServiceFactoryImpl(new PersistenceFactoryImpl()).getService(CategoryService.class);
 		locationService = new ServiceFactoryImpl(new PersistenceFactoryImpl()).getService(LocationService.class);
 	}
 
 	public List<ProductModel> allItems() {
-		return itemService.loadAllActiveItems();
+		return productService.loadAllActiveProducts();
 	}
 
 	public List<String> completeCategory(String category) {
@@ -67,7 +68,7 @@ public class ProductController implements Serializable {
 	}
 
 	public void saveProduct() {
-		Optional<ProductModel> item = itemService.createNewItem(
+		Optional<ProductModel> item = productService.createNewProduct(
 				model.getName(), model.getCategory(), model.getLocation(), model.getUnits(), model.getUnitsPerCase(),
 				model.getItemPrice(), model.getCasePrice());
 		if (item.isPresent()) {

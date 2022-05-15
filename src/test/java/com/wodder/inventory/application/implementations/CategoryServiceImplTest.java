@@ -14,8 +14,7 @@ class CategoryServiceImplTest {
 
 	@BeforeEach
 	public void setup() {
-		PersistenceFactoryImpl psf = new PersistenceFactoryImpl();
-		new DataPopulation().initForTesting(psf);
+		PersistenceFactory psf = TestPersistenceFactory.getPopulated();
 		svc = new CategoryServiceImpl(psf.getRepository(Category.class));
 	}
 

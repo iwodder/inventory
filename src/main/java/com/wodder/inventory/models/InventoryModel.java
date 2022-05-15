@@ -5,6 +5,7 @@ import java.time.*;
 import java.util.*;
 
 public class InventoryModel implements Serializable {
+	private static final long serialVersionUID = 1L;
 
 	private LocalDate inventoryDate;
 	private final List<ItemModel> items;

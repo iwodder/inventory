@@ -8,25 +8,25 @@ import com.wodder.inventory.persistence.*;
 import java.util.*;
 import java.util.stream.*;
 
-class ItemServiceImpl implements ItemService {
+class ProductServiceImpl implements ProductService {
 
 	private final Repository<Product, ProductId> productRepository;
 	private final Repository<Category, CategoryId> categoryRepository;
 	private final Repository<Location, LocationId> locationRepository;
 
-	ItemServiceImpl(Repository<Product, ProductId> productRepository, Repository<Category, CategoryId> categoryRepository, Repository<Location, LocationId> locationRepository) {
+	ProductServiceImpl(Repository<Product, ProductId> productRepository, Repository<Category, CategoryId> categoryRepository, Repository<Location, LocationId> locationRepository) {
 		this.productRepository = productRepository;
 		this.categoryRepository = categoryRepository;
 		this.locationRepository = locationRepository;
 	}
 
 	@Override
-	public Optional<ProductModel> createNewItem(ProductModel newItem) {
-		return createNewItem(newItem.getName(), newItem.getCategory(), newItem.getLocation(), newItem.getUnits(), newItem.getUnitsPerCase(), newItem.getItemPrice(), newItem.getCasePrice());
+	public Optional<ProductModel> createNewProduct(ProductModel newItem) {
+		return createNewProduct(newItem.getName(), newItem.getCategory(), newItem.getLocation(), newItem.getUnits(), newItem.getUnitsPerCase(), newItem.getItemPrice(), newItem.getCasePrice());
 	}
 
 	@Override
-	public Optional<ProductModel> createNewItem(String name, String category, String location, String unit, int unitsPerCase, String unitPrice, String casePrice) {
+	public Optional<ProductModel> createNewProduct(String name, String category, String location, String unit, int unitsPerCase, String unitPrice, String casePrice) {
 		Category cat = categoryRepository.loadByItem(new Category(category))
 				.orElseGet(() -> categoryRepository.createItem(new Category(category)));
 
@@ -41,22 +41,22 @@ class ItemServiceImpl implements ItemService {
 	}
 
 	@Override
-	public Boolean deleteItem(String productId) {
+	public Boolean deleteProduct(String productId) {
 		return productRepository.deleteItem(ProductId.productIdOf(productId));
 	}
 
 	@Override
-	public Optional<ProductModel> updateItemCategory(String inventoryItemId, String category) {
-		if (inventoryItemId == null) {
+	public Optional<ProductModel> updateProductCategory(String productId, String category) {
+		if (productId == null) {
 			return Optional.empty();
 		} else {
-			return processCategoryUpdate(inventoryItemId, category);
+			return processCategoryUpdate(productId, category);
 		}
 	}
 
 	@Override
-	public Optional<ProductModel> updateItemLocation(String inventoryItemId, String location) {
-		Optional<Product> opt = productRepository.loadById(ProductId.productIdOf(inventoryItemId));
+	public Optional<ProductModel> updateProductLocation(String productId, String location) {
+		Optional<Product> opt = productRepository.loadById(ProductId.productIdOf(productId));
 		Optional<Location> loc = locationRepository.loadByItem(new Location(location));
 		if (opt.isPresent() && loc.isPresent()) {
 			Product item = opt.get();
@@ -69,8 +69,8 @@ class ItemServiceImpl implements ItemService {
 	}
 
 	@Override
-	public Optional<ProductModel> updateItemName(String inventoryItemId, String name) {
-		Optional<Product> opt = productRepository.loadById(ProductId.productIdOf(inventoryItemId));
+	public Optional<ProductModel> updateProductName(String productId, String name) {
+		Optional<Product> opt = productRepository.loadById(ProductId.productIdOf(productId));
 		if (opt.isPresent()) {
 			Product item = opt.get();
 			item.updateName(name);
@@ -82,8 +82,8 @@ class ItemServiceImpl implements ItemService {
 	}
 
 	@Override
-	public Optional<ProductModel> updateItemUnitOfMeasurement(String inventoryItemId, String unitOfMeasurement, Integer unitsPerCase) {
-		Optional<Product> opt = productRepository.loadById(ProductId.productIdOf(inventoryItemId));;
+	public Optional<ProductModel> updateProductUnitOfMeasurement(String productId, String unitOfMeasurement, Integer unitsPerCase) {
+		Optional<Product> opt = productRepository.loadById(ProductId.productIdOf(productId));;
 		if (opt.isPresent()) {
 			Product item = opt.get();
 			item.updateUnitOfMeasurement(new UnitOfMeasurement(unitOfMeasurement, unitsPerCase));
@@ -95,8 +95,8 @@ class ItemServiceImpl implements ItemService {
 	}
 
 	@Override
-	public Optional<ProductModel> updateItemPrice(String inventoryItemId, String unitPrice, String casePrice) {
-		Optional<Product> opt = productRepository.loadById(ProductId.productIdOf(inventoryItemId));
+	public Optional<ProductModel> updateProductPrice(String productId, String unitPrice, String casePrice) {
+		Optional<Product> opt = productRepository.loadById(ProductId.productIdOf(productId));
 		if (opt.isPresent()) {
 			Product i = opt.get();
 			i.updatePrice(new Price(unitPrice, casePrice));
@@ -120,13 +120,13 @@ class ItemServiceImpl implements ItemService {
 	}
 
 	@Override
-	public Optional<ProductModel> loadItem(String itemId) {
-		if (itemId == null) return Optional.empty();
-		return productRepository.loadById(ProductId.productIdOf(itemId)).map(Product::toItemModel);
+	public Optional<ProductModel> loadProduct(String productId) {
+		if (productId == null) return Optional.empty();
+		return productRepository.loadById(ProductId.productIdOf(productId)).map(Product::toItemModel);
 	}
 
 	@Override
-	public List<ProductModel> loadAllActiveItems() {
+	public List<ProductModel> loadAllActiveProducts() {
 		return productRepository.loadAllItems()
 				.stream()
 				.map(Product::toItemModel)

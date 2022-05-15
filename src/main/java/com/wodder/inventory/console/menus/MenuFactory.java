@@ -23,7 +23,7 @@ public class MenuFactory {
 
 	private InventoryItemMenu createInventoryMenu() {
 		InventoryItemMenu inventoryItemMenu = new InventoryItemMenu(new DefaultRootMenuHandler());
-		InventoryItemModel model = new InventoryItemModelImpl(serviceFactory.getService(ItemService.class));
+		InventoryItemModel model = new InventoryItemModelImpl(serviceFactory.getService(ProductService.class));
 		inventoryItemMenu.addMenu(new CreateItemMenu(new CreateItemHandler(model), model));
 		inventoryItemMenu.addMenu(new DeleteItemMenu(new DeleteItemHandler(model)));
 		inventoryItemMenu.addMenu(new UpdateItemMenu(new UpdateItemHandler(model)));
