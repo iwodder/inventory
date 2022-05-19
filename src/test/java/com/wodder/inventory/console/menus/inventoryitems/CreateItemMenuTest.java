@@ -1,7 +1,7 @@
 package com.wodder.inventory.console.menus.inventoryitems;
 
 import com.wodder.inventory.console.handlers.*;
-import com.wodder.inventory.models.*;
+import com.wodder.inventory.dto.*;
 import org.junit.jupiter.api.*;
 
 import java.util.*;

@@ -1,7 +1,8 @@
 package com.wodder.inventory.application.implementations;
 
 import com.wodder.inventory.application.*;
-import com.wodder.inventory.domain.entities.*;
+import com.wodder.inventory.domain.model.inventory.*;
+import com.wodder.inventory.domain.model.product.*;
 import com.wodder.inventory.persistence.*;
 
 public class ServiceFactoryImpl implements ServiceFactory {

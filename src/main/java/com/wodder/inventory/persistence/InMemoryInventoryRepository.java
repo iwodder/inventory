@@ -1,6 +1,7 @@
 package com.wodder.inventory.persistence;
 
-import com.wodder.inventory.domain.entities.*;
+
+import com.wodder.inventory.domain.model.inventory.*;
 
 public final class InMemoryInventoryRepository extends InMemoryRepository<Inventory, InventoryId> {
 

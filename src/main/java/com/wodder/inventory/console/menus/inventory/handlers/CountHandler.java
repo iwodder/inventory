@@ -1,7 +1,7 @@
 package com.wodder.inventory.console.menus.inventory.handlers;
 
 import com.wodder.inventory.console.handlers.*;
-import com.wodder.inventory.models.*;
+import com.wodder.inventory.dto.*;
 
 import java.io.*;
 import java.util.*;
@@ -9,7 +9,7 @@ import java.util.*;
 //TODO Revisit this once the Inventory Service is done
 public class CountHandler extends InputHandler {
 //	private InventoryService service;
-	private InventoryModel model;
+	private InventoryDto model;
 //	public CountHandler(InventoryService service) {
 //		this.service = service;
 //	}

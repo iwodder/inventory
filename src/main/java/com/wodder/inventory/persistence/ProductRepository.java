@@ -1,6 +1,7 @@
 package com.wodder.inventory.persistence;
 
-import com.wodder.inventory.domain.entities.*;
+
+import com.wodder.inventory.domain.model.product.*;
 
 import java.util.*;
 

@@ -1,7 +1,7 @@
 package com.wodder.inventory.console.menus.inventory.handlers;
 
 import com.wodder.inventory.console.menus.inventoryitems.*;
-import com.wodder.inventory.models.*;
+import com.wodder.inventory.dto.*;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.*;
 import org.mockito.*;
@@ -21,7 +21,7 @@ class CountHandlerTest extends BaseMenuTest {
 	@InjectMocks
 	CountHandler handler;
 
-	private InventoryModel model;
+	private InventoryDto model;
 
 	@BeforeEach
 	protected void setup() {
@@ -30,7 +30,7 @@ class CountHandlerTest extends BaseMenuTest {
 	}
 
 	private void setupInventoryModel() {
-		model = new InventoryModel();
+		model = new InventoryDto();
 		model.setInventoryDate(LocalDate.now());
 //		model.addInventoryCountModel(new InventoryCountModel(1L, "Bananas", "Fruit", "Pantry"));
 //		model.addInventoryCountModel(new InventoryCountModel(2L, "Apples", "Fruit", "Pantry"));

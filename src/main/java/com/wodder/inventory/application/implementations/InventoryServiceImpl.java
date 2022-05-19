@@ -1,8 +1,9 @@
 package com.wodder.inventory.application.implementations;
 
 import com.wodder.inventory.application.*;
-import com.wodder.inventory.domain.entities.*;
-import com.wodder.inventory.models.*;
+import com.wodder.inventory.domain.model.inventory.*;
+import com.wodder.inventory.domain.model.product.*;
+import com.wodder.inventory.dto.*;
 import com.wodder.inventory.persistence.*;
 
 import java.util.*;
@@ -19,7 +20,7 @@ public class InventoryServiceImpl implements InventoryService {
 	}
 
 	@Override
-	public InventoryModel createInventory() {
+	public InventoryDto createInventory() {
 		Inventory i = Inventory.createNewInventoryWithProducts(
 				this.productRepository.loadAllItems().stream()
 						.filter(Product::isActive).collect(Collectors.toList()));
@@ -27,7 +28,7 @@ public class InventoryServiceImpl implements InventoryService {
 	}
 
 	@Override
-	public Optional<InventoryModel> addInventoryCount(String inventoryId, String productId, double units, double cases) {
+	public Optional<InventoryDto> addInventoryCount(String inventoryId, String productId, double units, double cases) {
 		Optional<Inventory> opt = repository.loadById(InventoryId.inventoryIdOf(inventoryId));
 		Optional<Product> productOpt = productRepository.loadById(ProductId.productIdOf(productId));
 		if (opt.isPresent() && productOpt.isPresent()) {
@@ -41,13 +42,15 @@ public class InventoryServiceImpl implements InventoryService {
 	}
 
 	@Override
-	public Optional<InventoryModel> addInventoryCounts(String inventoryId, Collection<InventoryCountModel> counts) {
+	public Optional<InventoryDto> addInventoryCounts(String inventoryId, Collection<InventoryCountModel> counts) {
 		Optional<Inventory> opt = repository.loadById(InventoryId.inventoryIdOf(inventoryId));
 		if (opt.isPresent()) {
 			Inventory i = opt.get();
 			for (InventoryCountModel m : counts) {
-				Product p = productRepository.loadById(ProductId.productIdOf(m.getProductId())).get();
-				i.addItemToInventory(InventoryItem.fromProduct(p).updateCount(new InventoryCount(m.getUnits(), m.getCases())));
+				Optional<Product> p = productRepository.loadById(ProductId.productIdOf(m.getProductId()));
+				p.ifPresent((product) ->
+						i.addItemToInventory(InventoryItem.fromProduct(product)
+								.updateCount(new InventoryCount(m.getUnits(), m.getCases()))));
 			}
 			return Optional.of(i.toModel());
 		} else {
@@ -56,7 +59,7 @@ public class InventoryServiceImpl implements InventoryService {
 	}
 
 	@Override
-	public void saveInventory(InventoryModel model) {
+	public void saveInventory(InventoryDto model) {
 		Inventory i = repository.loadById(InventoryId.inventoryIdOf(model.getId())).get();
 		model.getItems()
 				.forEach(itemModel -> {
@@ -64,5 +67,15 @@ public class InventoryServiceImpl implements InventoryService {
 							InventoryCount.countFrom(itemModel.getNumberOfUnits(), itemModel.getNumberOfCases()));
 				});
 		repository.updateItem(i);
+	}
+
+	@Override
+	public Optional<InventoryDto> loadInventory(String inventoryId) {
+		Optional<Inventory> opt = repository.loadById(InventoryId.inventoryIdOf(inventoryId));
+		if (opt.isPresent()) {
+			return opt.map(Inventory::toModel);
+		} else {
+			return Optional.empty();
+		}
 	}
 }

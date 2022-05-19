@@ -1,6 +1,8 @@
 package com.wodder.inventory.persistence;
 
-import com.wodder.inventory.domain.entities.*;
+import com.wodder.inventory.domain.model.*;
+import com.wodder.inventory.domain.model.inventory.*;
+import com.wodder.inventory.domain.model.product.*;
 
 public class TestPersistenceFactory implements PersistenceFactory {
 	private final InMemoryProductRepository productRepository;

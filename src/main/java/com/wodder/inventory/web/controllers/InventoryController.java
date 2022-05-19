@@ -2,7 +2,7 @@ package com.wodder.inventory.web.controllers;
 
 import com.wodder.inventory.application.*;
 import com.wodder.inventory.application.implementations.*;
-import com.wodder.inventory.models.*;
+import com.wodder.inventory.dto.*;
 import com.wodder.inventory.persistence.*;
 
 import javax.annotation.*;
@@ -19,8 +19,8 @@ public class InventoryController implements Serializable {
 	private static final long serialVersionUID = 1L;
 	private transient InventoryService inventoryService;
 	private transient ProductService productService;
-	private InventoryModel model;
-	private Map<String, List<ItemModel>> items;
+	private InventoryDto model;
+	private Map<String, List<InventoryItemDto>> items;
 
 	@PostConstruct
 	void init() {
@@ -29,18 +29,18 @@ public class InventoryController implements Serializable {
 		model = inventoryService.createInventory();
 		items = model.getItems()
 				.stream()
-				.collect(Collectors.groupingBy(ItemModel::getLocation, Collectors.toList()));
+				.collect(Collectors.groupingBy(InventoryItemDto::getLocation, Collectors.toList()));
 	}
 
 	public String getInventoryDate() {
 		return model.getInventoryDate().format(DateTimeFormatter.ofLocalizedDate(FormatStyle.MEDIUM));
 	}
 
-	public Map<String, List<ItemModel>> getItemMap() {
+	public Map<String, List<InventoryItemDto>> getItemMap() {
 		return items;
 	}
 
-	public List<ItemModel> getItems(String location) {
+	public List<InventoryItemDto> getItems(String location) {
 		return Collections.unmodifiableList(items.getOrDefault(location, Collections.emptyList()));
 	}
 

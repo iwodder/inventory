@@ -1,16 +1,18 @@
 package com.wodder.inventory.application;
 
-import com.wodder.inventory.models.*;
+import com.wodder.inventory.dto.*;
 
 import java.util.*;
 
 public interface InventoryService {
 
-	InventoryModel createInventory();
+	InventoryDto createInventory();
 
-	Optional<InventoryModel> addInventoryCount(String inventoryId, String productId, double units, double cases);
+	Optional<InventoryDto> addInventoryCount(String inventoryId, String productId, double units, double cases);
 
-	Optional<InventoryModel> addInventoryCounts(String inventoryId, Collection<InventoryCountModel> counts);
+	Optional<InventoryDto> addInventoryCounts(String inventoryId, Collection<InventoryCountModel> counts);
 
-	void saveInventory(InventoryModel model);
+	void saveInventory(InventoryDto model);
+
+	Optional<InventoryDto> loadInventory(String inventoryId);
 }

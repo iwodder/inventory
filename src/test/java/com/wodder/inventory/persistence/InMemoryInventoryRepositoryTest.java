@@ -1,6 +1,6 @@
 package com.wodder.inventory.persistence;
 
-import com.wodder.inventory.domain.entities.*;
+import com.wodder.inventory.domain.model.inventory.*;
 import org.junit.jupiter.api.*;
 
 import java.time.*;
