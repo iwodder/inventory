@@ -1,11 +1,10 @@
 package com.wodder.inventory.persistence;
 
-
-import com.wodder.inventory.domain.model.*;
+import com.wodder.inventory.domain.model.Entity;
 
 public interface PersistenceFactory {
 
-	ProductRepository getInventoryDataStore();
+  ProductRepository getInventoryDataStore();
 
-	<T extends Entity<U>, U> Repository<T, U> getRepository(Class<T> clazz);
+  <T extends Entity<U>, U> Repository<T, U> getRepository(Class<T> clazz);
 }

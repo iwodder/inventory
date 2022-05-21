@@ -1,181 +1,198 @@
 package com.wodder.inventory.domain.model.product;
 
-import com.wodder.inventory.domain.model.*;
-import com.wodder.inventory.dto.*;
-
-import java.math.*;
+import com.wodder.inventory.domain.model.Entity;
+import com.wodder.inventory.dto.ProductModel;
+import java.math.BigDecimal;
 
 public class Product extends Entity<ProductId> {
-	private String name;
-	private Category category;
-	private Location location;
-	private UnitOfMeasurement uom;
-	private Price price;
-	private boolean active;
+  private String name;
+  private Category category;
+  private Location location;
+  private UnitOfMeasurement uom;
+  private Price price;
+  private boolean active;
 
-	public Product(String name, Category category, Location location) {
-		this(ProductId.generateId(), name, category, location, true, null, null);
-	}
+  public Product(String name, Category category, Location location) {
+    this(ProductId.generateId(), name, category, location, true, null, null);
+  }
 
-	public Product(String name, Category category, Location location, UnitOfMeasurement unitOfMeasurement, Price price) {
-		this(ProductId.generateId(), name, category, location, true, unitOfMeasurement, price);
-	}
+  public Product(
+      String name,
+      Category category,
+      Location location,
+      UnitOfMeasurement unitOfMeasurement,
+      Price price) {
+    this(ProductId.generateId(), name, category, location, true, unitOfMeasurement, price);
+  }
 
-	public Product(ProductId id, String name, Category category, Location location) {
-		this(id, name, category, location, true, null, null);
-	}
+  public Product(ProductId id, String name, Category category, Location location) {
+    this(id, name, category, location, true, null, null);
+  }
 
-	public Product(ProductId id, String name, Category category, Location location, Boolean active) {
-		this(id, name, category, location, active, null, null);
-	}
-	
-	public Product(ProductId id, String name, Category category, Location location, UnitOfMeasurement uom) {
-		this(id, name, category, location, true, uom, null);
-	}
+  public Product(ProductId id, String name, Category category, Location location, Boolean active) {
+    this(id, name, category, location, active, null, null);
+  }
 
-	public Product(ProductId id, String name, Category category, Location location, UnitOfMeasurement uom, Price price) {
-		this(id, name, category, location, true, uom, price);
-	}
+  public Product(
+      ProductId id, String name, Category category, Location location, UnitOfMeasurement uom) {
+    this(id, name, category, location, true, uom, null);
+  }
 
-	public Product(Product that) {
-		super(that.id);
-		this.name = that.name;
-		this.category = that.category;
-		this.active = that.active;
-		this.location = that.location;
-		this.uom = that.uom;
-		this.price = that.price;
-	}
+  public Product(
+      ProductId id,
+      String name,
+      Category category,
+      Location location,
+      UnitOfMeasurement uom,
+      Price price) {
+    this(id, name, category, location, true, uom, price);
+  }
 
-	private Product(ProductId id, String name, Category c, Location l, Boolean a, UnitOfMeasurement u, Price p) {
-		super(id);
-		setName(name);
-		setCategory(c);
-		this.location = l;
-		this.active = a;
-		this.uom = u;
-		this.price = p;
-	}
+  public Product(Product that) {
+    super(that.id);
+    this.name = that.name;
+    this.category = that.category;
+    this.active = that.active;
+    this.location = that.location;
+    this.uom = that.uom;
+    this.price = that.price;
+  }
 
-	public String getName() {
-		return name;
-	}
+  private Product(
+      ProductId id, String name, Category c, Location l, Boolean a, UnitOfMeasurement u, Price p) {
+    super(id);
+    setName(name);
+    setCategory(c);
+    this.location = l;
+    this.active = a;
+    this.uom = u;
+    this.price = p;
+  }
 
-	public void setName(String name) {
-		if (name == null || name.isBlank()) {
-			throw new IllegalArgumentException(name == null ? "Name was null" : "Name was blank");
-		}
-		this.name = name;
-	}
+  public String getName() {
+    return name;
+  }
 
-	public String getCategory() {
-		return category.getName();
-	}
+  public void setName(String name) {
+    if (name == null || name.isBlank()) {
+      throw new IllegalArgumentException(name == null ? "Name was null" : "Name was blank");
+    }
+    this.name = name;
+  }
 
-	private void setCategory(Category c) {
-		if (c == null) {
-			throw new IllegalArgumentException("Category is required");
-		}
-		this.category = c;
-	}
+  public String getCategory() {
+    return category.getName();
+  }
 
-	public void updateCategory(Category category) {
-		if (this.category.equals(category)) {
-			throw new IllegalArgumentException("Cannot update to the same category");
-		}
-		setCategory(category);
-	}
+  private void setCategory(Category c) {
+    if (c == null) {
+      throw new IllegalArgumentException("Category is required");
+    }
+    this.category = c;
+  }
 
-	public void updateLocation(Location location) {
-		if (this.location.equals(location)) {
-			throw new IllegalArgumentException("Cannot update to the same location");
-		}
-		setLocation(location);
-	}
+  public void updateCategory(Category category) {
+    if (this.category.equals(category)) {
+      throw new IllegalArgumentException("Cannot update to the same category");
+    }
+    setCategory(category);
+  }
 
-	public void updateName(String name) {
-		if (this.name.equals(name)) {
-			throw new IllegalArgumentException("Cannot update to the same name");
-		}
-		setName(name);
-	}
+  public void updateLocation(Location location) {
+    if (this.location.equals(location)) {
+      throw new IllegalArgumentException("Cannot update to the same location");
+    }
+    setLocation(location);
+  }
 
-	public void updateUnitOfMeasurement(UnitOfMeasurement uom) {
-		if (this.uom.equals(uom)) {
-			throw new IllegalArgumentException("Cannot update Unit of Measurement to the same value");
-		}
-		this.uom = uom;
-	}
+  public void updateName(String name) {
+    if (this.name.equals(name)) {
+      throw new IllegalArgumentException("Cannot update to the same name");
+    }
+    setName(name);
+  }
 
-	public void updatePrice(Price price) {
-		this.price = price;
-	}
+  public void updateUnitOfMeasurement(UnitOfMeasurement uom) {
+    if (this.uom.equals(uom)) {
+      throw new IllegalArgumentException("Cannot update Unit of Measurement to the same value");
+    }
+    this.uom = uom;
+  }
 
-	public boolean isActive() {
-		return active;
-	}
+  public void updatePrice(Price price) {
+    this.price = price;
+  }
 
-	public void inactivate() {
-		this.active = false;
-	}
+  public boolean isActive() {
+    return active;
+  }
 
-	public String getLocation() {
-		return location.getName();
-	}
+  public void inactivate() {
+    this.active = false;
+  }
 
-	public void setLocation(Location location) {
-		this.location = location;
-	}
+  public String getLocation() {
+    return location.getName();
+  }
 
-	public UnitOfMeasurement getUnits() {
-		return uom;
-	}
+  public void setLocation(Location location) {
+    this.location = location;
+  }
 
-	public int getUnitsPerCase() {
-		return uom.getItemsPerCase();
-	}
+  public UnitOfMeasurement getUnits() {
+    return uom;
+  }
 
-	public BigDecimal getUnitPrice() {
-		return price.getUnitPrice();
-	}
+  public int getUnitsPerCase() {
+    return uom.getItemsPerCase();
+  }
 
-	public BigDecimal getCasePrice() {
-		return price.getCasePrice();
-	}
+  public BigDecimal getUnitPrice() {
+    return price.getUnitPrice();
+  }
 
-	public Price getPrice() {
-		return price;
-	}
+  public BigDecimal getCasePrice() {
+    return price.getCasePrice();
+  }
 
-	@Override
-	public boolean equals(Object o) {
-		if (this == o) return true;
-		if (o == null || getClass() != o.getClass()) return false;
+  public Price getPrice() {
+    return price;
+  }
 
-		Product that = (Product) o;
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
+    }
+    if (o == null || getClass() != o.getClass()) {
+      return false;
+    }
 
-		return getName().equals(that.getName());
-	}
+    Product that = (Product) o;
+    return getName().equals(that.getName());
+  }
 
-	@Override
-	public int hashCode() {
-		return name.hashCode();
-	}
+  @Override
+  public int hashCode() {
+    return name.hashCode();
+  }
 
-	public ProductModel toItemModel() {
-		ProductModel.ProductModelBuilder b = ProductModel.builder()
-				.withId(this.id.getId())
-				.withName(this.name)
-				.withCategory(this.category.getName())
-				.withLocation(this.location.getName())
-				.isActive(this.active);
+  public ProductModel toItemModel() {
+    ProductModel.ProductModelBuilder b =
+        ProductModel.builder()
+            .withId(this.id.getId())
+            .withName(this.name)
+            .withCategory(this.category.getName())
+            .withLocation(this.location.getName())
+            .isActive(this.active);
 
-		if (this.uom != null) {
-			b.withUnitOfMeasurement(uom.getUnit()).withItemsPerCase(uom.getItemsPerCase());
-		}
-		if (this.price != null) {
-			b.withItemPrice(price.getUnitPrice().toString()).withCasePrice(price.getCasePrice().toString());
-		}
-		return b.build();
-	}
+    if (this.uom != null) {
+      b.withUnitOfMeasurement(uom.getUnit()).withItemsPerCase(uom.getItemsPerCase());
+    }
+    if (this.price != null) {
+      b.withItemPrice(price.getUnitPrice().toString())
+          .withCasePrice(price.getCasePrice().toString());
+    }
+    return b.build();
+  }
 }

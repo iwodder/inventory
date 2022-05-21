@@ -15,7 +15,8 @@
         </div>
         <h:form>
             <p:growl id="messages" showDetail="false"/>
-            <p:accordionPanel styleClass="count-grid" value="#{inventoryController.locations}" var="location">
+            <p:accordionPanel styleClass="count-grid" value="#{inventoryController.locations}"
+                              var="location">
                 <p:tab title="#{location}">
                     <p:dataTable value="#{inventoryController.getItems(location)}" var="item">
                         <p:column headerText="Name">
@@ -31,7 +32,7 @@
                 </p:tab>
             </p:accordionPanel>
             <div class="card top-border m-2">
-                <p:commandButton actionListener="#{inventoryController.save}" value="Save" />
+                <p:commandButton actionListener="#{inventoryController.save}" value="Save"/>
             </div>
         </h:form>
     </ui:define>

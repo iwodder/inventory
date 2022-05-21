@@ -1,41 +1,46 @@
 package com.wodder.inventory.domain.model.inventory;
 
-import java.util.*;
+import java.util.Objects;
+import java.util.UUID;
 
 public class InventoryId {
-	
-	private final String id;
-	
-	InventoryId() {
-		id = UUID.randomUUID().toString();
-	}
 
-	InventoryId(String id) {
-		this.id = id;
-	}
+  private final String id;
 
-	public String getId() {
-		return id;
-	}
+  InventoryId() {
+    id = UUID.randomUUID().toString();
+  }
 
-	public static InventoryId inventoryIdOf(String value) {
-		return new InventoryId(value);
-	}
+  InventoryId(String id) {
+    this.id = id;
+  }
 
-	public static InventoryId newId() {
-		return new InventoryId();
-	}
+  public static InventoryId inventoryIdOf(String value) {
+    return new InventoryId(value);
+  }
 
-	@Override
-	public boolean equals(Object o) {
-		if (this == o) return true;
-		if (!(o instanceof InventoryId)) return false;
-		InventoryId that = (InventoryId) o;
-		return Objects.equals(id, that.id);
-	}
+  public static InventoryId newId() {
+    return new InventoryId();
+  }
 
-	@Override
-	public int hashCode() {
-		return Objects.hash(id);
-	}
+  public String getId() {
+    return id;
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
+    }
+    if (!(o instanceof InventoryId)) {
+      return false;
+    }
+    InventoryId that = (InventoryId) o;
+    return Objects.equals(id, that.id);
+  }
+
+  @Override
+  public int hashCode() {
+    return Objects.hash(id);
+  }
 }

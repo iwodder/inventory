@@ -1,41 +1,46 @@
 package com.wodder.inventory.domain.model.product;
 
-import java.util.*;
+import java.util.Objects;
+import java.util.UUID;
 
 public class CategoryId {
 
-	private final String id;
+  private final String id;
 
-	CategoryId() {
-		id = UUID.randomUUID().toString();
-	}
+  CategoryId() {
+    id = UUID.randomUUID().toString();
+  }
 
-	private CategoryId(String id) {
-		this.id = id;
-	}
+  private CategoryId(String id) {
+    this.id = id;
+  }
 
-	public String getId() {
-		return id;
-	}
+  public static CategoryId generateId() {
+    return new CategoryId();
+  }
 
-	@Override
-	public boolean equals(Object o) {
-		if (this == o) return true;
-		if (!(o instanceof CategoryId)) return false;
-		CategoryId that = (CategoryId) o;
-		return Objects.equals(id, that.id);
-	}
+  public static CategoryId categoryIdOf(String value) {
+    return new CategoryId(value);
+  }
 
-	@Override
-	public int hashCode() {
-		return Objects.hash(id);
-	}
+  public String getId() {
+    return id;
+  }
 
-	public static CategoryId generateId() {
-		return new CategoryId();
-	}
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
+    }
+    if (!(o instanceof CategoryId)) {
+      return false;
+    }
+    CategoryId that = (CategoryId) o;
+    return Objects.equals(id, that.id);
+  }
 
-	public static CategoryId categoryIdOf(String value) {
-		return new CategoryId(value);
-	}
+  @Override
+  public int hashCode() {
+    return Objects.hash(id);
+  }
 }

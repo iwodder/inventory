@@ -2,5 +2,5 @@ package com.wodder.inventory.application;
 
 public interface ServiceFactory {
 
-	<T> T getService(Class<T> service);
+  <T> T getService(Class<T> service);
 }

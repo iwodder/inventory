@@ -1,21 +1,18 @@
 package com.wodder.inventory.persistence;
 
+import com.wodder.inventory.domain.model.product.Product;
+import com.wodder.inventory.domain.model.product.ProductId;
+import java.util.List;
+import java.util.stream.Collectors;
 
-import com.wodder.inventory.domain.model.product.*;
+final class InMemoryProductRepository extends InMemoryRepository<Product, ProductId>
+    implements ProductRepository {
 
-import java.util.*;
-import java.util.stream.*;
+  InMemoryProductRepository() {
+  }
 
-final class InMemoryProductRepository extends InMemoryRepository<Product, ProductId> implements ProductRepository {
-
-	InMemoryProductRepository() {
-	}
-
-	@Override
-	public List<Product> loadActiveItems() {
-		return items.stream()
-				.filter(Product::isActive)
-				.map(Product::new)
-				.collect(Collectors.toList());
-	}
+  @Override
+  public List<Product> loadActiveItems() {
+    return items.stream().filter(Product::isActive).map(Product::new).collect(Collectors.toList());
+  }
 }
