@@ -9,6 +9,8 @@ public interface InventoryService {
 
   InventoryDto createInventory();
 
+  InventoryDto createEmptyInventory();
+
   Optional<InventoryDto> addInventoryCount(
       String inventoryId, String productId, double units, double cases);
 

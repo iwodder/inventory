@@ -11,6 +11,7 @@ import com.wodder.inventory.dto.InventoryCountModel;
 import com.wodder.inventory.dto.InventoryDto;
 import com.wodder.inventory.persistence.Repository;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -34,6 +35,12 @@ public class InventoryServiceImpl implements InventoryService {
                 .filter(Product::isActive)
                 .collect(Collectors.toList()));
     return repository.createItem(i).toModel();
+  }
+
+  @Override
+  public InventoryDto createEmptyInventory() {
+    Inventory i = Inventory.createNewInventoryWithProducts(Collections.emptyList());
+    return this.repository.createItem(i).toModel();
   }
 
   @Override
@@ -96,4 +103,6 @@ public class InventoryServiceImpl implements InventoryService {
       return Optional.empty();
     }
   }
+
+
 }
