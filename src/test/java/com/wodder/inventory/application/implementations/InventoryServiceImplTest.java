@@ -19,6 +19,7 @@ import com.wodder.inventory.persistence.Repository;
 import com.wodder.inventory.persistence.TestPersistenceFactory;
 import java.time.LocalDate;
 import java.util.Arrays;
+import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -56,34 +57,58 @@ class InventoryServiceImplTest {
   }
 
   @Test
-  @DisplayName("Can add new count to inventory")
+  @DisplayName("Inventory is created with active products already added")
+  void createInventory2() {
+    initializeProducts();
+    InventoryDto dto = invSvc.createInventory();
+    assertCorrectItemsInInventory(3, dto);
+  }
+
+  @Test
+  @DisplayName("Can add a single count to inventory")
   void addInventoryCount() {
     InventoryDto dto = invSvc.createInventory();
-    Repository<Product, ProductId> product = psf.getRepository(Product.class);
-    product.createItem(
-        new Product(
-            ProductId.productIdOf("abc"),
-            "2% Milk",
-            new Category("Dairy"),
-            new Location("Refrigerator"),
-            new UnitOfMeasurement("GAL", 4),
-            new Price("2.35", "11.00")));
+    initializeProducts();
 
-    InventoryDto model = invSvc.addInventoryCount(dto.getId(), "abc", 2.0, 0.25).get();
+    InventoryDto model = invSvc.addInventoryCount(dto.getId(), "234", 2.0, 0.25).get();
 
-    assertEquals(1, model.numberOfItems());
+    assertCorrectItemsInInventory(1, model);
   }
 
   @Test
-  @DisplayName("Invalid inventory id returns empty optional")
+  @DisplayName("Cannot add inventory count to non-existant inventory")
   void addInventoryCountUnknown() {
-    assertTrue(invSvc.addInventoryCount("123", "abc", 2.0, 0.25).isEmpty());
+    assertResultIsEmpty(invSvc.addInventoryCount("123", "abc", 2.0, 0.25));
   }
 
   @Test
-  @DisplayName("Can add multiple inventory counts to single inventory")
+  @DisplayName("Can add multiple inventory counts to inventory")
   void addInventoryCounts() {
+    initializeProducts();
     InventoryDto inv = invSvc.createInventory();
+
+    InventoryDto m =
+        invSvc
+            .addInventoryCounts(
+                inv.getId(),
+                Arrays.asList(
+                    new InventoryCountModel("234", 1.0, 1.0),
+                    new InventoryCountModel("345", .23, 0.25),
+                    new InventoryCountModel("456", 1.1, 1.23)))
+            .get();
+
+    assertCorrectItemsInInventory(3, m);
+  }
+
+  private void assertResultIsEmpty(Optional<?> result) {
+    assertTrue(result.isEmpty());
+  }
+
+  private void assertCorrectItemsInInventory(int numberOfItems, InventoryDto m) {
+    assertEquals(numberOfItems, m.numberOfItems());
+  }
+
+  private void initializeProducts() {
     Repository<Product, ProductId> product = psf.getRepository(Product.class);
     product.createItem(
         new Product(
@@ -109,17 +134,5 @@ class InventoryServiceImplTest {
             new Location("Refrigerator"),
             new UnitOfMeasurement("GAL", 4),
             new Price("2.35", "11.00")));
-
-    InventoryDto m =
-        invSvc
-            .addInventoryCounts(
-                inv.getId(),
-                Arrays.asList(
-                    new InventoryCountModel("234", 1.0, 1.0),
-                    new InventoryCountModel("345", .23, 0.25),
-                    new InventoryCountModel("456", 1.1, 1.23)))
-            .get();
-
-    assertEquals(3, m.numberOfItems());
   }
 }
