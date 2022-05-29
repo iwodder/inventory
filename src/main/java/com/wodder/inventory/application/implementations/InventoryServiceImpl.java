@@ -9,7 +9,9 @@ import com.wodder.inventory.domain.model.product.Product;
 import com.wodder.inventory.domain.model.product.ProductId;
 import com.wodder.inventory.dto.InventoryCountModel;
 import com.wodder.inventory.dto.InventoryDto;
+import com.wodder.inventory.dto.ReportDto;
 import com.wodder.inventory.persistence.Repository;
+import java.time.LocalDate;
 import java.util.Collection;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -95,5 +97,12 @@ public class InventoryServiceImpl implements InventoryService {
     } else {
       return Optional.empty();
     }
+  }
+
+  @Override
+  public ReportDto generateInventoryReport(LocalDate start, LocalDate end) {
+    ReportDto reportDto = new ReportDto();
+    reportDto.setGenerationDate(LocalDate.now());
+    return reportDto;
   }
 }

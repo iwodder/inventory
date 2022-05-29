@@ -97,10 +97,6 @@ public class Inventory extends Entity<InventoryId> {
         .findAny();
   }
 
-  public LocalDate date() {
-    return date;
-  }
-
   public LocalDate getInventoryDate() {
     return date;
   }

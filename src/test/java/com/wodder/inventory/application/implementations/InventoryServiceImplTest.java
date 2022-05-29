@@ -14,6 +14,7 @@ import com.wodder.inventory.domain.model.product.ProductId;
 import com.wodder.inventory.domain.model.product.UnitOfMeasurement;
 import com.wodder.inventory.dto.InventoryCountModel;
 import com.wodder.inventory.dto.InventoryDto;
+import com.wodder.inventory.dto.ReportDto;
 import com.wodder.inventory.persistence.PersistenceFactory;
 import com.wodder.inventory.persistence.Repository;
 import com.wodder.inventory.persistence.TestPersistenceFactory;
@@ -76,7 +77,7 @@ class InventoryServiceImplTest {
   }
 
   @Test
-  @DisplayName("Cannot add inventory count to non-existant inventory")
+  @DisplayName("Cannot add inventory count to non-existent inventory")
   void addInventoryCountUnknown() {
     assertResultIsEmpty(invSvc.addInventoryCount("123", "abc", 2.0, 0.25));
   }
@@ -98,6 +99,20 @@ class InventoryServiceImplTest {
             .get();
 
     assertCorrectItemsInInventory(3, m);
+  }
+
+  @Test
+  @DisplayName("Should be able to generate a report between two dates")
+  void inventoryReport() {
+    ReportDto dto = invSvc.generateInventoryReport(LocalDate.of(2022, 5, 1), LocalDate.of(2022, 5, 7));
+    assertNotNull(dto);
+  }
+
+  @Test
+  @DisplayName("Report should include date of generation")
+  void inventoryReportDate() {
+    ReportDto dto = invSvc.generateInventoryReport(LocalDate.of(2022, 5, 1), LocalDate.of(2022, 5, 7));
+    assertEquals(LocalDate.now(), dto.getGenerationDate());
   }
 
   private void assertResultIsEmpty(Optional<?> result) {

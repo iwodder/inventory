@@ -25,7 +25,7 @@ class InventoryTest {
   @DisplayName("Inventory is created with current date")
   void current_date() {
     Inventory inventory = new Inventory();
-    assertEquals(LocalDate.now(), inventory.date());
+    assertEquals(LocalDate.now(), inventory.getInventoryDate());
   }
 
   @Test
@@ -97,7 +97,7 @@ class InventoryTest {
                 new InventoryCount(1.0, 0.25))));
     Inventory i = new Inventory(model);
 
-    assertEquals(model.getInventoryDate(), i.date());
+    assertEquals(model.getInventoryDate(), i.getInventoryDate());
     assertEquals(model.numberOfItems(), i.numberOfItems());
   }
 
