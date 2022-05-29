@@ -1,7 +1,6 @@
 package com.wodder.inventory.application.implementations;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import com.wodder.inventory.application.InventoryService;
@@ -42,11 +41,10 @@ class InventoryServiceImplTest {
   }
 
   @Test
-  @DisplayName("Can create a new inventory")
+  @DisplayName("Newly created inventory has today's date")
   void createInventory() {
     InventoryDto mdl = invSvc.createInventory();
-    assertNotNull(mdl);
-    assertEquals(LocalDate.now(), mdl.getInventoryDate());
+    assertInventoryDateIsToday(mdl);
   }
 
   @Test
@@ -58,11 +56,19 @@ class InventoryServiceImplTest {
   }
 
   @Test
-  @DisplayName("Inventory is created with active products already added")
+  @DisplayName("Inventory is created with active products")
   void createInventory2() {
     initializeProducts();
     InventoryDto dto = invSvc.createInventory();
     assertCorrectItemsInInventory(3, dto);
+  }
+
+  @Test
+  @DisplayName("Inventory is created without any products")
+  void createInventory3() {
+    InventoryDto dto = invSvc.createEmptyInventory();
+    assertCorrectItemsInInventory(0, dto);
+    assertResultIsPresent(invSvc.loadInventory(dto.getId()));
   }
 
   @Test
@@ -102,6 +108,19 @@ class InventoryServiceImplTest {
   }
 
   @Test
+  @DisplayName("Should be able to load a saved inventory")
+  void loadInventory() {
+    InventoryDto dto = invSvc.createInventory();
+    assertResultIsPresent(invSvc.loadInventory(dto.getId()));
+  }
+
+  @Test
+  @DisplayName("Should not find non-existent inventory id")
+  void loadInventory2() {
+    assertResultIsEmpty(invSvc.loadInventory("abc-123"));
+  }
+
+  @Test
   @DisplayName("Should be able to generate a report between two dates")
   void inventoryReport() {
     ReportDto dto = invSvc.generateInventoryReport(LocalDate.of(2022, 5, 1), LocalDate.of(2022, 5, 7));
@@ -119,8 +138,16 @@ class InventoryServiceImplTest {
     assertTrue(result.isEmpty());
   }
 
+  private void assertResultIsPresent(Optional<?> result) {
+    assertTrue(result.isPresent());
+  }
+
   private void assertCorrectItemsInInventory(int numberOfItems, InventoryDto m) {
     assertEquals(numberOfItems, m.numberOfItems());
+  }
+
+  private void assertInventoryDateIsToday(InventoryDto mdl) {
+    assertEquals(LocalDate.now(), mdl.getInventoryDate());
   }
 
   private void initializeProducts() {
@@ -149,5 +176,14 @@ class InventoryServiceImplTest {
             new Location("Refrigerator"),
             new UnitOfMeasurement("GAL", 4),
             new Price("2.35", "11.00")));
+    Product p = new Product(
+        ProductId.productIdOf("456"),
+        "Yogurt",
+        new Category("Dairy"),
+        new Location("Refrigerator"),
+        new UnitOfMeasurement("GAL", 4),
+        new Price("2.35", "11.00"));
+    p.inactivate();
+    product.createItem(p);
   }
 }

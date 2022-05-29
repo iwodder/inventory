@@ -39,6 +39,12 @@ public class InventoryServiceImpl implements InventoryService {
   }
 
   @Override
+  public InventoryDto createEmptyInventory() {
+    Inventory i = Inventory.createNewInventoryWithProducts(Collections.emptyList());
+    return this.repository.createItem(i).toModel();
+  }
+
+  @Override
   public Optional<InventoryDto> addInventoryCount(
       String inventoryId, String productId, double units, double cases) {
     Optional<Inventory> opt = repository.loadById(InventoryId.inventoryIdOf(inventoryId));
