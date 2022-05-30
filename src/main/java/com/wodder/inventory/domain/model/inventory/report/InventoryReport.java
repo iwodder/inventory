@@ -1,6 +1,7 @@
 package com.wodder.inventory.domain.model.inventory.report;
 
 import com.wodder.inventory.domain.model.inventory.Inventory;
+import com.wodder.inventory.domain.model.product.Category;
 import java.time.LocalDate;
 
 public class InventoryReport {
@@ -33,5 +34,9 @@ public class InventoryReport {
 
   public LocalDate getGenerationDate() {
     return generationDate;
+  }
+
+  public Usage getUsage(Category category) {
+    return new Usage();
   }
 }

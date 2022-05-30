@@ -159,7 +159,7 @@ class InventoryTest {
     Inventory i =
         Inventory.createNewInventoryWithProducts(
             Arrays.asList(new Product("Name", new Category("Frozen"), new Location("Freezer"))));
-    assertEquals(1, i.getItemsByCategory("Frozen").size());
-    assertEquals(0, i.getItemsByCategory("Dairy").size());
+    assertEquals(1, i.getItemsByCategory(Category.of("Frozen")).size());
+    assertEquals(0, i.getItemsByCategory(Category.of("Dairy")).size());
   }
 }

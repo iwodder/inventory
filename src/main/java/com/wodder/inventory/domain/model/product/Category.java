@@ -6,7 +6,7 @@ import java.util.Objects;
 
 // This should really change to a value object....
 public class Category extends Entity<CategoryId> {
-  private static final String DEFAULT_NAME = "unassigned";
+  private static final String DEFAULT_NAME = "UNASSIGNED";
   private String name;
 
   public Category() {
@@ -30,13 +30,17 @@ public class Category extends Entity<CategoryId> {
     return new Category();
   }
 
+  public static Category of(String name) {
+    return new Category(name);
+  }
+
   public String getName() {
     return name;
   }
 
   private void setName(String name) {
     if (name != null && name.length() > 0) {
-      this.name = name;
+      this.name = name.toUpperCase();
     } else {
       this.name = DEFAULT_NAME;
     }

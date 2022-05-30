@@ -30,7 +30,8 @@ public class InventoryItem {
     this.count = count;
   }
 
-  InventoryItem(String name, String location, String category, UnitOfMeasurement uom, Price price) {
+  public InventoryItem(String name, String location, String category, UnitOfMeasurement uom,
+      Price price) {
     this(name, location, category, uom, price, null);
   }
 
@@ -115,5 +116,9 @@ public class InventoryItem {
   @Override
   public int hashCode() {
     return Objects.hash(getName(), getLocation(), getCategory());
+  }
+
+  public OnHand getOnHand() {
+    return OnHand.zero();
   }
 }

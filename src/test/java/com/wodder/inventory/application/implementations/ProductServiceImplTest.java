@@ -59,7 +59,7 @@ class ProductServiceImplTest {
   void update_item_category() {
     ProductModel model = storage.createNewProduct(getDefaultItem().build()).get();
     ProductModel result = storage.updateProductCategory(model.getId(), "Frozen").get();
-    assertEquals("Frozen", result.getCategory());
+    assertEquals("FROZEN", result.getCategory());
   }
 
   @Test

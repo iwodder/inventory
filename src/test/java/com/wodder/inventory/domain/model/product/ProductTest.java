@@ -52,7 +52,7 @@ class ProductTest {
   void update_category() {
     Product i = new Product("Bread", new Category("Dry Goods"), new Location("Pantry"));
     i.updateCategory(new Category("Refrigerated"));
-    assertEquals("Refrigerated", i.getCategory());
+    assertEquals("REFRIGERATED", i.getCategory());
   }
 
   @Test
