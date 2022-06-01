@@ -17,6 +17,10 @@ public class UnitOfMeasurement {
     this(that.unit, that.itemsPerCase);
   }
 
+  public static UnitOfMeasurement empty() {
+    return new UnitOfMeasurement("empty", 0);
+  }
+
   public String getUnit() {
     return unit;
   }
@@ -46,7 +50,7 @@ public class UnitOfMeasurement {
     if (getItemsPerCase() != that.getItemsPerCase()) {
       return false;
     }
-    return getUnit() != null ? getUnit().equals(that.getUnit()) : that.getUnit() == null;
+    return getUnit() != null ? getUnit().equalsIgnoreCase(that.getUnit()) : that.getUnit() == null;
   }
 
   @Override

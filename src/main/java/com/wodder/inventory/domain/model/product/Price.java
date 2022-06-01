@@ -3,7 +3,7 @@ package com.wodder.inventory.domain.model.product;
 import java.math.BigDecimal;
 
 public class Price {
-
+  private static final Price ZERO = new Price("0", "0");
   private final BigDecimal unitPrice;
   private final BigDecimal casePrice;
 
@@ -22,6 +22,10 @@ public class Price {
 
   public Price(Price that) {
     this(that.getUnitPrice(), that.getCasePrice());
+  }
+
+  public static Price ofZero() {
+    return ZERO;
   }
 
   public BigDecimal getUnitPrice() {

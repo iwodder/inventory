@@ -1,8 +1,11 @@
 package com.wodder.inventory.domain.model.inventory;
 
 import com.wodder.inventory.dto.InventoryCountModel;
+import java.util.Objects;
 
 public class InventoryCount {
+
+  private static final InventoryCount ZERO = new InventoryCount(0.0, 0.0);
   private double units;
   private double cases;
 
@@ -19,8 +22,8 @@ public class InventoryCount {
     this(model.getUnits(), model.getCases());
   }
 
-  public static InventoryCount countOfZero() {
-    return new InventoryCount(0.0, 0.0);
+  public static InventoryCount ofZero() {
+    return ZERO;
   }
 
   public static InventoryCount countFrom(String units, String cases) {
@@ -49,5 +52,23 @@ public class InventoryCount {
     if (count < 0.0) {
       throw new IllegalArgumentException();
     }
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
+    }
+    if (o == null || getClass() != o.getClass()) {
+      return false;
+    }
+    InventoryCount that = (InventoryCount) o;
+    return Double.compare(that.getUnits(), getUnits()) == 0
+        && Double.compare(that.getCases(), getCases()) == 0;
+  }
+
+  @Override
+  public int hashCode() {
+    return Objects.hash(getUnits(), getCases());
   }
 }

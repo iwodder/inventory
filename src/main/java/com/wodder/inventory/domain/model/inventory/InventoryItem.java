@@ -52,7 +52,7 @@ public class InventoryItem {
         p.getCategory(),
         p.getUnits(),
         p.getPrice(),
-        InventoryCount.countOfZero());
+        InventoryCount.ofZero());
   }
 
   public static InventoryItem fromModel(InventoryItemDto model) {
@@ -119,6 +119,6 @@ public class InventoryItem {
   }
 
   public OnHand getOnHand() {
-    return OnHand.zero();
+    return OnHand.from(count, price, uom);
   }
 }

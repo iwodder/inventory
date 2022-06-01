@@ -1,47 +1,32 @@
 package com.wodder.inventory.domain.model.inventory;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
 
+import com.wodder.inventory.domain.model.product.Price;
+import com.wodder.inventory.domain.model.product.UnitOfMeasurement;
 import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.ValueSource;
+import org.junit.jupiter.api.Test;
 
 class OnHandTest {
 
-  @ParameterizedTest
-  @ValueSource(doubles = {-0.1, -0.0, -1})
-  @DisplayName("Should not allow negative values for unit quantity")
-  void nonNegativeUnitQty(double value) {
-    IllegalArgumentException e = assertThrows(IllegalArgumentException.class,
-        () -> OnHand.of(value, 1, 1, 1));
-    assertEquals("Unit quantity can't be negative", e.getMessage());
+  @Test
+  @DisplayName("Should be able to create an on-hand of zero")
+  void zero() {
+    OnHand onHand = OnHand.zero();
+    assertEquals(0.0, onHand.getTotalDollars());
+    assertEquals(0, onHand.getCaseQty());
+    assertEquals(0, onHand.getUnitQty());
   }
 
-  @ParameterizedTest
-  @ValueSource(doubles = {-0.1, -0.0, -1})
-  @DisplayName("Should not allow negative values for case quantity")
-  void nonNegativeCaseQty(double value) {
-    IllegalArgumentException e = assertThrows(IllegalArgumentException.class,
-        () -> OnHand.of(0, value, 1, 1));
-    assertEquals("Case quantity can't be negative", e.getMessage());
-  }
+  @Test
+  @DisplayName("Should calculate the total dollars of an item")
+  void dollars() {
+    InventoryCount c = InventoryCount.countFrom("1", "2");
+    Price p = new Price("1.0", "1.49");
+    UnitOfMeasurement unitOfMeasurement = new UnitOfMeasurement("Gallons", 4);
 
-  @ParameterizedTest
-  @ValueSource(doubles = {-0.1, -0.0, -1})
-  @DisplayName("Should not allow negative values for unit price")
-  void nonNegativeUnitPrice(double value) {
-    IllegalArgumentException e = assertThrows(IllegalArgumentException.class,
-        () -> OnHand.of(0, 0, value, 1));
-    assertEquals("Unit price can't be negative", e.getMessage());
-  }
+    OnHand onHand = OnHand.from(c, p, unitOfMeasurement);
 
-  @ParameterizedTest
-  @ValueSource(doubles = {-0.1, -0.0, -1})
-  @DisplayName("Should not allow negative values for case price")
-  void nonNegativeCasePrice(double value) {
-    IllegalArgumentException e = assertThrows(IllegalArgumentException.class,
-        () -> OnHand.of(0, 0, 0, value));
-    assertEquals("Case price can't be negative", e.getMessage());
+    assertEquals(3.98, onHand.getTotalDollars());
   }
 }

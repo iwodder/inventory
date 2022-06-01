@@ -83,6 +83,15 @@ public class Inventory extends Entity<InventoryId> {
     return getItemsBy(i -> i.getCategory().equalsIgnoreCase(category.getName()));
   }
 
+  public InventoryItem getItem(String s) {
+    List<InventoryItem> item = getItemsBy(i -> i.getName().equalsIgnoreCase(s));
+    if (item.size() == 1) {
+      return item.get(0);
+    } else {
+      return null;
+    }
+  }
+
   private List<InventoryItem> getItemsBy(Predicate<InventoryItem> p) {
     return counts.values().stream().filter(p).collect(Collectors.toUnmodifiableList());
   }

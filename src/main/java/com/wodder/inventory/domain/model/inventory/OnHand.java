@@ -1,79 +1,47 @@
 package com.wodder.inventory.domain.model.inventory;
 
+import com.wodder.inventory.domain.model.product.Price;
+import com.wodder.inventory.domain.model.product.UnitOfMeasurement;
+import java.math.BigDecimal;
 import java.util.Objects;
 
 public class OnHand {
 
-  private double unitQty;
-  private double caseQty;
-  private double unitPrice;
-  private double casePrice;
+  private final InventoryCount count;
+  private final Price price;
+  private final UnitOfMeasurement uom;
 
-  private OnHand(double unitQty, double caseQty, double unitPrice, double casePrice) {
-    setUnitQty(unitQty);
-    setCaseQty(caseQty);
-    setUnitPrice(unitPrice);
-    setCasePrice(casePrice);
+
+  private OnHand(InventoryCount count, Price price, UnitOfMeasurement uom) {
+    this.count = count;
+    this.price = price;
+    this.uom = uom;
   }
 
   public static OnHand zero() {
-    return new OnHand(0, 0, 0, 0);
+    return new OnHand(
+        InventoryCount.ofZero(),
+        Price.ofZero(),
+        UnitOfMeasurement.empty()
+    );
   }
 
-  public static OnHand of(double unitQty, double caseQty, double unitPrice, double casePrice) {
-    return new OnHand(unitQty, caseQty, unitPrice, casePrice);
+  public static OnHand from(InventoryCount count, Price price, UnitOfMeasurement uom) {
+    return new OnHand(count, price, uom);
   }
 
   public double getTotalDollars() {
-    return 0;
+    BigDecimal unitTotal = price.getUnitPrice().multiply(BigDecimal.valueOf(count.getUnits()));
+    BigDecimal caseTotal = price.getCasePrice().multiply(BigDecimal.valueOf(count.getCases()));
+    return unitTotal.add(caseTotal).doubleValue();
   }
 
   public double getUnitQty() {
-    return unitQty;
+    return count.getUnits();
   }
 
   public double getCaseQty() {
-    return caseQty;
-  }
-
-  private void setUnitQty(double value) {
-    if (isNonNegative(value)) {
-      this.unitQty = value;
-    } else {
-      throwException("Unit quantity");
-    }
-  }
-
-  private void setCaseQty(double value) {
-    if (isNonNegative(value)) {
-      this.caseQty = value;
-    } else {
-      throwException("Case quantity");
-    }
-  }
-
-  private void setUnitPrice(double value) {
-    if (isNonNegative(value)) {
-      this.unitPrice = value;
-    } else {
-      throwException("Unit price");
-    }
-  }
-
-  private void setCasePrice(double value) {
-    if (isNonNegative(value)) {
-      this.casePrice = value;
-    } else {
-      throwException("Case price");
-    }
-  }
-
-  private boolean isNonNegative(double value) {
-    return Double.compare(0, value) <= 0;
-  }
-
-  private void throwException(String value) {
-    throw new IllegalArgumentException(String.format("%s can't be negative", value));
+    return count.getCases();
   }
 
   @Override
@@ -85,14 +53,11 @@ public class OnHand {
       return false;
     }
     OnHand onHand = (OnHand) o;
-    return Double.compare(onHand.getUnitQty(), getUnitQty()) == 0
-        && Double.compare(onHand.getCaseQty(), getCaseQty()) == 0
-        && Double.compare(onHand.unitPrice, unitPrice) == 0
-        && Double.compare(onHand.casePrice, casePrice) == 0;
+    return count.equals(onHand.count) && price.equals(onHand.price) && uom.equals(onHand.uom);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(getUnitQty(), getCaseQty(), unitPrice, casePrice);
+    return Objects.hash(count, price, uom);
   }
 }

@@ -162,4 +162,21 @@ class InventoryTest {
     assertEquals(1, i.getItemsByCategory(Category.of("Frozen")).size());
     assertEquals(0, i.getItemsByCategory(Category.of("Dairy")).size());
   }
+
+  @Test
+  @DisplayName("Should be able to query item by name")
+  void query_by_name() {
+    InventoryItem item =
+        new InventoryItem(
+            "2% Milk",
+            "Refrigerator",
+            "Dairy",
+            new UnitOfMeasurement("Gallon", 4),
+            new Price("0.99", "4.98"),
+            new InventoryCount(1.0, 0.25));
+    Inventory inventory = new Inventory();
+    inventory.addItemToInventory(item);
+
+    assertEquals(item, inventory.getItem("2% Milk"));
+  }
 }

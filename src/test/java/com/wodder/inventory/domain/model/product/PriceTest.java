@@ -27,6 +27,15 @@ class PriceTest {
   void equal() {
     Price p = new Price(new BigDecimal("0.65"), new BigDecimal("90.11"));
     Price p1 = new Price(new BigDecimal("0.65"), new BigDecimal("90.11"));
+
     assertEquals(p, p1);
+  }
+
+  @Test
+  @DisplayName("Should be able to create a zero price")
+  void zero() {
+    Price p = Price.ofZero();
+    assertEquals(BigDecimal.ZERO, p.getUnitPrice());
+    assertEquals(BigDecimal.ZERO, p.getCasePrice());
   }
 }

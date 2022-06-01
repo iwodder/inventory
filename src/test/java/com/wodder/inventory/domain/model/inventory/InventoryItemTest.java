@@ -27,15 +27,19 @@ class InventoryItemTest {
   }
 
   @Test
-  @DisplayName("Should have nothing on hand when counts are zero")
-  void zeroCounts() {
+  @DisplayName("Should properly create an OnHand value")
+  void onHand() {
+    UnitOfMeasurement uom = new UnitOfMeasurement("ounce", 16);
+    Price p = new Price("0.98", "10.00");
     InventoryItem item = new InventoryItem(
         "Cheese", "Refrigerator", "Dairy",
-        new UnitOfMeasurement("ounce", 16),
-        new Price("0.98", "10.00"),
-        InventoryCount.countOfZero()
+        uom,
+        p,
+        InventoryCount.ofZero()
     );
 
-    assertEquals(OnHand.zero(), item.getOnHand());
+    OnHand onHand = OnHand.from(InventoryCount.ofZero(), p, uom);
+
+    assertEquals(onHand, item.getOnHand());
   }
 }

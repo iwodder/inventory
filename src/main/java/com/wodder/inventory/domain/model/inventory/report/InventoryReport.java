@@ -1,6 +1,7 @@
 package com.wodder.inventory.domain.model.inventory.report;
 
 import com.wodder.inventory.domain.model.inventory.Inventory;
+import com.wodder.inventory.domain.model.inventory.OnHand;
 import com.wodder.inventory.domain.model.product.Category;
 import java.time.LocalDate;
 
@@ -37,6 +38,12 @@ public class InventoryReport {
   }
 
   public Usage getUsage(Category category) {
-    return new Usage();
+    return Usage.none();
+  }
+
+  public Usage getUsage(String itemName) {
+    OnHand starting = start.getItem(itemName).getOnHand();
+    OnHand ending = end.getItem(itemName).getOnHand();
+    return Usage.of(starting, ending);
   }
 }

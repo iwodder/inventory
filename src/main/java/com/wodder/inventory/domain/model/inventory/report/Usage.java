@@ -1,10 +1,26 @@
 package com.wodder.inventory.domain.model.inventory.report;
 
+import com.wodder.inventory.domain.model.inventory.OnHand;
+
 public class Usage {
+
+  private static final Usage NONE = new Usage(OnHand.zero(), OnHand.zero());
   //Starting on-hand
+  private final OnHand starting;
+  private final OnHand ending;
   //Ending on-hand
+
+  private Usage(OnHand starting, OnHand ending) {
+    this.starting = starting;
+    this.ending = ending;
+  }
+
   public static Usage none() {
-    return new Usage();
+    return NONE;
+  }
+
+  public static Usage of(OnHand start, OnHand end) {
+    return new Usage(start, end);
   }
 
   @Override
@@ -24,10 +40,10 @@ public class Usage {
   }
 
   public double getUnits() {
-    return 0.5;
+    return starting.getUnitQty() - ending.getUnitQty();
   }
 
   public double getDollars() {
-    return 0.49;
+    return starting.getTotalDollars() - ending.getTotalDollars();
   }
 }
