@@ -8,6 +8,14 @@ import java.util.Objects;
 
 public class InventoryItem {
 
+  private static final InventoryItem EMPTY = new InventoryItem(
+      "null_item",
+      "",
+      "",
+      UnitOfMeasurement.empty(),
+      Price.ofZero(),
+      InventoryCount.ofZero());
+
   private final String name;
   private final String location;
   private final String category;
@@ -65,6 +73,10 @@ public class InventoryItem {
         new InventoryCount(
             Double.parseDouble(model.getNumberOfUnits()),
             Double.parseDouble(model.getNumberOfCases())));
+  }
+
+  public static InventoryItem empty() {
+    return EMPTY;
   }
 
   public InventoryItem updateCount(InventoryCount count) {

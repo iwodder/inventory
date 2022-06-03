@@ -1,16 +1,23 @@
 package com.wodder.inventory.domain.model.inventory.report;
 
 import com.wodder.inventory.domain.model.inventory.Inventory;
+import com.wodder.inventory.domain.model.inventory.InventoryItem;
 import com.wodder.inventory.domain.model.inventory.OnHand;
 import com.wodder.inventory.domain.model.product.Category;
 import java.time.LocalDate;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Map.Entry;
 
 public class InventoryReport {
   private final LocalDate generationDate;
   private final Inventory start;
   private final Inventory end;
 
+  private final Map<InventoryItem, Usage> usages;
+
   private InventoryReport(Inventory start, Inventory end) {
+    this.usages = new HashMap<>();
     this.generationDate = LocalDate.now();
     this.start = start;
     this.end = end;
@@ -42,8 +49,29 @@ public class InventoryReport {
   }
 
   public Usage getUsage(String itemName) {
-    OnHand starting = start.getItem(itemName).getOnHand();
-    OnHand ending = end.getItem(itemName).getOnHand();
-    return Usage.of(starting, ending);
+    return usages.entrySet()
+        .stream()
+        .filter((e) -> e.getKey().getName().equals(itemName))
+        .map(Entry::getValue)
+        .findAny()
+        .orElseGet(Usage::none);
+  }
+
+  public void process() {
+    processEndingInventory();
+    processStartingInventory();
+  }
+
+  private void processEndingInventory() {
+    end.getItems().forEach((ending) -> {
+      InventoryItem starting = start.getItem(ending.getName());
+      usages.put(ending, Usage.of(starting.getOnHand(), ending.getOnHand()));
+    });
+  }
+
+  private void processStartingInventory() {
+    start.getItems().forEach((starting) -> {
+      usages.computeIfAbsent(starting, (item) -> Usage.of(item.getOnHand(), OnHand.zero()));
+    });
   }
 }

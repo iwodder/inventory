@@ -132,11 +132,68 @@ class InventoryReportTest {
         InventoryReport.between(
             new Inventory(start),
             new Inventory(end));
+    report.process();
 
     Usage usage = report.getUsage("Cheese");
-
     assertEquals(0.5, usage.getUnits(), 0.00);
     assertEquals(0.49, usage.getDollars(), 0.00);
+  }
+
+  @Test
+  @DisplayName("Should return negative usage when item is absent from starting inventory")
+  void absentItemUsage() {
+    InventoryItem sampleItem = new InventoryItem(
+        "Cheese", "Refrigerator", "Dairy",
+        new UnitOfMeasurement("Ounces", 4),
+        new Price("0.98", "3.96"));
+    Inventory start = new Inventory(LocalDate.of(2022, 5, 1));
+    Inventory end = new Inventory(LocalDate.of(2022, 5, 2));
+    end.addItemToInventory(sampleItem);
+    end.updateInventoryCount("Cheese", "Refrigerator",
+        InventoryCount.countFrom("0.5", "0.0"));
+
+    InventoryReport report = InventoryReport.between(new Inventory(start), new Inventory(end));
+    report.process();
+
+    Usage usage = report.getUsage("Cheese");
+    assertEquals(-0.5, usage.getUnits(), 0.00);
+    assertEquals(-0.49, usage.getDollars(), 0.00);
+  }
+
+  @Test
+  @DisplayName("Should return usage of none for an absent item")
+  void absentStartingItemUsage() {
+    Inventory start = new Inventory(LocalDate.of(2022, 5, 1));
+    Inventory end = new Inventory(LocalDate.of(2022, 5, 2));
+
+    InventoryReport report = InventoryReport.between(new Inventory(start), new Inventory(end));
+    report.process();
+
+    Usage usage = report.getUsage("Cheese");
+    assertEquals(0.0, usage.getUnits(), 0.00);
+    assertEquals(0.0, usage.getDollars(), 0.00);
+  }
+
+  @Test
+  @DisplayName("Should return 100% usage when item is absent from ending inventory")
+  void absentEndingItemUsage() {
+    InventoryItem sampleItem = new InventoryItem(
+        "Cheese", "Refrigerator", "Dairy",
+        new UnitOfMeasurement("Ounces", 4),
+        new Price("0.98", "3.96"));
+    Inventory start = new Inventory(LocalDate.of(2022, 5, 1));
+    start.addItemToInventory(sampleItem);
+    start.updateInventoryCount("Cheese", "Refrigerator",
+        InventoryCount.countFrom("0.5", "1.0"));
+
+    Inventory end = new Inventory(LocalDate.of(2022, 5, 2));
+
+    InventoryReport report = InventoryReport.between(new Inventory(start), new Inventory(end));
+    report.process();
+
+    Usage usage = report.getUsage("Cheese");
+    assertEquals(0.5, usage.getUnits(), 0.00);
+    assertEquals(4.45, usage.getDollars(), 0.00);
   }
 
   static Stream<Arguments> illegalInventoryArgs() {

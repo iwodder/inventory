@@ -88,7 +88,7 @@ public class Inventory extends Entity<InventoryId> {
     if (item.size() == 1) {
       return item.get(0);
     } else {
-      return null;
+      return InventoryItem.empty();
     }
   }
 
@@ -141,6 +141,10 @@ public class Inventory extends Entity<InventoryId> {
   @Override
   public int hashCode() {
     return Objects.hash(date);
+  }
+
+  public Iterable<InventoryItem> getItems() {
+    return counts.values();
   }
 
   private enum InventoryState {

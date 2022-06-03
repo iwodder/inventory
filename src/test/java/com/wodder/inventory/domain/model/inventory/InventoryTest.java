@@ -15,6 +15,7 @@ import com.wodder.inventory.dto.InventoryDto;
 import com.wodder.inventory.dto.InventoryItemDto;
 import java.time.LocalDate;
 import java.util.Arrays;
+import java.util.concurrent.atomic.AtomicInteger;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -178,5 +179,43 @@ class InventoryTest {
     inventory.addItemToInventory(item);
 
     assertEquals(item, inventory.getItem("2% Milk"));
+  }
+
+  @Test
+  @DisplayName("Should be able to retrieve all items")
+  void query_all() {
+    InventoryItem item =
+        new InventoryItem(
+            "2% Milk",
+            "Refrigerator",
+            "Dairy",
+            new UnitOfMeasurement("Gallon", 4),
+            new Price("0.99", "4.98"),
+            new InventoryCount(1.0, 0.25));
+    InventoryItem item2 =
+        new InventoryItem(
+            "Chocolate Milk",
+            "Refrigerator",
+            "Dairy",
+            new UnitOfMeasurement("Gallon", 2),
+            new Price("1.99", "4.98"),
+            new InventoryCount(1.0, 0.25));
+    Inventory inventory = new Inventory();
+    inventory.addItemToInventory(item);
+    inventory.addItemToInventory(item2);
+
+    Iterable<InventoryItem> items = inventory.getItems();
+    AtomicInteger cnt = new AtomicInteger();
+    items.forEach((i) -> cnt.getAndIncrement());
+
+    assertEquals(2, cnt.get());
+  }
+
+  @Test
+  @DisplayName("Absent item in inventory should return an empty item")
+  void query_by_name_absent() {
+    Inventory inventory = new Inventory();
+
+    assertEquals(InventoryItem.empty(), inventory.getItem("2% Milk"));
   }
 }
