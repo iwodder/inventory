@@ -11,6 +11,7 @@ import com.wodder.inventory.domain.model.inventory.InventoryItem;
 import com.wodder.inventory.domain.model.product.Category;
 import com.wodder.inventory.domain.model.product.Price;
 import com.wodder.inventory.domain.model.product.UnitOfMeasurement;
+import com.wodder.inventory.dto.ReportDto;
 import java.time.LocalDate;
 import java.util.stream.Stream;
 import org.junit.jupiter.api.Disabled;
@@ -194,6 +195,34 @@ class InventoryReportTest {
     Usage usage = report.getUsage("Cheese");
     assertEquals(0.5, usage.getUnits(), 0.00);
     assertEquals(4.45, usage.getDollars(), 0.00);
+  }
+
+  @Test
+  @DisplayName("Should be able to covert into Dto")
+  void toDto() {
+    InventoryItem sampleItem = new InventoryItem(
+        "Cheese", "Refrigerator", "Dairy",
+        new UnitOfMeasurement("Ounces", 4),
+        new Price("0.98", "3.96"));
+    Inventory start = new Inventory(LocalDate.of(2022, 5, 1));
+    start.addItemToInventory(sampleItem);
+    start.updateInventoryCount("Cheese", "Refrigerator",
+        InventoryCount.countFrom("1.0", "0.0"));
+    Inventory end = new Inventory(LocalDate.of(2022, 5, 2));
+    end.addItemToInventory(sampleItem);
+    end.updateInventoryCount("Cheese", "Refrigerator",
+        InventoryCount.countFrom("0.5", "0.0"));
+
+    InventoryReport report =
+        InventoryReport.between(
+            new Inventory(start),
+            new Inventory(end));
+    report.process();
+    ReportDto dto = report.toDto();
+
+    assertEquals("", dto.getGenerationDate());
+    assertEquals("", dto.getStartDate());
+    assertEquals("", dto.getEndDate());
   }
 
   static Stream<Arguments> illegalInventoryArgs() {
