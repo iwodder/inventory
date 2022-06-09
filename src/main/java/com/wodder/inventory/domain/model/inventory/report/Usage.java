@@ -1,6 +1,7 @@
 package com.wodder.inventory.domain.model.inventory.report;
 
 import com.wodder.inventory.domain.model.inventory.OnHand;
+import com.wodder.inventory.dto.UsageDto;
 
 public class Usage {
 
@@ -45,5 +46,12 @@ public class Usage {
 
   public double getDollars() {
     return starting.getTotalDollars() - ending.getTotalDollars();
+  }
+
+  public UsageDto toDto() {
+    UsageDto dto = new UsageDto();
+    dto.setUnitsUsed(Double.toString(getUnits()));
+    dto.setUnitsUsed(Double.toString(getDollars()));
+    return dto;
   }
 }
