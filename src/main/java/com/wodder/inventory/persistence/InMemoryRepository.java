@@ -31,7 +31,7 @@ public abstract class InMemoryRepository<T extends Entity<U>, U> implements Repo
   @Override
   public T createItem(T item) {
     addItem(item);
-    return copy(item).orElseThrow(() -> new RuntimeException());
+    return copy(item).orElseThrow(RuntimeException::new);
   }
 
   @Override

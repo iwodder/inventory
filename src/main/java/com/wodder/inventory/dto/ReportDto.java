@@ -1,12 +1,13 @@
 package com.wodder.inventory.dto;
 
+import java.util.HashMap;
 import java.util.Map;
 
 public class ReportDto {
   private String generationDate;
   private String startDate;
   private String endDate;
-  private Map<InventoryItemDto, UsageDto> usageDtoMap;
+  private Map<InventoryItemDto, UsageDto> usageDtoMap = new HashMap<>();
 
   public String getGenerationDate() {
     return generationDate;
@@ -26,5 +27,17 @@ public class ReportDto {
 
   public void addUsage(InventoryItemDto itemDto, UsageDto u) {
     usageDtoMap.putIfAbsent(itemDto, u);
+  }
+
+  public String getStartDate() {
+    return startDate;
+  }
+
+  public String getEndDate() {
+    return endDate;
+  }
+
+  public int getUsageCnt() {
+    return usageDtoMap.size();
   }
 }

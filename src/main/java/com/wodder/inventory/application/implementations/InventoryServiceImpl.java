@@ -5,11 +5,13 @@ import com.wodder.inventory.domain.model.inventory.Inventory;
 import com.wodder.inventory.domain.model.inventory.InventoryCount;
 import com.wodder.inventory.domain.model.inventory.InventoryId;
 import com.wodder.inventory.domain.model.inventory.InventoryItem;
+import com.wodder.inventory.domain.model.inventory.report.InventoryReport;
 import com.wodder.inventory.domain.model.product.Product;
 import com.wodder.inventory.domain.model.product.ProductId;
 import com.wodder.inventory.dto.InventoryCountModel;
 import com.wodder.inventory.dto.InventoryDto;
 import com.wodder.inventory.dto.ReportDto;
+import com.wodder.inventory.persistence.InventoryRepository;
 import com.wodder.inventory.persistence.Repository;
 import java.time.LocalDate;
 import java.util.Collection;
@@ -19,11 +21,11 @@ import java.util.stream.Collectors;
 
 public class InventoryServiceImpl implements InventoryService {
 
-  private final Repository<Inventory, InventoryId> repository;
+  private final InventoryRepository repository;
   private final Repository<Product, ProductId> productRepository;
 
   InventoryServiceImpl(
-      Repository<Inventory, InventoryId> repository,
+      InventoryRepository repository,
       Repository<Product, ProductId> productRepository) {
     this.repository = repository;
     this.productRepository = productRepository;
@@ -107,9 +109,11 @@ public class InventoryServiceImpl implements InventoryService {
   }
 
   @Override
-  public ReportDto generateInventoryReport(LocalDate start, LocalDate end) {
-    ReportDto reportDto = new ReportDto();
-    reportDto.setGenerationDate(LocalDate.now());
-    return reportDto;
+  public ReportDto generateInventoryReport(LocalDate begin, LocalDate end) {
+    Optional<Inventory> start = repository.getInventoryByDate(begin);
+    Optional<Inventory> finish = repository.getInventoryByDate(end);
+    InventoryReport report = InventoryReport.between(start.get(), finish.get());
+    report.process();
+    return report.toDto();
   }
 }

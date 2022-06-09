@@ -23,5 +23,5 @@ public interface InventoryService {
 
   Optional<InventoryDto> loadInventory(String inventoryId);
 
-  ReportDto generateInventoryReport(LocalDate start, LocalDate end);
+  ReportDto generateInventoryReport(LocalDate begin, LocalDate end);
 }
