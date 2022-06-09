@@ -60,7 +60,7 @@ class InMemoryProductRepositoryTest {
     Product updated = result.get();
     assertNotSame(item2, updated);
     assertEquals(item2.getName(), updated.getName());
-    assertEquals("REFRIGERATED", updated.getCategory());
+    assertEquals("REFRIGERATED", updated.getCategory().getName());
   }
 
   @Test

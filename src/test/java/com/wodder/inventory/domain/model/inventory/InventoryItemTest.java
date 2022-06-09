@@ -15,7 +15,7 @@ class InventoryItemTest {
   @DisplayName("Should return a value of the item")
   void value() {
    InventoryItem item = new InventoryItem(
-       "Cheese", "Refrigerator", "Dairy",
+       "Cheese", "Refrigerator", InventoryCategory.of("Dairy"),
        new UnitOfMeasurement("ounce", 16),
        new Price("0.98", "10.00"),
        InventoryCount.countFrom("2", "1")
@@ -32,7 +32,7 @@ class InventoryItemTest {
     UnitOfMeasurement uom = new UnitOfMeasurement("ounce", 16);
     Price p = new Price("0.98", "10.00");
     InventoryItem item = new InventoryItem(
-        "Cheese", "Refrigerator", "Dairy",
+        "Cheese", "Refrigerator", InventoryCategory.of("Dairy"),
         uom,
         p,
         InventoryCount.ofZero()

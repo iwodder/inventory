@@ -1,7 +1,6 @@
 package com.wodder.inventory.domain.model.inventory;
 
 import com.wodder.inventory.domain.model.Entity;
-import com.wodder.inventory.domain.model.product.Category;
 import com.wodder.inventory.domain.model.product.Product;
 import com.wodder.inventory.dto.InventoryDto;
 import java.time.LocalDate;
@@ -79,8 +78,8 @@ public class Inventory extends Entity<InventoryId> {
     return getItemsBy(i -> i.getLocation().equalsIgnoreCase(location));
   }
 
-  public List<InventoryItem> getItemsByCategory(Category category) {
-    return getItemsBy(i -> i.getCategory().equalsIgnoreCase(category.getName()));
+  public List<InventoryItem> getItemsByCategory(InventoryCategory category) {
+    return getItemsBy(i -> i.getCategory().equals(category));
   }
 
   public InventoryItem getItem(String s) {

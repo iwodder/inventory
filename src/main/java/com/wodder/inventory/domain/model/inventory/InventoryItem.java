@@ -11,14 +11,14 @@ public class InventoryItem {
   private static final InventoryItem EMPTY = new InventoryItem(
       "null_item",
       "",
-      "",
+      InventoryCategory.defaultCategory(),
       UnitOfMeasurement.empty(),
       Price.ofZero(),
       InventoryCount.ofZero());
 
   private final String name;
   private final String location;
-  private final String category;
+  private final InventoryCategory category;
   private final UnitOfMeasurement uom;
   private final Price price;
   private final InventoryCount count;
@@ -26,7 +26,7 @@ public class InventoryItem {
   InventoryItem(
       String name,
       String location,
-      String category,
+      InventoryCategory category,
       UnitOfMeasurement uom,
       Price price,
       InventoryCount count) {
@@ -38,7 +38,11 @@ public class InventoryItem {
     this.count = count;
   }
 
-  public InventoryItem(String name, String location, String category, UnitOfMeasurement uom,
+  public InventoryItem(
+      String name,
+      String location,
+      InventoryCategory category,
+      UnitOfMeasurement uom,
       Price price) {
     this(name, location, category, uom, price, null);
   }
@@ -57,7 +61,7 @@ public class InventoryItem {
     return new InventoryItem(
         p.getName(),
         p.getLocation(),
-        p.getCategory(),
+        InventoryCategory.of(p.getCategory().getName()),
         p.getUnits(),
         p.getPrice(),
         InventoryCount.ofZero());
@@ -67,7 +71,7 @@ public class InventoryItem {
     return new InventoryItem(
         model.getName(),
         model.getLocation(),
-        model.getCategory(),
+        InventoryCategory.of(model.getCategory()),
         new UnitOfMeasurement(model.getUnits(), Integer.parseInt(model.getItemsPerCase())),
         new Price(model.getUnitPrice(), model.getCasePrice()),
         new InventoryCount(
@@ -91,7 +95,7 @@ public class InventoryItem {
     return location;
   }
 
-  public String getCategory() {
+  public InventoryCategory getCategory() {
     return category;
   }
 

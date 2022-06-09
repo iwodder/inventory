@@ -4,7 +4,6 @@ import com.wodder.inventory.domain.model.Entity;
 import com.wodder.inventory.dto.CategoryModel;
 import java.util.Objects;
 
-// This should really change to a value object....
 public class Category extends Entity<CategoryId> {
   private static final String DEFAULT_NAME = "UNASSIGNED";
   private String name;
