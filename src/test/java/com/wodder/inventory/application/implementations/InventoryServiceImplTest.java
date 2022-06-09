@@ -6,6 +6,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import com.wodder.inventory.application.InventoryService;
 import com.wodder.inventory.domain.model.inventory.Inventory;
+import com.wodder.inventory.domain.model.inventory.InventoryCategory;
 import com.wodder.inventory.domain.model.inventory.InventoryCount;
 import com.wodder.inventory.domain.model.inventory.InventoryId;
 import com.wodder.inventory.domain.model.inventory.InventoryItem;
@@ -129,7 +130,7 @@ class InventoryServiceImplTest {
   @DisplayName("Should be able to generate a report between two dates")
   void inventoryReport() {
     InventoryItem sampleItem = new InventoryItem(
-        "Cheese", "Refrigerator", "Dairy",
+        "Cheese", "Refrigerator", InventoryCategory.of("Dairy"),
         new UnitOfMeasurement("Ounces", 4),
         new Price("0.98", "3.96"));
     Inventory start = new Inventory(LocalDate.of(2022, 5, 1));
@@ -152,7 +153,7 @@ class InventoryServiceImplTest {
   @DisplayName("Report should include date of generation")
   void inventoryReportDate() {
     InventoryItem sampleItem = new InventoryItem(
-        "Cheese", "Refrigerator", "Dairy",
+        "Cheese", "Refrigerator", InventoryCategory.of("Dairy"),
         new UnitOfMeasurement("Ounces", 4),
         new Price("0.98", "3.96"));
     Inventory start = new Inventory(LocalDate.of(2022, 5, 1));
@@ -175,7 +176,7 @@ class InventoryServiceImplTest {
   @DisplayName("Should generate an inventory report")
   void generate() {
     InventoryItem sampleItem = new InventoryItem(
-        "Cheese", "Refrigerator", "Dairy",
+        "Cheese", "Refrigerator", InventoryCategory.of("Dairy"),
         new UnitOfMeasurement("Ounces", 4),
         new Price("0.98", "3.96"));
     Inventory start = new Inventory(LocalDate.of(2022, 5, 1));

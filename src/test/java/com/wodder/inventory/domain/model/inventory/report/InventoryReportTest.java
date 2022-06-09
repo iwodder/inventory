@@ -7,6 +7,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import com.wodder.inventory.domain.model.inventory.Inventory;
+import com.wodder.inventory.domain.model.inventory.InventoryCategory;
 import com.wodder.inventory.domain.model.inventory.InventoryCount;
 import com.wodder.inventory.domain.model.inventory.InventoryItem;
 import com.wodder.inventory.domain.model.product.Category;
@@ -91,7 +92,7 @@ class InventoryReportTest {
   @DisplayName("Usage for present category should have values")
   void presentCategoryUsage() {
     InventoryItem sampleItem = new InventoryItem(
-        "Cheese", "Refrigerator", "Dairy",
+        "Cheese", "Refrigerator", InventoryCategory.of("Dairy"),
         new UnitOfMeasurement("Ounces", 4),
         new Price("0.98", "3.96"));
     Inventory start = new Inventory(LocalDate.of(2022, 5, 1));
@@ -118,7 +119,7 @@ class InventoryReportTest {
   @DisplayName("Should be able to return the usage for an item")
   void itemUsage() {
     InventoryItem sampleItem = new InventoryItem(
-        "Cheese", "Refrigerator", "Dairy",
+        "Cheese", "Refrigerator", InventoryCategory.of("Dairy"),
         new UnitOfMeasurement("Ounces", 4),
         new Price("0.98", "3.96"));
     Inventory start = new Inventory(LocalDate.of(2022, 5, 1));
@@ -145,7 +146,7 @@ class InventoryReportTest {
   @DisplayName("Should return negative usage when item is absent from starting inventory")
   void absentItemUsage() {
     InventoryItem sampleItem = new InventoryItem(
-        "Cheese", "Refrigerator", "Dairy",
+        "Cheese", "Refrigerator", InventoryCategory.of("Dairy"),
         new UnitOfMeasurement("Ounces", 4),
         new Price("0.98", "3.96"));
     Inventory start = new Inventory(LocalDate.of(2022, 5, 1));
@@ -180,7 +181,7 @@ class InventoryReportTest {
   @DisplayName("Should return 100% usage when item is absent from ending inventory")
   void absentEndingItemUsage() {
     InventoryItem sampleItem = new InventoryItem(
-        "Cheese", "Refrigerator", "Dairy",
+        "Cheese", "Refrigerator", InventoryCategory.of("Dairy"),
         new UnitOfMeasurement("Ounces", 4),
         new Price("0.98", "3.96"));
     Inventory start = new Inventory(LocalDate.of(2022, 5, 1));
@@ -202,7 +203,7 @@ class InventoryReportTest {
   @DisplayName("Converted DTO should have correct dates")
   void toDto() {
     InventoryItem sampleItem = new InventoryItem(
-        "Cheese", "Refrigerator", "Dairy",
+        "Cheese", "Refrigerator", InventoryCategory.of("Dairy"),
         new UnitOfMeasurement("Ounces", 4),
         new Price("0.98", "3.96"));
     Inventory start = new Inventory(LocalDate.of(2022, 5, 1));
@@ -233,7 +234,7 @@ class InventoryReportTest {
   @DisplayName("Converted DTO should have correct number of usages")
   void toDtoItem() {
     InventoryItem sampleItem = new InventoryItem(
-        "Cheese", "Refrigerator", "Dairy",
+        "Cheese", "Refrigerator", InventoryCategory.of("Dairy"),
         new UnitOfMeasurement("Ounces", 4),
         new Price("0.98", "3.96"));
     Inventory start = new Inventory(LocalDate.of(2022, 5, 1));

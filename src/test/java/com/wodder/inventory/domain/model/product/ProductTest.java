@@ -51,8 +51,9 @@ class ProductTest {
   @DisplayName("Can successfully update a category")
   void update_category() {
     Product i = new Product("Bread", new Category("Dry Goods"), new Location("Pantry"));
-    i.updateCategory(new Category("Refrigerated"));
-    assertEquals("REFRIGERATED", i.getCategory());
+    Category newCategory = new Category("Refrigerated");
+    i.updateCategory(newCategory);
+    assertEquals(newCategory, i.getCategory());
   }
 
   @Test
