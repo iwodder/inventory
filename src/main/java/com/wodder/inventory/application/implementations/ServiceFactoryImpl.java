@@ -2,7 +2,6 @@ package com.wodder.inventory.application.implementations;
 
 import com.wodder.inventory.application.InventoryService;
 import com.wodder.inventory.application.ServiceFactory;
-import com.wodder.inventory.domain.model.inventory.Inventory;
 import com.wodder.inventory.domain.model.product.Category;
 import com.wodder.inventory.domain.model.product.Location;
 import com.wodder.inventory.domain.model.product.Product;
@@ -34,7 +33,7 @@ public class ServiceFactoryImpl implements ServiceFactory {
       } else if (service.isAssignableFrom(InventoryService.class)) {
         return service.cast(
             new InventoryServiceImpl(
-                factory.getRepository(Inventory.class), factory.getRepository(Product.class)));
+                factory.getInventoryRepository(), factory.getRepository(Product.class)));
       }
     } catch (Exception e) {
       e.printStackTrace();

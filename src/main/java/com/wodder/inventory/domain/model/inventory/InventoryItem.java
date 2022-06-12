@@ -12,7 +12,7 @@ public class InventoryItem {
       ItemId.emptyId(),
       "null_item",
       "",
-      "",
+      InventoryCategory.defaultCategory(),
       UnitOfMeasurement.empty(),
       Price.ofZero(),
       InventoryCount.ofZero());
@@ -20,7 +20,7 @@ public class InventoryItem {
   private final ItemId id;
   private final String name;
   private final String location;
-  private final String category;
+  private final InventoryCategory category;
   private final UnitOfMeasurement uom;
   private final Price price;
   private final InventoryCount count;
@@ -29,7 +29,7 @@ public class InventoryItem {
       ItemId id,
       String name,
       String location,
-      String category,
+      InventoryCategory category,
       UnitOfMeasurement uom,
       Price price,
       InventoryCount count) {
@@ -45,7 +45,7 @@ public class InventoryItem {
   public InventoryItem(
       String name,
       String location,
-      String category,
+      InventoryCategory category,
       UnitOfMeasurement uom,
       Price price) {
     this(ItemId.newId(), name, location, category, uom, price, InventoryCount.ofZero());
@@ -66,7 +66,7 @@ public class InventoryItem {
     return new InventoryItem(
         p.getName(),
         p.getLocation(),
-        p.getCategory(),
+        InventoryCategory.of(p.getCategory().getName()),
         p.getUnits(),
         p.getPrice());
   }
@@ -76,7 +76,7 @@ public class InventoryItem {
         ItemId.of(model.getId()),
         model.getName(),
         model.getLocation(),
-        model.getCategory(),
+        InventoryCategory.of(model.getCategory()),
         new UnitOfMeasurement(model.getUnits(), Integer.parseInt(model.getItemsPerCase())),
         new Price(model.getUnitPrice(), model.getCasePrice()),
         new InventoryCount(
@@ -111,7 +111,7 @@ public class InventoryItem {
     return location;
   }
 
-  public String getCategory() {
+  public InventoryCategory getCategory() {
     return category;
   }
 

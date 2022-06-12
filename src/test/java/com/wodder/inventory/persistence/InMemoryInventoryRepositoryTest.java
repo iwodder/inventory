@@ -1,5 +1,6 @@
 package com.wodder.inventory.persistence;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNotSame;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -43,5 +44,24 @@ class InMemoryInventoryRepositoryTest {
     Inventory i = new Inventory(LocalDate.of(2020, 1, 1));
     Optional<Inventory> result = repo.loadByItem(i);
     assertTrue(result.isEmpty());
+  }
+
+  @Test
+  @DisplayName("Should return nothing when inventory doesn't exist on a given date")
+  void load_by_date_absent() {
+    Inventory i = new Inventory(LocalDate.of(2020, 1, 1));
+    Optional<Inventory> result = repo.getInventoryByDate(i.getInventoryDate());
+    assertTrue(result.isEmpty());
+  }
+
+  @Test
+  @DisplayName("Should return an inventory for a given date")
+  void load_by_date_present() {
+    Inventory i = new Inventory(LocalDate.of(2020, 1, 1));
+    i =repo.createItem(i);
+
+    Optional<Inventory> result = repo.getInventoryByDate(i.getInventoryDate());
+    assertTrue(result.isPresent());
+    assertEquals(i, result.get());
   }
 }

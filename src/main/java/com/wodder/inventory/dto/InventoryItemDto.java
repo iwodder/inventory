@@ -42,7 +42,7 @@ public class InventoryItemDto {
         item.getId().getValue(),
         item.getName(),
         item.getLocation(),
-        item.getCategory(),
+        item.getCategory().getName(),
         item.getUom().getUnit(),
         Integer.toString(item.getUom().getItemsPerCase()),
         item.getPrice().getUnitPrice().toString(),

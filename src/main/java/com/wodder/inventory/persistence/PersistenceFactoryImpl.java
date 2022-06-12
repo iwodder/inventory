@@ -25,6 +25,11 @@ public class PersistenceFactoryImpl implements PersistenceFactory {
   }
 
   @Override
+  public InventoryRepository getInventoryRepository() {
+    return inventoryRepository;
+  }
+
+  @Override
   public <T extends Entity<U>, U> Repository<T, U> getRepository(Class<T> clazz) {
     if (clazz.isAssignableFrom(Category.class)) {
       @SuppressWarnings("unchecked")

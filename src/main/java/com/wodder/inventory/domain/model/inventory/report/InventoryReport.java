@@ -4,7 +4,9 @@ import com.wodder.inventory.domain.model.inventory.Inventory;
 import com.wodder.inventory.domain.model.inventory.InventoryItem;
 import com.wodder.inventory.domain.model.inventory.OnHand;
 import com.wodder.inventory.domain.model.product.Category;
+import com.wodder.inventory.dto.ReportDto;
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -73,5 +75,16 @@ public class InventoryReport {
     start.getItems().forEach((starting) -> {
       usages.computeIfAbsent(starting, (item) -> Usage.of(item.getOnHand(), OnHand.zero()));
     });
+  }
+
+  public ReportDto toDto() {
+    ReportDto dto = new ReportDto();
+    dto.setGenerationDate(this.generationDate.format(DateTimeFormatter.ISO_DATE));
+    dto.setStartingDate(this.getStartDate().format(DateTimeFormatter.ISO_DATE));
+    dto.setEndingDate(this.getEndDate().format(DateTimeFormatter.ISO_DATE));
+    usages.forEach((k, v) -> {
+      dto.addUsage(k.toModel(), v.toDto());
+    });
+    return dto;
   }
 }

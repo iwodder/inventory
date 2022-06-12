@@ -80,8 +80,8 @@ public class Product extends Entity<ProductId> {
     this.name = name;
   }
 
-  public String getCategory() {
-    return category.getName();
+  public Category getCategory() {
+    return category;
   }
 
   private void setCategory(Category c) {

@@ -1,16 +1,19 @@
 package com.wodder.inventory.domain.model.inventory.report;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import com.wodder.inventory.domain.model.inventory.Inventory;
+import com.wodder.inventory.domain.model.inventory.InventoryCategory;
 import com.wodder.inventory.domain.model.inventory.InventoryCount;
 import com.wodder.inventory.domain.model.inventory.InventoryItem;
 import com.wodder.inventory.domain.model.product.Category;
 import com.wodder.inventory.domain.model.product.Price;
 import com.wodder.inventory.domain.model.product.UnitOfMeasurement;
+import com.wodder.inventory.dto.ReportDto;
 import java.time.LocalDate;
 import java.util.stream.Stream;
 import org.junit.jupiter.api.Disabled;
@@ -89,7 +92,7 @@ class InventoryReportTest {
   @DisplayName("Usage for present category should have values")
   void presentCategoryUsage() {
     InventoryItem sampleItem = new InventoryItem(
-        "Cheese", "Refrigerator", "Dairy",
+        "Cheese", "Refrigerator", InventoryCategory.of("Dairy"),
         new UnitOfMeasurement("Ounces", 4),
         new Price("0.98", "3.96"));
     Inventory start = new Inventory(LocalDate.of(2022, 5, 1));
@@ -116,7 +119,7 @@ class InventoryReportTest {
   @DisplayName("Should be able to return the usage for an item")
   void itemUsage() {
     InventoryItem sampleItem = new InventoryItem(
-        "Cheese", "Refrigerator", "Dairy",
+        "Cheese", "Refrigerator", InventoryCategory.of("Dairy"),
         new UnitOfMeasurement("Ounces", 4),
         new Price("0.98", "3.96"));
     Inventory start = new Inventory(LocalDate.of(2022, 5, 1));
@@ -143,7 +146,7 @@ class InventoryReportTest {
   @DisplayName("Should return negative usage when item is absent from starting inventory")
   void absentItemUsage() {
     InventoryItem sampleItem = new InventoryItem(
-        "Cheese", "Refrigerator", "Dairy",
+        "Cheese", "Refrigerator", InventoryCategory.of("Dairy"),
         new UnitOfMeasurement("Ounces", 4),
         new Price("0.98", "3.96"));
     Inventory start = new Inventory(LocalDate.of(2022, 5, 1));
@@ -178,7 +181,7 @@ class InventoryReportTest {
   @DisplayName("Should return 100% usage when item is absent from ending inventory")
   void absentEndingItemUsage() {
     InventoryItem sampleItem = new InventoryItem(
-        "Cheese", "Refrigerator", "Dairy",
+        "Cheese", "Refrigerator", InventoryCategory.of("Dairy"),
         new UnitOfMeasurement("Ounces", 4),
         new Price("0.98", "3.96"));
     Inventory start = new Inventory(LocalDate.of(2022, 5, 1));
@@ -194,6 +197,63 @@ class InventoryReportTest {
     Usage usage = report.getUsage("Cheese");
     assertEquals(0.5, usage.getUnits(), 0.00);
     assertEquals(4.45, usage.getDollars(), 0.00);
+  }
+
+  @Test
+  @DisplayName("Converted DTO should have correct dates")
+  void toDto() {
+    InventoryItem sampleItem = new InventoryItem(
+        "Cheese", "Refrigerator", InventoryCategory.of("Dairy"),
+        new UnitOfMeasurement("Ounces", 4),
+        new Price("0.98", "3.96"));
+    Inventory start = new Inventory(LocalDate.of(2022, 5, 1));
+    start.addItemToInventory(sampleItem);
+    start.updateInventoryCount("Cheese", "Refrigerator",
+        InventoryCount.countFrom("1.0", "0.0"));
+    Inventory end = new Inventory(LocalDate.of(2022, 5, 2));
+    end.addItemToInventory(sampleItem);
+    end.updateInventoryCount("Cheese", "Refrigerator",
+        InventoryCount.countFrom("0.5", "0.0"));
+
+    InventoryReport report =
+        InventoryReport.between(
+            new Inventory(start),
+            new Inventory(end));
+    report.process();
+    ReportDto dto = report.toDto();
+
+    assertNotEquals(
+        "",
+        dto.getGenerationDate(),
+        "Generation date shouldn't be blank");
+    assertEquals("2022-05-01", dto.getStartDate());
+    assertEquals("2022-05-02", dto.getEndDate());
+  }
+
+  @Test
+  @DisplayName("Converted DTO should have correct number of usages")
+  void toDtoItem() {
+    InventoryItem sampleItem = new InventoryItem(
+        "Cheese", "Refrigerator", InventoryCategory.of("Dairy"),
+        new UnitOfMeasurement("Ounces", 4),
+        new Price("0.98", "3.96"));
+    Inventory start = new Inventory(LocalDate.of(2022, 5, 1));
+    start.addItemToInventory(sampleItem);
+    start.updateInventoryCount("Cheese", "Refrigerator",
+        InventoryCount.countFrom("1.0", "0.0"));
+    Inventory end = new Inventory(LocalDate.of(2022, 5, 2));
+    end.addItemToInventory(sampleItem);
+    end.updateInventoryCount("Cheese", "Refrigerator",
+        InventoryCount.countFrom("0.5", "0.0"));
+
+    InventoryReport report =
+        InventoryReport.between(
+            new Inventory(start),
+            new Inventory(end));
+    report.process();
+    ReportDto dto = report.toDto();
+
+    assertEquals(1, dto.getUsageCnt());
   }
 
   static Stream<Arguments> illegalInventoryArgs() {

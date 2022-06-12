@@ -6,6 +6,10 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import com.wodder.inventory.application.InventoryService;
 import com.wodder.inventory.domain.model.inventory.Inventory;
+import com.wodder.inventory.domain.model.inventory.InventoryCategory;
+import com.wodder.inventory.domain.model.inventory.InventoryCount;
+import com.wodder.inventory.domain.model.inventory.InventoryId;
+import com.wodder.inventory.domain.model.inventory.InventoryItem;
 import com.wodder.inventory.domain.model.product.Category;
 import com.wodder.inventory.domain.model.product.Location;
 import com.wodder.inventory.domain.model.product.Price;
@@ -19,6 +23,7 @@ import com.wodder.inventory.persistence.PersistenceFactory;
 import com.wodder.inventory.persistence.Repository;
 import com.wodder.inventory.persistence.TestPersistenceFactory;
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
 import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
@@ -38,7 +43,7 @@ class InventoryServiceImplTest {
     psf = TestPersistenceFactory.getUnpopulated();
     invSvc =
         new InventoryServiceImpl(
-            psf.getRepository(Inventory.class), psf.getRepository(Product.class));
+            psf.getInventoryRepository(), psf.getRepository(Product.class));
   }
 
   @Test
@@ -124,15 +129,73 @@ class InventoryServiceImplTest {
   @Test
   @DisplayName("Should be able to generate a report between two dates")
   void inventoryReport() {
-    ReportDto dto = invSvc.generateInventoryReport(LocalDate.of(2022, 5, 1), LocalDate.of(2022, 5, 7));
+    InventoryItem sampleItem = new InventoryItem(
+        "Cheese", "Refrigerator", InventoryCategory.of("Dairy"),
+        new UnitOfMeasurement("Ounces", 4),
+        new Price("0.98", "3.96"));
+    Inventory start = new Inventory(LocalDate.of(2022, 5, 1));
+    start.addItemToInventory(sampleItem);
+    start.updateInventoryCount("Cheese", "Refrigerator",
+        InventoryCount.countFrom("1.0", "0.0"));
+    Inventory end = new Inventory(LocalDate.of(2022, 5, 2));
+    end.addItemToInventory(sampleItem);
+    end.updateInventoryCount("Cheese", "Refrigerator",
+        InventoryCount.countFrom("0.5", "0.0"));
+    Repository<Inventory, InventoryId> r = psf.getRepository(Inventory.class);
+    r.createItem(start);
+    r.createItem(end);
+
+    ReportDto dto = invSvc.generateInventoryReport(LocalDate.of(2022, 5, 1), LocalDate.of(2022, 5, 2));
     assertNotNull(dto);
   }
 
   @Test
   @DisplayName("Report should include date of generation")
   void inventoryReportDate() {
-    ReportDto dto = invSvc.generateInventoryReport(LocalDate.of(2022, 5, 1), LocalDate.of(2022, 5, 7));
-    assertEquals(LocalDate.now(), dto.getGenerationDate());
+    InventoryItem sampleItem = new InventoryItem(
+        "Cheese", "Refrigerator", InventoryCategory.of("Dairy"),
+        new UnitOfMeasurement("Ounces", 4),
+        new Price("0.98", "3.96"));
+    Inventory start = new Inventory(LocalDate.of(2022, 5, 1));
+    start.addItemToInventory(sampleItem);
+    start.updateInventoryCount("Cheese", "Refrigerator",
+        InventoryCount.countFrom("1.0", "0.0"));
+    Inventory end = new Inventory(LocalDate.of(2022, 5, 2));
+    end.addItemToInventory(sampleItem);
+    end.updateInventoryCount("Cheese", "Refrigerator",
+        InventoryCount.countFrom("0.5", "0.0"));
+    Repository<Inventory, InventoryId> r = psf.getRepository(Inventory.class);
+    r.createItem(start);
+    r.createItem(end);
+
+    ReportDto dto = invSvc.generateInventoryReport(LocalDate.of(2022, 5, 1), LocalDate.of(2022, 5, 2));
+    assertEquals(LocalDate.now().format(DateTimeFormatter.ISO_DATE), dto.getGenerationDate());
+  }
+
+  @Test
+  @DisplayName("Should generate an inventory report")
+  void generate() {
+    InventoryItem sampleItem = new InventoryItem(
+        "Cheese", "Refrigerator", InventoryCategory.of("Dairy"),
+        new UnitOfMeasurement("Ounces", 4),
+        new Price("0.98", "3.96"));
+    Inventory start = new Inventory(LocalDate.of(2022, 5, 1));
+    start.addItemToInventory(sampleItem);
+    start.updateInventoryCount("Cheese", "Refrigerator",
+        InventoryCount.countFrom("1.0", "0.0"));
+    Inventory end = new Inventory(LocalDate.of(2022, 5, 2));
+    end.addItemToInventory(sampleItem);
+    end.updateInventoryCount("Cheese", "Refrigerator",
+        InventoryCount.countFrom("0.5", "0.0"));
+    Repository<Inventory, InventoryId> r = psf.getRepository(Inventory.class);
+    r.createItem(start);
+    r.createItem(end);
+
+    ReportDto dto = invSvc.generateInventoryReport(
+        LocalDate.of(2022, 5, 1),
+        LocalDate.of(2022, 5, 2));
+
+    assertEquals(1, dto.getUsageCnt());
   }
 
   private void assertResultIsEmpty(Optional<?> result) {
