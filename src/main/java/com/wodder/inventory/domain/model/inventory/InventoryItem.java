@@ -9,6 +9,7 @@ import java.util.Objects;
 public class InventoryItem {
 
   private static final InventoryItem EMPTY = new InventoryItem(
+      ItemId.emptyId(),
       "null_item",
       "",
       "",
@@ -16,6 +17,7 @@ public class InventoryItem {
       Price.ofZero(),
       InventoryCount.ofZero());
 
+  private final ItemId id;
   private final String name;
   private final String location;
   private final String category;
@@ -24,12 +26,14 @@ public class InventoryItem {
   private final InventoryCount count;
 
   InventoryItem(
+      ItemId id,
       String name,
       String location,
       String category,
       UnitOfMeasurement uom,
       Price price,
       InventoryCount count) {
+    this.id = id;
     this.name = name;
     this.location = location;
     this.category = category;
@@ -38,13 +42,18 @@ public class InventoryItem {
     this.count = count;
   }
 
-  public InventoryItem(String name, String location, String category, UnitOfMeasurement uom,
+  public InventoryItem(
+      String name,
+      String location,
+      String category,
+      UnitOfMeasurement uom,
       Price price) {
-    this(name, location, category, uom, price, null);
+    this(ItemId.newId(), name, location, category, uom, price, InventoryCount.ofZero());
   }
 
   InventoryItem(InventoryItem that) {
     this(
+        that.id,
         that.name,
         that.location,
         that.category,
@@ -59,12 +68,12 @@ public class InventoryItem {
         p.getLocation(),
         p.getCategory(),
         p.getUnits(),
-        p.getPrice(),
-        InventoryCount.ofZero());
+        p.getPrice());
   }
 
   public static InventoryItem fromModel(InventoryItemDto model) {
     return new InventoryItem(
+        ItemId.of(model.getId()),
         model.getName(),
         model.getLocation(),
         model.getCategory(),
@@ -80,7 +89,18 @@ public class InventoryItem {
   }
 
   public InventoryItem updateCount(InventoryCount count) {
-    return new InventoryItem(this.name, this.location, this.category, this.uom, this.price, count);
+    return new InventoryItem(
+        this.id,
+        this.name,
+        this.location,
+        this.category,
+        this.uom,
+        this.price,
+        count);
+  }
+
+  public ItemId getId() {
+    return id;
   }
 
   public String getName() {
@@ -120,9 +140,7 @@ public class InventoryItem {
       return false;
     }
     InventoryItem item = (InventoryItem) o;
-    return getName().equals(item.getName())
-        && getLocation().equals(item.getLocation())
-        && getCategory().equals(item.getCategory());
+    return this.id.equals(item.id);
   }
 
   @Override

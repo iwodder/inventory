@@ -36,6 +36,7 @@ class InventoryTest {
     Inventory inventory = new Inventory();
     InventoryItem item =
         new InventoryItem(
+            ItemId.newId(),
             "2% Milk",
             "Refrigerator",
             "Dairy",
@@ -81,6 +82,7 @@ class InventoryTest {
     model.addInventoryItem(
         new InventoryItemDto(
             new InventoryItem(
+                ItemId.newId(),
                 "2% Milk",
                 "Refrigerator",
                 "Dairy",
@@ -90,6 +92,7 @@ class InventoryTest {
     model.addInventoryItem(
         new InventoryItemDto(
             new InventoryItem(
+                ItemId.newId(),
                 "Shredded Cheese",
                 "Refrigerator",
                 "Dairy",
@@ -169,6 +172,7 @@ class InventoryTest {
   void query_by_name() {
     InventoryItem item =
         new InventoryItem(
+            ItemId.newId(),
             "2% Milk",
             "Refrigerator",
             "Dairy",
@@ -186,6 +190,7 @@ class InventoryTest {
   void query_all() {
     InventoryItem item =
         new InventoryItem(
+            ItemId.newId(),
             "2% Milk",
             "Refrigerator",
             "Dairy",
@@ -194,6 +199,7 @@ class InventoryTest {
             new InventoryCount(1.0, 0.25));
     InventoryItem item2 =
         new InventoryItem(
+            ItemId.newId(),
             "Chocolate Milk",
             "Refrigerator",
             "Dairy",
