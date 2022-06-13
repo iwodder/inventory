@@ -1,6 +1,6 @@
 package com.wodder.inventory.domain.model.inventory;
 
-import com.wodder.inventory.dto.InventoryCountModel;
+import com.wodder.inventory.dto.InventoryCountDto;
 import java.util.Objects;
 
 public class InventoryCount {
@@ -18,7 +18,7 @@ public class InventoryCount {
     this(that.getUnits(), that.getCases());
   }
 
-  public InventoryCount(InventoryCountModel model) {
+  public InventoryCount(InventoryCountDto model) {
     this(model.getUnits(), model.getCases());
   }
 

@@ -16,7 +16,7 @@ import com.wodder.inventory.domain.model.product.Price;
 import com.wodder.inventory.domain.model.product.Product;
 import com.wodder.inventory.domain.model.product.ProductId;
 import com.wodder.inventory.domain.model.product.UnitOfMeasurement;
-import com.wodder.inventory.dto.InventoryCountModel;
+import com.wodder.inventory.dto.InventoryCountDto;
 import com.wodder.inventory.dto.InventoryDto;
 import com.wodder.inventory.dto.ReportDto;
 import com.wodder.inventory.persistence.PersistenceFactory;
@@ -105,9 +105,9 @@ class InventoryServiceImplTest {
             .addInventoryCounts(
                 inv.getId(),
                 Arrays.asList(
-                    new InventoryCountModel("234", 1.0, 1.0),
-                    new InventoryCountModel("345", .23, 0.25),
-                    new InventoryCountModel("456", 1.1, 1.23)))
+                    new InventoryCountDto("234", 1.0, 1.0),
+                    new InventoryCountDto("345", .23, 0.25),
+                    new InventoryCountDto("456", 1.1, 1.23)))
             .get();
 
     assertCorrectItemsInInventory(3, m);

@@ -1,6 +1,6 @@
 package com.wodder.inventory.application;
 
-import com.wodder.inventory.dto.InventoryCountModel;
+import com.wodder.inventory.dto.InventoryCountDto;
 import com.wodder.inventory.dto.InventoryDto;
 import com.wodder.inventory.dto.ReportDto;
 import java.time.LocalDate;
@@ -17,7 +17,7 @@ public interface InventoryService {
       String inventoryId, String productId, double units, double cases);
 
   Optional<InventoryDto> addInventoryCounts(
-      String inventoryId, Collection<InventoryCountModel> counts);
+      String inventoryId, Collection<InventoryCountDto> counts);
 
   void saveInventory(InventoryDto model);
 

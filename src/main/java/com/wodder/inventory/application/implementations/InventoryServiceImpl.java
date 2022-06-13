@@ -8,7 +8,7 @@ import com.wodder.inventory.domain.model.inventory.InventoryItem;
 import com.wodder.inventory.domain.model.inventory.report.InventoryReport;
 import com.wodder.inventory.domain.model.product.Product;
 import com.wodder.inventory.domain.model.product.ProductId;
-import com.wodder.inventory.dto.InventoryCountModel;
+import com.wodder.inventory.dto.InventoryCountDto;
 import com.wodder.inventory.dto.InventoryDto;
 import com.wodder.inventory.dto.ReportDto;
 import com.wodder.inventory.persistence.InventoryRepository;
@@ -64,11 +64,11 @@ public class InventoryServiceImpl implements InventoryService {
 
   @Override
   public Optional<InventoryDto> addInventoryCounts(
-      String inventoryId, Collection<InventoryCountModel> counts) {
+      String inventoryId, Collection<InventoryCountDto> counts) {
     Optional<Inventory> opt = repository.loadById(InventoryId.inventoryIdOf(inventoryId));
     if (opt.isPresent()) {
       Inventory i = opt.get();
-      for (InventoryCountModel m : counts) {
+      for (InventoryCountDto m : counts) {
         Optional<Product> p = productRepository.loadById(ProductId.productIdOf(m.getProductId()));
         p.ifPresent(
             (product) ->

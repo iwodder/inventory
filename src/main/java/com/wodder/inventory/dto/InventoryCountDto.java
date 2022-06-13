@@ -2,24 +2,24 @@ package com.wodder.inventory.dto;
 
 import java.io.Serializable;
 
-public class InventoryCountModel implements Serializable {
+public class InventoryCountDto implements Serializable {
   private static final long serialVersionUID = 1L;
   private String productId;
   private double units;
   private double cases;
 
-  public InventoryCountModel(double units, double cases) {
+  public InventoryCountDto(double units, double cases) {
     this.units = units;
     this.cases = cases;
   }
 
-  public InventoryCountModel(String productId) {
+  public InventoryCountDto(String productId) {
     this.productId = productId;
     this.units = 0.0;
     this.cases = 0.0;
   }
 
-  public InventoryCountModel(String productId, double units, double cases) {
+  public InventoryCountDto(String productId, double units, double cases) {
     this.productId = productId;
     this.units = units;
     this.cases = cases;
