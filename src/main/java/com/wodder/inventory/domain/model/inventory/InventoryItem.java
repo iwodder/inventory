@@ -11,7 +11,7 @@ public class InventoryItem {
   private static final InventoryItem EMPTY = new InventoryItem(
       ItemId.emptyId(),
       "null_item",
-      "",
+      InventoryLocation.defaultCategory(),
       InventoryCategory.defaultCategory(),
       UnitOfMeasurement.empty(),
       Price.ofZero(),
@@ -19,7 +19,7 @@ public class InventoryItem {
 
   private final ItemId id;
   private final String name;
-  private final String location;
+  private final InventoryLocation location;
   private final InventoryCategory category;
   private final UnitOfMeasurement uom;
   private final Price price;
@@ -28,7 +28,7 @@ public class InventoryItem {
   public InventoryItem(
       ItemId id,
       String name,
-      String location,
+      InventoryLocation location,
       InventoryCategory category,
       UnitOfMeasurement uom,
       Price price,
@@ -44,7 +44,7 @@ public class InventoryItem {
 
   public InventoryItem(
       String name,
-      String location,
+      InventoryLocation location,
       InventoryCategory category,
       UnitOfMeasurement uom,
       Price price) {
@@ -65,7 +65,7 @@ public class InventoryItem {
   public static InventoryItem fromProduct(Product p) {
     return new InventoryItem(
         p.getName(),
-        p.getLocation(),
+        InventoryLocation.of(p.getLocation()),
         InventoryCategory.of(p.getCategory().getName()),
         p.getUnits(),
         p.getPrice());
@@ -75,7 +75,7 @@ public class InventoryItem {
     return new InventoryItem(
         ItemId.of(model.getId()),
         model.getName(),
-        model.getLocation(),
+        InventoryLocation.of(model.getLocation()),
         InventoryCategory.of(model.getCategory()),
         new UnitOfMeasurement(model.getUnits(), Integer.parseInt(model.getItemsPerCase())),
         new Price(model.getUnitPrice(), model.getCasePrice()),
@@ -107,7 +107,7 @@ public class InventoryItem {
     return name;
   }
 
-  public String getLocation() {
+  public InventoryLocation getLocation() {
     return location;
   }
 

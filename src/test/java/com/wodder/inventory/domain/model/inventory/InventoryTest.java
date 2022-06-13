@@ -38,7 +38,7 @@ class InventoryTest {
         new InventoryItem(
             ItemId.newId(),
             "2% Milk",
-            "Refrigerator",
+            InventoryLocation.of("Refrigerator"),
             InventoryCategory.of("Dairy"),
             new UnitOfMeasurement("Gallon", 4),
             new Price("0.99", "4.98"),
@@ -84,7 +84,7 @@ class InventoryTest {
             new InventoryItem(
                 ItemId.newId(),
                 "2% Milk",
-                "Refrigerator",
+                InventoryLocation.of("Refrigerator"),
                 InventoryCategory.of("Dairy"),
                 new UnitOfMeasurement("Gallon", 4),
                 new Price("0.99", "4.98"),
@@ -94,7 +94,7 @@ class InventoryTest {
             new InventoryItem(
                 ItemId.newId(),
                 "Shredded Cheese",
-                "Refrigerator",
+                InventoryLocation.of("Refrigerator"),
                 InventoryCategory.of("Dairy"),
                 new UnitOfMeasurement("Gallon", 4),
                 new Price("0.99", "4.98"),
@@ -153,8 +153,8 @@ class InventoryTest {
     Inventory i =
         Inventory.createNewInventoryWithProducts(
             Arrays.asList(new Product("Name", new Category("Frozen"), new Location("Freezer"))));
-    assertEquals(1, i.getItemsByLocation("Freezer").size());
-    assertEquals(0, i.getItemsByLocation("Pantry").size());
+    assertEquals(1, i.getItemsByLocation(InventoryLocation.of("Freezer")).size());
+    assertEquals(0, i.getItemsByLocation(InventoryLocation.of("Pantry")).size());
   }
 
   @Test
@@ -174,7 +174,7 @@ class InventoryTest {
         new InventoryItem(
             ItemId.newId(),
             "2% Milk",
-            "Refrigerator",
+            InventoryLocation.of("Refrigerator"),
             InventoryCategory.of("Dairy"),
             new UnitOfMeasurement("Gallon", 4),
             new Price("0.99", "4.98"),
@@ -192,7 +192,7 @@ class InventoryTest {
         new InventoryItem(
             ItemId.newId(),
             "2% Milk",
-            "Refrigerator",
+            InventoryLocation.of("Refrigerator"),
             InventoryCategory.of("Dairy"),
             new UnitOfMeasurement("Gallon", 4),
             new Price("0.99", "4.98"),
@@ -201,7 +201,7 @@ class InventoryTest {
         new InventoryItem(
             ItemId.newId(),
             "Chocolate Milk",
-            "Refrigerator",
+            InventoryLocation.of("Refrigerator"),
             InventoryCategory.of("Dairy"),
             new UnitOfMeasurement("Gallon", 2),
             new Price("1.99", "4.98"),

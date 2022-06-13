@@ -10,6 +10,7 @@ import com.wodder.inventory.domain.model.inventory.Inventory;
 import com.wodder.inventory.domain.model.inventory.InventoryCategory;
 import com.wodder.inventory.domain.model.inventory.InventoryCount;
 import com.wodder.inventory.domain.model.inventory.InventoryItem;
+import com.wodder.inventory.domain.model.inventory.InventoryLocation;
 import com.wodder.inventory.domain.model.inventory.ItemId;
 import com.wodder.inventory.domain.model.product.Category;
 import com.wodder.inventory.domain.model.product.Price;
@@ -95,7 +96,7 @@ class InventoryReportTest {
   @DisplayName("Usage for present category should have values")
   void presentCategoryUsage() {
     InventoryItem sampleItem = new InventoryItem(
-        "Cheese", "Refrigerator", InventoryCategory.of("Dairy"),
+        "Cheese", InventoryLocation.of("Refrigerator"), InventoryCategory.of("Dairy"),
         new UnitOfMeasurement("Ounces", 4),
         new Price("0.98", "3.96"));
     Inventory start = new Inventory(LocalDate.of(2022, 5, 1));
@@ -122,7 +123,7 @@ class InventoryReportTest {
   @DisplayName("Should be able to return the usage for an item")
   void itemUsage() {
     InventoryItem sampleItem = new InventoryItem(
-        "Cheese", "Refrigerator", InventoryCategory.of("Dairy"),
+        "Cheese", InventoryLocation.of("Refrigerator"), InventoryCategory.of("Dairy"),
         new UnitOfMeasurement("Ounces", 4),
         new Price("0.98", "3.96"));
     Inventory start = new Inventory(LocalDate.of(2022, 5, 1));
@@ -149,7 +150,7 @@ class InventoryReportTest {
   @DisplayName("Should return negative usage when item is absent from starting inventory")
   void absentItemUsage() {
     InventoryItem sampleItem = new InventoryItem(
-        "Cheese", "Refrigerator", InventoryCategory.of("Dairy"),
+        "Cheese", InventoryLocation.of("Refrigerator"), InventoryCategory.of("Dairy"),
         new UnitOfMeasurement("Ounces", 4),
         new Price("0.98", "3.96"));
     Inventory start = new Inventory(LocalDate.of(2022, 5, 1));
@@ -184,7 +185,7 @@ class InventoryReportTest {
   @DisplayName("Should return 100% usage when item is absent from ending inventory")
   void absentEndingItemUsage() {
     InventoryItem sampleItem = new InventoryItem(
-        "Cheese", "Refrigerator", InventoryCategory.of("Dairy"),
+        "Cheese", InventoryLocation.of("Refrigerator"), InventoryCategory.of("Dairy"),
         new UnitOfMeasurement("Ounces", 4),
         new Price("0.98", "3.96"));
     Inventory start = new Inventory(LocalDate.of(2022, 5, 1));
@@ -206,7 +207,7 @@ class InventoryReportTest {
   @DisplayName("Should return no usage when starting on hand matches ending on hand")
   void noUsage() {
     InventoryItem sampleItem = new InventoryItem(
-        "Cheese", "Refrigerator", InventoryCategory.of("Dairy"),
+        "Cheese", InventoryLocation.of("Refrigerator"), InventoryCategory.of("Dairy"),
         new UnitOfMeasurement("Ounces", 4),
         new Price("0.98", "3.96"));
     Inventory start = new Inventory(LocalDate.of(2022, 5, 1));
@@ -231,7 +232,7 @@ class InventoryReportTest {
   @DisplayName("Should be able to add no received items report")
   void noReceived() {
     InventoryItem sampleItem = new InventoryItem(
-        "Cheese", "Refrigerator", InventoryCategory.of("Dairy"),
+        "Cheese", InventoryLocation.of("Refrigerator"), InventoryCategory.of("Dairy"),
         new UnitOfMeasurement("Ounces", 4),
         new Price("0.98", "3.96"));
     Inventory start = new Inventory(LocalDate.of(2022, 5, 1));
@@ -259,7 +260,7 @@ class InventoryReportTest {
   void received() {
     InventoryItem sampleItem = new InventoryItem(
         ItemId.of("123"),
-        "Cheese", "Refrigerator", InventoryCategory.of("Dairy"),
+        "Cheese", InventoryLocation.of("Refrigerator"), InventoryCategory.of("Dairy"),
         new UnitOfMeasurement("Ounces", 4),
         new Price("0.98", "3.96"), InventoryCount.ofZero());
     Inventory start = new Inventory(LocalDate.of(2022, 5, 1));
@@ -269,7 +270,7 @@ class InventoryReportTest {
 
     Inventory end = new Inventory(LocalDate.of(2022, 5, 2));
     end.addItemToInventory(sampleItem);
-    end.updateInventoryCount("Cheese", "Refrigerator",
+    end.updateInventoryCount("Cheese","Refrigerator",
         InventoryCount.countFrom("0.5", "1.0"));
 
     InventoryReport report =
@@ -288,7 +289,7 @@ class InventoryReportTest {
   @DisplayName("Converted DTO should have correct dates")
   void toDto() {
     InventoryItem sampleItem = new InventoryItem(
-        "Cheese", "Refrigerator", InventoryCategory.of("Dairy"),
+        "Cheese", InventoryLocation.of("Refrigerator"), InventoryCategory.of("Dairy"),
         new UnitOfMeasurement("Ounces", 4),
         new Price("0.98", "3.96"));
     Inventory start = new Inventory(LocalDate.of(2022, 5, 1));
@@ -319,7 +320,7 @@ class InventoryReportTest {
   @DisplayName("Converted DTO should have correct number of usages")
   void toDtoItem() {
     InventoryItem sampleItem = new InventoryItem(
-        "Cheese", "Refrigerator", InventoryCategory.of("Dairy"),
+        "Cheese", InventoryLocation.of("Refrigerator"), InventoryCategory.of("Dairy"),
         new UnitOfMeasurement("Ounces", 4),
         new Price("0.98", "3.96"));
     Inventory start = new Inventory(LocalDate.of(2022, 5, 1));

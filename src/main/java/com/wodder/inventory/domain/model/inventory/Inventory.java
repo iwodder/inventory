@@ -71,11 +71,11 @@ public class Inventory extends Entity<InventoryId> {
   }
 
   private int generateKey(InventoryItem item) {
-    return Objects.hash(item.getName().toLowerCase(), item.getLocation().toLowerCase());
+    return Objects.hash(item.getName().toLowerCase(), item.getLocation().getName().toLowerCase());
   }
 
-  public List<InventoryItem> getItemsByLocation(String location) {
-    return getItemsBy(i -> i.getLocation().equalsIgnoreCase(location));
+  public List<InventoryItem> getItemsByLocation(InventoryLocation location) {
+    return getItemsBy(i -> i.getLocation().equals(location));
   }
 
   public List<InventoryItem> getItemsByCategory(InventoryCategory category) {
