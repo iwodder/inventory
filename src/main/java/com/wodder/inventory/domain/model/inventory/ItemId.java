@@ -1,5 +1,6 @@
 package com.wodder.inventory.domain.model.inventory;
 
+import java.nio.charset.StandardCharsets;
 import java.util.Objects;
 import java.util.UUID;
 
@@ -20,6 +21,12 @@ public class ItemId {
 
   public static ItemId of(String id) {
     return new ItemId(id);
+  }
+
+  public static ItemId from(String source) {
+    return new ItemId(
+        UUID.nameUUIDFromBytes(
+            source.getBytes(StandardCharsets.UTF_8)).toString());
   }
 
   public static ItemId emptyId() {

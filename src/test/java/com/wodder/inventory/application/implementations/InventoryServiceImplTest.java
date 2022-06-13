@@ -9,8 +9,8 @@ import com.wodder.inventory.domain.model.inventory.Inventory;
 import com.wodder.inventory.domain.model.inventory.InventoryCategory;
 import com.wodder.inventory.domain.model.inventory.InventoryCount;
 import com.wodder.inventory.domain.model.inventory.InventoryId;
-import com.wodder.inventory.domain.model.inventory.InventoryItem;
 import com.wodder.inventory.domain.model.inventory.InventoryLocation;
+import com.wodder.inventory.domain.model.inventory.Item;
 import com.wodder.inventory.domain.model.product.Category;
 import com.wodder.inventory.domain.model.product.Location;
 import com.wodder.inventory.domain.model.product.Price;
@@ -130,7 +130,7 @@ class InventoryServiceImplTest {
   @Test
   @DisplayName("Should be able to generate a report between two dates")
   void inventoryReport() {
-    InventoryItem sampleItem = new InventoryItem(
+    Item sampleItem = new Item(
         "Cheese", InventoryLocation.of("Refrigerator"), InventoryCategory.of("Dairy"),
         new UnitOfMeasurement("Ounces", 4),
         new Price("0.98", "3.96"));
@@ -153,7 +153,7 @@ class InventoryServiceImplTest {
   @Test
   @DisplayName("Report should include date of generation")
   void inventoryReportDate() {
-    InventoryItem sampleItem = new InventoryItem(
+    Item sampleItem = new Item(
         "Cheese", InventoryLocation.of("Refrigerator"), InventoryCategory.of("Dairy"),
         new UnitOfMeasurement("Ounces", 4),
         new Price("0.98", "3.96"));
@@ -176,7 +176,7 @@ class InventoryServiceImplTest {
   @Test
   @DisplayName("Should generate an inventory report")
   void generate() {
-    InventoryItem sampleItem = new InventoryItem(
+    Item sampleItem = new Item(
         "Cheese", InventoryLocation.of("Refrigerator"), InventoryCategory.of("Dairy"),
         new UnitOfMeasurement("Ounces", 4),
         new Price("0.98", "3.96"));

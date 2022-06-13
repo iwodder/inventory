@@ -4,7 +4,7 @@ import com.wodder.inventory.application.InventoryService;
 import com.wodder.inventory.domain.model.inventory.Inventory;
 import com.wodder.inventory.domain.model.inventory.InventoryCount;
 import com.wodder.inventory.domain.model.inventory.InventoryId;
-import com.wodder.inventory.domain.model.inventory.InventoryItem;
+import com.wodder.inventory.domain.model.inventory.Item;
 import com.wodder.inventory.domain.model.inventory.report.InventoryReport;
 import com.wodder.inventory.domain.model.product.Product;
 import com.wodder.inventory.domain.model.product.ProductId;
@@ -54,7 +54,7 @@ public class InventoryServiceImpl implements InventoryService {
     Optional<Product> productOpt = productRepository.loadById(ProductId.productIdOf(productId));
     if (opt.isPresent() && productOpt.isPresent()) {
       Inventory i = opt.get();
-      InventoryItem item = InventoryItem.fromProduct(productOpt.get());
+      Item item = Item.fromProduct(productOpt.get());
       i.addItemToInventory(item.updateCount(new InventoryCount(units, cases)));
       return Optional.of(i.toModel());
     } else {
@@ -73,7 +73,7 @@ public class InventoryServiceImpl implements InventoryService {
         p.ifPresent(
             (product) ->
                 i.addItemToInventory(
-                    InventoryItem.fromProduct(product)
+                    Item.fromProduct(product)
                         .updateCount(new InventoryCount(m.getUnits(), m.getCases()))));
       }
       return Optional.of(i.toModel());

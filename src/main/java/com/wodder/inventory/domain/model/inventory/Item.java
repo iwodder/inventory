@@ -6,9 +6,9 @@ import com.wodder.inventory.domain.model.product.UnitOfMeasurement;
 import com.wodder.inventory.dto.InventoryItemDto;
 import java.util.Objects;
 
-public class InventoryItem {
+public class Item {
 
-  private static final InventoryItem EMPTY = new InventoryItem(
+  private static final Item EMPTY = new Item(
       ItemId.emptyId(),
       "null_item",
       InventoryLocation.defaultCategory(),
@@ -25,7 +25,7 @@ public class InventoryItem {
   private final Price price;
   private final InventoryCount count;
 
-  public InventoryItem(
+  public Item(
       ItemId id,
       String name,
       InventoryLocation location,
@@ -42,7 +42,7 @@ public class InventoryItem {
     this.count = count;
   }
 
-  public InventoryItem(
+  public Item(
       String name,
       InventoryLocation location,
       InventoryCategory category,
@@ -51,7 +51,7 @@ public class InventoryItem {
     this(ItemId.newId(), name, location, category, uom, price, InventoryCount.ofZero());
   }
 
-  InventoryItem(InventoryItem that) {
+  Item(Item that) {
     this(
         that.id,
         that.name,
@@ -62,8 +62,18 @@ public class InventoryItem {
         new InventoryCount(that.count));
   }
 
-  public static InventoryItem fromProduct(Product p) {
-    return new InventoryItem(
+  private Item(ItemBuilder b) {
+    this.id = b.id;
+    this.name = b.name;
+    this.category = b.category;
+    this.location = b.location;
+    this.uom = b.uom;
+    this.price = b.price;
+    this.count = b.count;
+  }
+
+  public static Item fromProduct(Product p) {
+    return new Item(
         p.getName(),
         InventoryLocation.of(p.getLocation()),
         InventoryCategory.of(p.getCategory().getName()),
@@ -71,8 +81,8 @@ public class InventoryItem {
         p.getPrice());
   }
 
-  public static InventoryItem fromModel(InventoryItemDto model) {
-    return new InventoryItem(
+  public static Item fromModel(InventoryItemDto model) {
+    return new Item(
         ItemId.of(model.getId()),
         model.getName(),
         InventoryLocation.of(model.getLocation()),
@@ -84,12 +94,12 @@ public class InventoryItem {
             Double.parseDouble(model.getNumberOfCases())));
   }
 
-  public static InventoryItem empty() {
+  public static Item empty() {
     return EMPTY;
   }
 
-  public InventoryItem updateCount(InventoryCount count) {
-    return new InventoryItem(
+  public Item updateCount(InventoryCount count) {
+    return new Item(
         this.id,
         this.name,
         this.location,
@@ -135,15 +145,69 @@ public class InventoryItem {
     return new InventoryItemDto(this);
   }
 
+  public static ItemBuilder builder() {
+    return new ItemBuilder();
+  }
+
+  public static class ItemBuilder {
+
+    private ItemId id;
+    private String name;
+    private InventoryLocation location;
+    private InventoryCategory category;
+    private UnitOfMeasurement uom;
+    private Price price;
+    private InventoryCount count;
+
+    private ItemBuilder() {
+      count = InventoryCount.ofZero();
+    }
+
+    public ItemBuilder withName(String name) {
+      this.id = ItemId.from(name);
+      this.name = name;
+      return this;
+    }
+
+    public ItemBuilder withLocation(String location) {
+      this.location = InventoryLocation.of(location);
+      return this;
+    }
+
+    public ItemBuilder withCategory(String category) {
+      this.category = InventoryCategory.of(category);
+      return this;
+    }
+
+    public ItemBuilder withUnits(String units, String qtyPerCase) {
+      this.uom = UnitOfMeasurement.of(units, qtyPerCase);
+      return this;
+    }
+
+    public ItemBuilder withPricing(String unitPrice, String casePrice) {
+      this.price = Price.of(unitPrice, casePrice);
+      return this;
+    }
+
+    public ItemBuilder withCount(String units, String cases) {
+      this.count = InventoryCount.countFrom(units, cases);
+      return this;
+    }
+
+    public Item build() {
+      return new Item(this);
+    }
+  }
+
   @Override
   public boolean equals(Object o) {
     if (this == o) {
       return true;
     }
-    if (!(o instanceof InventoryItem)) {
+    if (!(o instanceof Item)) {
       return false;
     }
-    InventoryItem item = (InventoryItem) o;
+    Item item = (Item) o;
     return this.id.equals(item.id);
   }
 

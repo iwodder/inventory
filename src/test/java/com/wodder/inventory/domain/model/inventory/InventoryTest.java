@@ -34,8 +34,8 @@ class InventoryTest {
   @Disabled
   void add_item() {
     Inventory inventory = new Inventory();
-    InventoryItem item =
-        new InventoryItem(
+    Item item =
+        new Item(
             ItemId.newId(),
             "2% Milk",
             InventoryLocation.of("Refrigerator"),
@@ -81,7 +81,7 @@ class InventoryTest {
     model.setInventoryDate(LocalDate.now());
     model.addInventoryItem(
         new InventoryItemDto(
-            new InventoryItem(
+            new Item(
                 ItemId.newId(),
                 "2% Milk",
                 InventoryLocation.of("Refrigerator"),
@@ -91,7 +91,7 @@ class InventoryTest {
                 new InventoryCount(1.0, 0.25))));
     model.addInventoryItem(
         new InventoryItemDto(
-            new InventoryItem(
+            new Item(
                 ItemId.newId(),
                 "Shredded Cheese",
                 InventoryLocation.of("Refrigerator"),
@@ -170,8 +170,8 @@ class InventoryTest {
   @Test
   @DisplayName("Should be able to query item by name")
   void query_by_name() {
-    InventoryItem item =
-        new InventoryItem(
+    Item item =
+        new Item(
             ItemId.newId(),
             "2% Milk",
             InventoryLocation.of("Refrigerator"),
@@ -188,29 +188,27 @@ class InventoryTest {
   @Test
   @DisplayName("Should be able to retrieve all items")
   void query_all() {
-    InventoryItem item =
-        new InventoryItem(
-            ItemId.newId(),
-            "2% Milk",
-            InventoryLocation.of("Refrigerator"),
-            InventoryCategory.of("Dairy"),
-            new UnitOfMeasurement("Gallon", 4),
-            new Price("0.99", "4.98"),
-            new InventoryCount(1.0, 0.25));
-    InventoryItem item2 =
-        new InventoryItem(
-            ItemId.newId(),
-            "Chocolate Milk",
-            InventoryLocation.of("Refrigerator"),
-            InventoryCategory.of("Dairy"),
-            new UnitOfMeasurement("Gallon", 2),
-            new Price("1.99", "4.98"),
-            new InventoryCount(1.0, 0.25));
+    Item item = Item.builder()
+        .withCategory("Dairy")
+        .withLocation("Refrigerator")
+        .withName("2% Milk")
+        .withUnits("Gallon", "4")
+        .withPricing("0.99", "4.98")
+        .withCount("1.0", "0.25")
+        .build();
+    Item item2 = Item.builder()
+        .withCategory("Dairy")
+        .withLocation("Refrigerator")
+        .withName("Chocolate Milk")
+        .withUnits("Gallon", "2")
+        .withPricing("1.99", "4.98")
+        .withCount("1.0", "0.25")
+        .build();
     Inventory inventory = new Inventory();
     inventory.addItemToInventory(item);
     inventory.addItemToInventory(item2);
 
-    Iterable<InventoryItem> items = inventory.getItems();
+    Iterable<Item> items = inventory.getItems();
     AtomicInteger cnt = new AtomicInteger();
     items.forEach((i) -> cnt.getAndIncrement());
 
@@ -222,6 +220,6 @@ class InventoryTest {
   void query_by_name_absent() {
     Inventory inventory = new Inventory();
 
-    assertEquals(InventoryItem.empty(), inventory.getItem("2% Milk"));
+    assertEquals(Item.empty(), inventory.getItem("2% Milk"));
   }
 }

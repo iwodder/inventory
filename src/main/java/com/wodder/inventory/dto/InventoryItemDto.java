@@ -1,6 +1,6 @@
 package com.wodder.inventory.dto;
 
-import com.wodder.inventory.domain.model.inventory.InventoryItem;
+import com.wodder.inventory.domain.model.inventory.Item;
 
 public class InventoryItemDto {
 
@@ -37,7 +37,7 @@ public class InventoryItemDto {
     this.numberOfCases = numberOfCases;
   }
 
-  public InventoryItemDto(InventoryItem item) {
+  public InventoryItemDto(Item item) {
     this(
         item.getId().getValue(),
         item.getName(),

@@ -8,13 +8,13 @@ import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-class InventoryItemTest {
+class ItemTest {
 
   @Test
   @Disabled
   @DisplayName("Should return a value of the item")
   void value() {
-   InventoryItem item = new InventoryItem(
+   Item item = new Item(
        ItemId.newId(),
        "Cheese", InventoryLocation.of("Refrigerator"), InventoryCategory.of("Dairy"),
        new UnitOfMeasurement("ounce", 16),
@@ -32,7 +32,7 @@ class InventoryItemTest {
   void onHand() {
     UnitOfMeasurement uom = new UnitOfMeasurement("ounce", 16);
     Price p = new Price("0.98", "10.00");
-    InventoryItem item = new InventoryItem(
+    Item item = new Item(
         ItemId.newId(),
         "Cheese", InventoryLocation.of("Refrigerator"), InventoryCategory.of("Dairy"),
         uom,

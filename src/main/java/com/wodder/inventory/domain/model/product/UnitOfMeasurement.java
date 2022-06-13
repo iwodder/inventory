@@ -21,6 +21,10 @@ public class UnitOfMeasurement {
     return new UnitOfMeasurement("empty", 0);
   }
 
+  public static UnitOfMeasurement of(String unit, String unitsPerCase) {
+    return new UnitOfMeasurement(unit, Integer.parseInt(unitsPerCase));
+  }
+
   public String getUnit() {
     return unit;
   }

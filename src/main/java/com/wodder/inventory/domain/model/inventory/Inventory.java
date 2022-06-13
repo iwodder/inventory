@@ -15,7 +15,7 @@ import java.util.stream.Collectors;
 
 public class Inventory extends Entity<InventoryId> {
   private final LocalDate date;
-  private final Map<Integer, InventoryItem> counts = new HashMap<>();
+  private final Map<Integer, Item> counts = new HashMap<>();
 
   private InventoryState state;
 
@@ -39,7 +39,7 @@ public class Inventory extends Entity<InventoryId> {
         model.getInventoryDate(),
         InventoryState.valueOf(model.getState()));
     model.getItems().stream()
-        .map(InventoryItem::fromModel)
+        .map(Item::fromModel)
         .forEach(
             m -> {
               counts.putIfAbsent(generateKey(m), m);
@@ -48,7 +48,7 @@ public class Inventory extends Entity<InventoryId> {
 
   public Inventory(Inventory that) {
     this(that.id, that.date, that.state);
-    that.counts.forEach((k, v) -> this.counts.put(k, new InventoryItem(v)));
+    that.counts.forEach((k, v) -> this.counts.put(k, new Item(v)));
   }
 
   public static Inventory createNewInventoryWithProducts(Collection<Product> products) {
@@ -61,37 +61,37 @@ public class Inventory extends Entity<InventoryId> {
     state.updateCount(counts, name, location, count);
   }
 
-  public void addItemToInventory(InventoryItem item) {
+  public void addItemToInventory(Item item) {
     state.addItemToInventory(counts, generateKey(item), item);
   }
 
   private void addProductToInventory(Product product) {
-    InventoryItem item = InventoryItem.fromProduct(product);
+    Item item = Item.fromProduct(product);
     counts.put(generateKey(item), item);
   }
 
-  private int generateKey(InventoryItem item) {
+  private int generateKey(Item item) {
     return Objects.hash(item.getName().toLowerCase(), item.getLocation().getName().toLowerCase());
   }
 
-  public List<InventoryItem> getItemsByLocation(InventoryLocation location) {
+  public List<Item> getItemsByLocation(InventoryLocation location) {
     return getItemsBy(i -> i.getLocation().equals(location));
   }
 
-  public List<InventoryItem> getItemsByCategory(InventoryCategory category) {
+  public List<Item> getItemsByCategory(InventoryCategory category) {
     return getItemsBy(i -> i.getCategory().equals(category));
   }
 
-  public InventoryItem getItem(String s) {
-    List<InventoryItem> item = getItemsBy(i -> i.getName().equalsIgnoreCase(s));
+  public Item getItem(String s) {
+    List<Item> item = getItemsBy(i -> i.getName().equalsIgnoreCase(s));
     if (item.size() == 1) {
       return item.get(0);
     } else {
-      return InventoryItem.empty();
+      return Item.empty();
     }
   }
 
-  private List<InventoryItem> getItemsBy(Predicate<InventoryItem> p) {
+  private List<Item> getItemsBy(Predicate<Item> p) {
     return counts.values().stream().filter(p).collect(Collectors.toUnmodifiableList());
   }
 
@@ -102,7 +102,7 @@ public class Inventory extends Entity<InventoryId> {
   public Optional<InventoryCount> getCount(String name) {
     return counts.values().stream()
         .filter(entry -> entry.getName().equalsIgnoreCase(name))
-        .map(InventoryItem::getCount)
+        .map(Item::getCount)
         .findAny();
   }
 
@@ -121,7 +121,7 @@ public class Inventory extends Entity<InventoryId> {
   public InventoryDto toModel() {
     InventoryDto result = new InventoryDto(id.getId(), state.name());
     result.setInventoryDate(date);
-    counts.values().stream().map(InventoryItem::toModel).forEach(result::addInventoryItem);
+    counts.values().stream().map(Item::toModel).forEach(result::addInventoryItem);
     return result;
   }
 
@@ -142,7 +142,7 @@ public class Inventory extends Entity<InventoryId> {
     return Objects.hash(date);
   }
 
-  public Iterable<InventoryItem> getItems() {
+  public Iterable<Item> getItems() {
     return counts.values();
   }
 
@@ -155,13 +155,13 @@ public class Inventory extends Entity<InventoryId> {
 
       @Override
       void updateCount(
-          Map<Integer, InventoryItem> counts, String name, String location, InventoryCount count) {
+          Map<Integer, Item> counts, String name, String location, InventoryCount count) {
         int key = Objects.hash(name.toLowerCase(), location.toLowerCase());
         counts.computeIfPresent(key, (k, v) -> v.updateCount(count));
       }
 
       @Override
-      void addItemToInventory(Map<Integer, InventoryItem> counts, Integer id, InventoryItem item) {
+      void addItemToInventory(Map<Integer, Item> counts, Integer id, Item item) {
         counts.putIfAbsent(id, item);
       }
     },
@@ -174,12 +174,12 @@ public class Inventory extends Entity<InventoryId> {
 
       @Override
       void updateCount(
-          Map<Integer, InventoryItem> counts, String name, String location, InventoryCount count) {
+          Map<Integer, Item> counts, String name, String location, InventoryCount count) {
         throw new IllegalStateException("Cannot update counts on a closed inventory");
       }
 
       @Override
-      void addItemToInventory(Map<Integer, InventoryItem> counts, Integer id, InventoryItem item) {
+      void addItemToInventory(Map<Integer, Item> counts, Integer id, Item item) {
         throw new IllegalStateException("Cannot add a new item to a closed inventory");
       }
     };
@@ -187,9 +187,9 @@ public class Inventory extends Entity<InventoryId> {
     abstract boolean isOpen();
 
     abstract void updateCount(
-        Map<Integer, InventoryItem> counts, String name, String location, InventoryCount count);
+        Map<Integer, Item> counts, String name, String location, InventoryCount count);
 
     abstract void addItemToInventory(
-        Map<Integer, InventoryItem> counts, Integer id, InventoryItem item);
+        Map<Integer, Item> counts, Integer id, Item item);
   }
 }

@@ -1,7 +1,7 @@
 package com.wodder.inventory.domain.model.inventory.report;
 
 import com.wodder.inventory.domain.model.inventory.Inventory;
-import com.wodder.inventory.domain.model.inventory.InventoryItem;
+import com.wodder.inventory.domain.model.inventory.Item;
 import com.wodder.inventory.domain.model.inventory.OnHand;
 import com.wodder.inventory.domain.model.product.Category;
 import com.wodder.inventory.dto.ReportDto;
@@ -18,7 +18,7 @@ public class InventoryReport {
   private final Inventory start;
   private final Inventory end;
 
-  private final Map<InventoryItem, Usage> usages = new HashMap<>();
+  private final Map<Item, Usage> usages = new HashMap<>();
   private final Set<ReceivedItem> items = new HashSet<>();
 
   private InventoryReport(Inventory start, Inventory end) {
@@ -74,7 +74,7 @@ public class InventoryReport {
 
   private void processEndingInventory() {
     end.getItems().forEach((ending) -> {
-      InventoryItem starting = start.getItem(ending.getName());
+      Item starting = start.getItem(ending.getName());
       usages.put(ending, Usage.of(starting.getOnHand(), ending.getOnHand()));
     });
   }

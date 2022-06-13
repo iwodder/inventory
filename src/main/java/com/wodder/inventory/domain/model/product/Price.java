@@ -28,6 +28,10 @@ public class Price {
     return ZERO;
   }
 
+  public static Price of(String unitPrice, String casePrice) {
+    return new Price(unitPrice, casePrice);
+  }
+
   public BigDecimal getUnitPrice() {
     return unitPrice;
   }
