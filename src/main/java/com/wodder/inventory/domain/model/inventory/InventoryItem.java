@@ -25,7 +25,7 @@ public class InventoryItem {
   private final Price price;
   private final InventoryCount count;
 
-  InventoryItem(
+  public InventoryItem(
       ItemId id,
       String name,
       String location,
@@ -127,6 +127,10 @@ public class InventoryItem {
     return count;
   }
 
+  public OnHand getOnHand() {
+    return OnHand.from(count, price, uom);
+  }
+
   public InventoryItemDto toModel() {
     return new InventoryItemDto(this);
   }
@@ -148,7 +152,5 @@ public class InventoryItem {
     return Objects.hash(getName(), getLocation(), getCategory());
   }
 
-  public OnHand getOnHand() {
-    return OnHand.from(count, price, uom);
-  }
+
 }

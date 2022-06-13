@@ -10,11 +10,14 @@ import com.wodder.inventory.domain.model.inventory.Inventory;
 import com.wodder.inventory.domain.model.inventory.InventoryCategory;
 import com.wodder.inventory.domain.model.inventory.InventoryCount;
 import com.wodder.inventory.domain.model.inventory.InventoryItem;
+import com.wodder.inventory.domain.model.inventory.ItemId;
 import com.wodder.inventory.domain.model.product.Category;
 import com.wodder.inventory.domain.model.product.Price;
 import com.wodder.inventory.domain.model.product.UnitOfMeasurement;
 import com.wodder.inventory.dto.ReportDto;
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.stream.Stream;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
@@ -197,6 +200,88 @@ class InventoryReportTest {
     Usage usage = report.getUsage("Cheese");
     assertEquals(0.5, usage.getUnits(), 0.00);
     assertEquals(4.45, usage.getDollars(), 0.00);
+  }
+
+  @Test
+  @DisplayName("Should return no usage when starting on hand matches ending on hand")
+  void noUsage() {
+    InventoryItem sampleItem = new InventoryItem(
+        "Cheese", "Refrigerator", InventoryCategory.of("Dairy"),
+        new UnitOfMeasurement("Ounces", 4),
+        new Price("0.98", "3.96"));
+    Inventory start = new Inventory(LocalDate.of(2022, 5, 1));
+    start.addItemToInventory(sampleItem);
+    start.updateInventoryCount("Cheese", "Refrigerator",
+        InventoryCount.countFrom("0.5", "1.0"));
+
+    Inventory end = new Inventory(LocalDate.of(2022, 5, 2));
+    end.addItemToInventory(sampleItem);
+    end.updateInventoryCount("Cheese", "Refrigerator",
+        InventoryCount.countFrom("0.5", "1.0"));
+
+    InventoryReport report = InventoryReport.between(new Inventory(start), new Inventory(end));
+    report.process();
+
+    Usage usage = report.getUsage("Cheese");
+    assertEquals(0.0, usage.getUnits(), 0.00);
+    assertEquals(0.0, usage.getDollars(), 0.00);
+  }
+
+  @Test
+  @DisplayName("Should be able to add no received items report")
+  void noReceived() {
+    InventoryItem sampleItem = new InventoryItem(
+        "Cheese", "Refrigerator", InventoryCategory.of("Dairy"),
+        new UnitOfMeasurement("Ounces", 4),
+        new Price("0.98", "3.96"));
+    Inventory start = new Inventory(LocalDate.of(2022, 5, 1));
+    start.addItemToInventory(sampleItem);
+    start.updateInventoryCount("Cheese", "Refrigerator",
+        InventoryCount.countFrom("0.5", "1.0"));
+
+    Inventory end = new Inventory(LocalDate.of(2022, 5, 2));
+    end.addItemToInventory(sampleItem);
+    end.updateInventoryCount("Cheese", "Refrigerator",
+        InventoryCount.countFrom("0.5", "1.0"));
+
+    InventoryReport report =
+        InventoryReport.between(new Inventory(start), new Inventory(end))
+            .withReceivedItems(new ArrayList<>());
+    report.process();
+
+    Usage usage = report.getUsage("Cheese");
+    assertEquals(0.0, usage.getUnits(), 0.00);
+    assertEquals(0.0, usage.getDollars(), 0.00);
+  }
+
+  @Test
+  @DisplayName("Should be able to add a received items report")
+  void received() {
+    InventoryItem sampleItem = new InventoryItem(
+        ItemId.of("123"),
+        "Cheese", "Refrigerator", InventoryCategory.of("Dairy"),
+        new UnitOfMeasurement("Ounces", 4),
+        new Price("0.98", "3.96"), InventoryCount.ofZero());
+    Inventory start = new Inventory(LocalDate.of(2022, 5, 1));
+    start.addItemToInventory(sampleItem);
+    start.updateInventoryCount("Cheese", "Refrigerator",
+        InventoryCount.countFrom("0.5", "1.0"));
+
+    Inventory end = new Inventory(LocalDate.of(2022, 5, 2));
+    end.addItemToInventory(sampleItem);
+    end.updateInventoryCount("Cheese", "Refrigerator",
+        InventoryCount.countFrom("0.5", "1.0"));
+
+    InventoryReport report =
+        InventoryReport.between(start, end)
+            .withReceivedItems(Collections.singletonList(
+                ReceivedItem.of(ItemId.of("123"), 2)
+            ));
+    report.process();
+
+    Usage usage = report.getUsage("Cheese");
+    assertEquals(2, usage.getUnits(), 0.00);
+    assertEquals(1.96, usage.getDollars(), 0.00);
   }
 
   @Test

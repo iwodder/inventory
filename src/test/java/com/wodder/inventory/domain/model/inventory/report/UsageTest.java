@@ -36,4 +36,19 @@ class UsageTest {
 
     assertEquals(1.0, u.getDollars());
   }
+
+  @Test
+  @DisplayName("Should be able to add number of received units")
+  void addUnits() {
+    Price p = new Price("1.0", "1.5");
+    UnitOfMeasurement uom = new UnitOfMeasurement("Gallons", 4);
+    OnHand start = OnHand.from(InventoryCount.countFrom("1", "2"), p, uom);
+    OnHand end = OnHand.from(InventoryCount.countFrom("0", "2"), p, uom);
+
+    Usage u = Usage.of(start, end);
+    Usage u1 = u.addReceivedQty(1);
+
+    assertEquals(2.0, u1.getUnits());
+    assertEquals(1.0, u.getUnits());
+  }
 }

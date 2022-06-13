@@ -44,6 +44,10 @@ public class OnHand {
     return count.getCases();
   }
 
+  public Price getPrice() {
+    return price;
+  }
+
   @Override
   public boolean equals(Object o) {
     if (this == o) {

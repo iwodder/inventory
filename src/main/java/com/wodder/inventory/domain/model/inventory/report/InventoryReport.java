@@ -8,18 +8,20 @@ import com.wodder.inventory.dto.ReportDto;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Set;
 
 public class InventoryReport {
   private final LocalDate generationDate;
   private final Inventory start;
   private final Inventory end;
 
-  private final Map<InventoryItem, Usage> usages;
+  private final Map<InventoryItem, Usage> usages = new HashMap<>();
+  private final Set<ReceivedItem> items = new HashSet<>();
 
   private InventoryReport(Inventory start, Inventory end) {
-    this.usages = new HashMap<>();
     this.generationDate = LocalDate.now();
     this.start = start;
     this.end = end;
@@ -32,6 +34,11 @@ public class InventoryReport {
       throw new IllegalArgumentException(
           "Can't create inventory report with improperly ordered dates");
     }
+  }
+
+  public InventoryReport withReceivedItems(Iterable<ReceivedItem> items) {
+    items.forEach(this.items::add);
+    return this;
   }
 
   public LocalDate getStartDate() {
@@ -62,6 +69,7 @@ public class InventoryReport {
   public void process() {
     processEndingInventory();
     processStartingInventory();
+    processReceivedItems();
   }
 
   private void processEndingInventory() {
@@ -75,6 +83,18 @@ public class InventoryReport {
     start.getItems().forEach((starting) -> {
       usages.computeIfAbsent(starting, (item) -> Usage.of(item.getOnHand(), OnHand.zero()));
     });
+  }
+
+  public void processReceivedItems() {
+    items.forEach(
+        (item) -> {
+          for (var key : usages.keySet()) {
+            if (key.getId().equals(item.getId())) {
+              usages.compute(key, (k, v) -> v.addReceivedQty(item.getQuantity()));
+            }
+          }
+        }
+    );
   }
 
   public ReportDto toDto() {
