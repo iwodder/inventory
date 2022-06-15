@@ -89,9 +89,9 @@ public class Item {
         InventoryCategory.of(model.getCategory()),
         new UnitOfMeasurement(model.getUnits(), Integer.parseInt(model.getItemsPerCase())),
         new Price(model.getUnitPrice(), model.getCasePrice()),
-        new InventoryCount(
-            Double.parseDouble(model.getNumberOfUnits()),
-            Double.parseDouble(model.getNumberOfCases())));
+        InventoryCount.countFrom(
+            model.getNumberOfUnits(),
+            model.getNumberOfCases()));
   }
 
   public static Item empty() {
@@ -164,7 +164,6 @@ public class Item {
     }
 
     public ItemBuilder withName(String name) {
-      this.id = ItemId.from(name);
       this.name = name;
       return this;
     }
@@ -194,7 +193,15 @@ public class Item {
       return this;
     }
 
+    public ItemBuilder withId(String id) {
+      this.id = ItemId.of(id);
+      return this;
+    }
+
     public Item build() {
+      if (id == null) {
+        id = ItemId.newId();
+      }
       return new Item(this);
     }
   }

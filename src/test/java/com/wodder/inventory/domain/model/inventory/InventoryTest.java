@@ -2,6 +2,7 @@ package com.wodder.inventory.domain.model.inventory;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNotSame;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -14,7 +15,9 @@ import com.wodder.inventory.domain.model.product.UnitOfMeasurement;
 import com.wodder.inventory.dto.InventoryDto;
 import com.wodder.inventory.dto.InventoryItemDto;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
@@ -25,7 +28,7 @@ class InventoryTest {
   @Test
   @DisplayName("Inventory is created with current date")
   void current_date() {
-    Inventory inventory = new Inventory();
+    Inventory inventory = Inventory.emptyInventory();
     assertEquals(LocalDate.now(), inventory.getInventoryDate());
   }
 
@@ -33,7 +36,7 @@ class InventoryTest {
   @DisplayName("Can add count to inventory")
   @Disabled
   void add_item() {
-    Inventory inventory = new Inventory();
+    Inventory inventory = Inventory.emptyInventory();
     Item item =
         new Item(
             ItemId.newId(),
@@ -108,7 +111,7 @@ class InventoryTest {
   @Test
   @DisplayName("Copy constructor makes sure that InventoryState is set")
   void copy_state() {
-    Inventory i = new Inventory();
+    Inventory i = Inventory.emptyInventory();
     Inventory i2 = new Inventory(i);
     assertTrue(i2.isOpen());
   }
@@ -116,14 +119,14 @@ class InventoryTest {
   @Test
   @DisplayName("Inventory is created in the OPEN state")
   void open_state() {
-    Inventory i = new Inventory();
+    Inventory i = Inventory.emptyInventory();
     assertTrue(i.isOpen());
   }
 
   @Test
   @DisplayName("Inventory can be closed")
   void closed_state() {
-    Inventory i = new Inventory();
+    Inventory i = Inventory.emptyInventory();
     i.finish();
     assertFalse(i.isOpen());
   }
@@ -131,7 +134,7 @@ class InventoryTest {
   @Test
   @DisplayName("Adding an item to a closed inventory causes IllegalStateException")
   void add_when_closed() {
-    Inventory i = new Inventory();
+    Inventory i = Inventory.emptyInventory();
     i.finish();
     assertThrows(
         IllegalStateException.class,
@@ -170,16 +173,16 @@ class InventoryTest {
   @Test
   @DisplayName("Should be able to query item by name")
   void query_by_name() {
-    Item item =
-        new Item(
-            ItemId.newId(),
-            "2% Milk",
-            InventoryLocation.of("Refrigerator"),
-            InventoryCategory.of("Dairy"),
-            new UnitOfMeasurement("Gallon", 4),
-            new Price("0.99", "4.98"),
-            new InventoryCount(1.0, 0.25));
-    Inventory inventory = new Inventory();
+    Item item = Item.builder()
+        .withName("2% Milk")
+        .withLocation("Refrigerator")
+        .withCategory("Dairy")
+        .withUnits("Gallon", "4")
+        .withPricing("0.99", "4.98")
+        .withCount("1.0", "0.25")
+        .build();
+
+    Inventory inventory = Inventory.emptyInventory();
     inventory.addItemToInventory(item);
 
     assertEquals(item, inventory.getItem("2% Milk"));
@@ -204,7 +207,7 @@ class InventoryTest {
         .withPricing("1.99", "4.98")
         .withCount("1.0", "0.25")
         .build();
-    Inventory inventory = new Inventory();
+    Inventory inventory = Inventory.emptyInventory();
     inventory.addItemToInventory(item);
     inventory.addItemToInventory(item2);
 
@@ -218,8 +221,32 @@ class InventoryTest {
   @Test
   @DisplayName("Absent item in inventory should return an empty item")
   void query_by_name_absent() {
-    Inventory inventory = new Inventory();
+    Inventory inventory = Inventory.emptyInventory();
 
     assertEquals(Item.empty(), inventory.getItem("2% Milk"));
+  }
+
+  @Test
+  @DisplayName("Should create an inventory with just item ids")
+  void newInventory() {
+    List<ItemId> itemIds = new ArrayList<>();
+    itemIds.add(ItemId.of("123"));
+    itemIds.add(ItemId.of("234"));
+    itemIds.add(ItemId.of("345"));
+
+    Inventory i = Inventory.createNewInventory(itemIds);
+
+    assertEquals(3, i.numberOfItems());
+  }
+
+  @Test
+  @DisplayName("Should be able to create an empty inventory")
+  void emptyInventory() {
+    Inventory i = Inventory.emptyInventory();
+
+    assertNotNull(i);
+    assertEquals(LocalDate.now(), i.getInventoryDate());
+    assertEquals(0, i.numberOfItems());
+    assertTrue(i.isOpen());
   }
 }

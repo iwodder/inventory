@@ -24,14 +24,14 @@ class InMemoryInventoryRepositoryTest {
   @Test
   @DisplayName("Can save inventory to store")
   void save() {
-    Inventory i = new Inventory();
+    Inventory i = Inventory.emptyInventory();
     assertNotNull(repo.createItem(i));
   }
 
   @Test
   @DisplayName("Can load inventory from store")
   void load() {
-    Inventory i = new Inventory();
+    Inventory i = Inventory.emptyInventory();
     repo.createItem(i);
     Inventory i2 = repo.loadByItem(i).get();
     assertNotSame(i, i2);

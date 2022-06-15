@@ -8,10 +8,17 @@ public class InventoryCount {
   private static final InventoryCount ZERO = new InventoryCount(0.0, 0.0);
   private double units;
   private double cases;
+  private ItemId itemId;
 
   public InventoryCount(double units, double cases) {
     setUnits(units);
     setCases(cases);
+  }
+
+  private InventoryCount(ItemId itemId, double units, double cases) {
+    this.itemId = itemId;
+    setCases(cases);
+    setUnits(units);
   }
 
   public InventoryCount(InventoryCount that) {
@@ -28,6 +35,10 @@ public class InventoryCount {
 
   public static InventoryCount countFrom(String units, String cases) {
     return new InventoryCount(Double.parseDouble(units), Double.parseDouble(cases));
+  }
+
+  public static InventoryCount countFor(ItemId itemId) {
+    return new InventoryCount(itemId, 0, 0);
   }
 
   public double getUnits() {
