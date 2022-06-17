@@ -1,7 +1,7 @@
 package com.wodder.inventory.console.handlers;
 
 import com.wodder.inventory.console.MenuUtils;
-import com.wodder.inventory.dto.ProductModel;
+import com.wodder.inventory.dto.ProductDto;
 import com.wodder.inventory.dto.Result;
 import java.io.PrintStream;
 import java.util.Map;
@@ -26,8 +26,8 @@ public class UpdateItemHandler extends InputHandler {
 
   private void processInput(PrintStream out, PrintStream err, String line) {
     Map<String, String> values = MenuUtils.extractKeyValuePairs(line);
-    ProductModel dto = ProductModel.fromMap(values);
-    Result<ProductModel, String> result = model.updateItem(dto);
+    ProductDto dto = ProductDto.fromMap(values);
+    Result<ProductDto, String> result = model.updateItem(dto);
     if (result.isOk()) {
       out.println("Item updated successfully");
     } else {

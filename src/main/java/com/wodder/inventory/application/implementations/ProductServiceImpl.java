@@ -9,7 +9,7 @@ import com.wodder.inventory.domain.model.product.Price;
 import com.wodder.inventory.domain.model.product.Product;
 import com.wodder.inventory.domain.model.product.ProductId;
 import com.wodder.inventory.domain.model.product.UnitOfMeasurement;
-import com.wodder.inventory.dto.ProductModel;
+import com.wodder.inventory.dto.ProductDto;
 import com.wodder.inventory.persistence.Repository;
 import java.util.List;
 import java.util.Optional;
@@ -31,7 +31,7 @@ class ProductServiceImpl implements ProductService {
   }
 
   @Override
-  public Optional<ProductModel> createNewProduct(ProductModel newItem) {
+  public Optional<ProductDto> createNewProduct(ProductDto newItem) {
     return createNewProduct(
         newItem.getName(),
         newItem.getCategory(),
@@ -43,7 +43,7 @@ class ProductServiceImpl implements ProductService {
   }
 
   @Override
-  public Optional<ProductModel> createNewProduct(
+  public Optional<ProductDto> createNewProduct(
       String name,
       String category,
       String location,
@@ -78,7 +78,7 @@ class ProductServiceImpl implements ProductService {
   }
 
   @Override
-  public Optional<ProductModel> updateProductCategory(String productId, String category) {
+  public Optional<ProductDto> updateProductCategory(String productId, String category) {
     if (productId == null) {
       return Optional.empty();
     } else {
@@ -87,7 +87,7 @@ class ProductServiceImpl implements ProductService {
   }
 
   @Override
-  public Optional<ProductModel> updateProductLocation(String productId, String location) {
+  public Optional<ProductDto> updateProductLocation(String productId, String location) {
     Optional<Product> opt = productRepository.loadById(ProductId.productIdOf(productId));
     Optional<Location> loc = locationRepository.loadByItem(new Location(location));
     if (opt.isPresent() && loc.isPresent()) {
@@ -101,7 +101,7 @@ class ProductServiceImpl implements ProductService {
   }
 
   @Override
-  public Optional<ProductModel> updateProductName(String productId, String name) {
+  public Optional<ProductDto> updateProductName(String productId, String name) {
     Optional<Product> opt = productRepository.loadById(ProductId.productIdOf(productId));
     if (opt.isPresent()) {
       Product item = opt.get();
@@ -114,7 +114,7 @@ class ProductServiceImpl implements ProductService {
   }
 
   @Override
-  public Optional<ProductModel> updateProductUnitOfMeasurement(
+  public Optional<ProductDto> updateProductUnitOfMeasurement(
       String productId, String unitOfMeasurement, Integer unitsPerCase) {
     Optional<Product> opt = productRepository.loadById(ProductId.productIdOf(productId));
     ;
@@ -129,7 +129,7 @@ class ProductServiceImpl implements ProductService {
   }
 
   @Override
-  public Optional<ProductModel> updateProductPrice(
+  public Optional<ProductDto> updateProductPrice(
       String productId, String unitPrice, String casePrice) {
     Optional<Product> opt = productRepository.loadById(ProductId.productIdOf(productId));
     if (opt.isPresent()) {
@@ -142,7 +142,7 @@ class ProductServiceImpl implements ProductService {
     }
   }
 
-  private Optional<ProductModel> processCategoryUpdate(String inventoryItemId, String category) {
+  private Optional<ProductDto> processCategoryUpdate(String inventoryItemId, String category) {
     Optional<Product> inventoryItem =
         productRepository.loadById(ProductId.productIdOf(inventoryItemId));
     Optional<Category> c = categoryRepository.loadByItem(new Category(category));
@@ -156,7 +156,7 @@ class ProductServiceImpl implements ProductService {
   }
 
   @Override
-  public Optional<ProductModel> loadProduct(String productId) {
+  public Optional<ProductDto> loadProduct(String productId) {
     if (productId == null) {
       return Optional.empty();
     }
@@ -164,7 +164,7 @@ class ProductServiceImpl implements ProductService {
   }
 
   @Override
-  public List<ProductModel> loadAllActiveProducts() {
+  public List<ProductDto> loadAllActiveProducts() {
     return productRepository.loadAllItems().stream()
         .map(Product::toItemModel)
         .collect(Collectors.toList());

@@ -7,13 +7,11 @@ import static org.junit.jupiter.api.Assertions.assertNotSame;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import com.wodder.inventory.domain.model.product.Category;
-import com.wodder.inventory.domain.model.product.Location;
 import com.wodder.inventory.domain.model.product.Price;
-import com.wodder.inventory.domain.model.product.Product;
 import com.wodder.inventory.domain.model.product.UnitOfMeasurement;
 import com.wodder.inventory.dto.InventoryDto;
 import com.wodder.inventory.dto.InventoryItemDto;
+import com.wodder.inventory.dto.ProductDto;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -56,18 +54,24 @@ class InventoryTest {
     Inventory i =
         Inventory.createNewInventoryWithProducts(
             Arrays.asList(
-                new Product(
-                    "2% Milk",
-                    new Category("Dairy"),
-                    new Location("Refrigerator"),
-                    new UnitOfMeasurement("Gallon", 4),
-                    new Price("0.99", "4.98")),
-                new Product(
-                    "Chicken Breast",
-                    new Category("Meat"),
-                    new Location("Refrigerator"),
-                    new UnitOfMeasurement("Gallon", 4),
-                    new Price("0.99", "4.98"))));
+                ProductDto.builder()
+                    .withName("2% Milk")
+                    .withCategory("Dairy")
+                    .withLocation("Refrigerator")
+                    .withUnitOfMeasurement("Gallon")
+                    .withItemsPerCase(4)
+                    .withItemPrice("0.99")
+                    .withCasePrice("4.98")
+                    .build(),
+                ProductDto.builder()
+                    .withName("Chicken Breast")
+                    .withCategory("Meat")
+                    .withLocation("Refrigerator")
+                    .withUnitOfMeasurement("Pound")
+                    .withItemsPerCase(4)
+                    .withItemPrice("0.99")
+                    .withCasePrice("4.98")
+                    .build()));
 
     Inventory i2 = new Inventory(i);
     assertNotSame(i, i2);
@@ -146,7 +150,17 @@ class InventoryTest {
   void add_product() {
     Inventory i =
         Inventory.createNewInventoryWithProducts(
-            Arrays.asList(new Product("Name", new Category("Frozen"), new Location("Freezer"))));
+            List.of(
+                ProductDto.builder()
+                    .withName("2% Milk")
+                    .withCategory("Dairy")
+                    .withLocation("Refrigerator")
+                    .withUnitOfMeasurement("Gallon")
+                    .withItemsPerCase(4)
+                    .withItemPrice("0.99")
+                    .withCasePrice("4.98")
+                    .build()
+            ));
     assertEquals(1, i.numberOfItems());
   }
 
@@ -155,7 +169,17 @@ class InventoryTest {
   void query_by_location() {
     Inventory i =
         Inventory.createNewInventoryWithProducts(
-            Arrays.asList(new Product("Name", new Category("Frozen"), new Location("Freezer"))));
+            List.of(
+                ProductDto.builder()
+                    .withName("2% Milk")
+                    .withCategory("Dairy")
+                    .withLocation("Freezer")
+                    .withUnitOfMeasurement("Gallon")
+                    .withItemsPerCase(4)
+                    .withItemPrice("0.99")
+                    .withCasePrice("4.98")
+                    .build()
+            ));
     assertEquals(1, i.getItemsByLocation(InventoryLocation.of("Freezer")).size());
     assertEquals(0, i.getItemsByLocation(InventoryLocation.of("Pantry")).size());
   }
@@ -165,7 +189,17 @@ class InventoryTest {
   void query_by_category() {
     Inventory i =
         Inventory.createNewInventoryWithProducts(
-            Arrays.asList(new Product("Name", new Category("Frozen"), new Location("Freezer"))));
+            List.of(
+                ProductDto.builder()
+                    .withName("2% Milk")
+                    .withCategory("Frozen")
+                    .withLocation("Freezer")
+                    .withUnitOfMeasurement("Gallon")
+                    .withItemsPerCase(4)
+                    .withItemPrice("0.99")
+                    .withCasePrice("4.98")
+                    .build()
+            ));
     assertEquals(1, i.getItemsByCategory(InventoryCategory.of("Frozen")).size());
     assertEquals(0, i.getItemsByCategory(InventoryCategory.of("Dairy")).size());
   }

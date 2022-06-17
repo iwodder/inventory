@@ -1,24 +1,24 @@
 package com.wodder.inventory.console.handlers;
 
-import com.wodder.inventory.dto.ProductModel;
+import com.wodder.inventory.dto.ProductDto;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 
 public class ItemTableFormatter {
-  private final List<ProductModel> items;
+  private final List<ProductDto> items;
 
-  public ItemTableFormatter(List<ProductModel> items) {
+  public ItemTableFormatter(List<ProductDto> items) {
     this.items = new ArrayList<>(items);
   }
 
   public String formatToTable() {
     StringBuilder output = new StringBuilder();
-    items.sort(Comparator.comparing(ProductModel::getId));
+    items.sort(Comparator.comparing(ProductDto::getId));
     int maxId =
         Math.max(
             items.stream()
-                .map(ProductModel::getId)
+                .map(ProductDto::getId)
                 .mapToInt(String::length)
                 .max()
                 .orElseGet(() -> 20),
@@ -26,7 +26,7 @@ public class ItemTableFormatter {
     int maxName =
         Math.max(
             items.stream()
-                .map(ProductModel::getName)
+                .map(ProductDto::getName)
                 .max(Comparator.comparing(String::length))
                 .map(String::length)
                 .orElseGet(() -> 20),
@@ -34,7 +34,7 @@ public class ItemTableFormatter {
     int maxCategory =
         Math.max(
             items.stream()
-                .map(ProductModel::getCategory)
+                .map(ProductDto::getCategory)
                 .max(Comparator.comparing(String::length))
                 .map(String::length)
                 .orElseGet(() -> 20),
@@ -54,7 +54,7 @@ public class ItemTableFormatter {
     output.append(System.lineSeparator());
     output.append(rowSep);
     output.append(System.lineSeparator());
-    for (ProductModel dto : items) {
+    for (ProductDto dto : items) {
       output.append(
           String.format(
               "|%s|%s|%s|",

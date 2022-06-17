@@ -1,14 +1,14 @@
 package com.wodder.inventory.application;
 
-import com.wodder.inventory.dto.ProductModel;
+import com.wodder.inventory.dto.ProductDto;
 import java.util.List;
 import java.util.Optional;
 
 public interface ProductService {
 
-  Optional<ProductModel> createNewProduct(ProductModel newItem);
+  Optional<ProductDto> createNewProduct(ProductDto newItem);
 
-  Optional<ProductModel> createNewProduct(
+  Optional<ProductDto> createNewProduct(
       String name,
       String category,
       String location,
@@ -19,18 +19,18 @@ public interface ProductService {
 
   Boolean deleteProduct(String productId);
 
-  Optional<ProductModel> updateProductCategory(String productId, String category);
+  Optional<ProductDto> updateProductCategory(String productId, String category);
 
-  Optional<ProductModel> updateProductLocation(String productId, String location);
+  Optional<ProductDto> updateProductLocation(String productId, String location);
 
-  Optional<ProductModel> updateProductName(String productId, String name);
+  Optional<ProductDto> updateProductName(String productId, String name);
 
-  Optional<ProductModel> updateProductUnitOfMeasurement(
+  Optional<ProductDto> updateProductUnitOfMeasurement(
       String productId, String unitOfMeasurement, Integer unitsPerCase);
 
-  Optional<ProductModel> updateProductPrice(String productId, String unitPrice, String casePrice);
+  Optional<ProductDto> updateProductPrice(String productId, String unitPrice, String casePrice);
 
-  Optional<ProductModel> loadProduct(String productId);
+  Optional<ProductDto> loadProduct(String productId);
 
-  List<ProductModel> loadAllActiveProducts();
+  List<ProductDto> loadAllActiveProducts();
 }

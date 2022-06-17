@@ -6,7 +6,7 @@ import com.wodder.inventory.application.ProductService;
 import com.wodder.inventory.application.implementations.ServiceFactoryImpl;
 import com.wodder.inventory.dto.CategoryModel;
 import com.wodder.inventory.dto.LocationModel;
-import com.wodder.inventory.dto.ProductModel;
+import com.wodder.inventory.dto.ProductDto;
 import com.wodder.inventory.persistence.PersistenceFactoryImpl;
 import java.io.Serializable;
 import java.util.List;
@@ -26,7 +26,7 @@ public class ProductController implements Serializable {
   transient ProductService productService;
   transient CategoryService categoryService;
   transient LocationService locationService;
-  private ProductModel model;
+  private ProductDto model;
   private CategoryModel categoryModel;
   private LocationModel locationModel;
 
@@ -40,7 +40,7 @@ public class ProductController implements Serializable {
         new ServiceFactoryImpl(new PersistenceFactoryImpl()).getService(LocationService.class);
   }
 
-  public List<ProductModel> allItems() {
+  public List<ProductDto> allItems() {
     return productService.loadAllActiveProducts();
   }
 
@@ -61,7 +61,7 @@ public class ProductController implements Serializable {
   }
 
   public void newItem() {
-    this.model = new ProductModel();
+    this.model = new ProductDto();
   }
 
   public void newCategory() {
@@ -73,7 +73,7 @@ public class ProductController implements Serializable {
   }
 
   public void saveProduct() {
-    Optional<ProductModel> item =
+    Optional<ProductDto> item =
         productService.createNewProduct(
             model.getName(),
             model.getCategory(),
@@ -121,11 +121,11 @@ public class ProductController implements Serializable {
     PrimeFaces.current().ajax().update("form:messages");
   }
 
-  public ProductModel getModel() {
+  public ProductDto getModel() {
     return model;
   }
 
-  public void setModel(ProductModel model) {
+  public void setModel(ProductDto model) {
     this.model = model;
   }
 

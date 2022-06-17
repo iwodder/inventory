@@ -9,7 +9,7 @@ import com.wodder.inventory.application.ProductService;
 import com.wodder.inventory.domain.model.product.Category;
 import com.wodder.inventory.domain.model.product.Location;
 import com.wodder.inventory.domain.model.product.Product;
-import com.wodder.inventory.dto.ProductModel;
+import com.wodder.inventory.dto.ProductDto;
 import com.wodder.inventory.persistence.PersistenceFactory;
 import com.wodder.inventory.persistence.TestPersistenceFactory;
 import java.util.List;
@@ -35,16 +35,16 @@ class ProductServiceImplTest {
   @Test
   @DisplayName("Should be able to create a new product")
   void create_new_product() {
-    ProductModel model = getDefaultItem().build();
-    Optional<ProductModel> i = storage.createNewProduct(model);
+    ProductDto model = getDefaultItem().build();
+    Optional<ProductDto> i = storage.createNewProduct(model);
     assertTrue(i.isPresent());
   }
 
   @Test
   @DisplayName("Can delete an item")
   void delete_item() {
-    ProductModel model = getDefaultItem().build();
-    Optional<ProductModel> opt = storage.createNewProduct(model);
+    ProductDto model = getDefaultItem().build();
+    Optional<ProductDto> opt = storage.createNewProduct(model);
     assertTrue(storage.deleteProduct(opt.get().getId()));
   }
 
@@ -57,17 +57,17 @@ class ProductServiceImplTest {
   @Test
   @DisplayName("Able to update item category")
   void update_item_category() {
-    ProductModel model = storage.createNewProduct(getDefaultItem().build()).get();
-    ProductModel result = storage.updateProductCategory(model.getId(), "Frozen").get();
+    ProductDto model = storage.createNewProduct(getDefaultItem().build()).get();
+    ProductDto result = storage.updateProductCategory(model.getId(), "Frozen").get();
     assertEquals("FROZEN", result.getCategory());
   }
 
   @Test
   @DisplayName("Able to update item name")
   void update_item_name() {
-    ProductModel model =
+    ProductDto model =
         storage.createNewProduct(getDefaultItem().withName("Cheese").build()).get();
-    ProductModel result = storage.updateProductName(model.getId(), "2% Low-fat Milk").get();
+    ProductDto result = storage.updateProductName(model.getId(), "2% Low-fat Milk").get();
     assertEquals(result.getName(), "2% Low-fat Milk");
   }
 
@@ -80,31 +80,31 @@ class ProductServiceImplTest {
   @Test
   @DisplayName("Can load existing item")
   void read_item() {
-    ProductModel newItem = storage.createNewProduct(getDefaultItem().build()).get();
-    Optional<ProductModel> result = storage.loadProduct(newItem.getId());
+    ProductDto newItem = storage.createNewProduct(getDefaultItem().build()).get();
+    Optional<ProductDto> result = storage.loadProduct(newItem.getId());
     assertTrue(result.isPresent());
   }
 
   @Test
   @DisplayName("Can update an item's location")
   void update_location() {
-    ProductModel newItem =
+    ProductDto newItem =
         storage.createNewProduct(getDefaultItem().withLocation("Freezer").build()).get();
-    ProductModel result = storage.updateProductLocation(newItem.getId(), "Pantry").get();
+    ProductDto result = storage.updateProductLocation(newItem.getId(), "Pantry").get();
     assertEquals(result.getLocation(), "Pantry");
   }
 
   @Test
   @DisplayName("Id is required to load item")
   void read_item_bo_id() {
-    Optional<ProductModel> item = storage.loadProduct(null);
+    Optional<ProductDto> item = storage.loadProduct(null);
     assertFalse(item.isPresent());
   }
 
   @Test
   @DisplayName("Can load all available items")
   void read_all_items() {
-    List<ProductModel> result = storage.loadAllActiveProducts();
+    List<ProductDto> result = storage.loadAllActiveProducts();
     assertNotNull(result);
     assertFalse(result.isEmpty());
     assertEquals(4, result.size());
@@ -113,9 +113,9 @@ class ProductServiceImplTest {
   @Test
   @DisplayName("Can update the Unit of Measurement for an item")
   void update_uom() {
-    ProductModel newItem =
+    ProductDto newItem =
         storage.createNewProduct(getDefaultItem().withLocation("Freezer").build()).get();
-    ProductModel result =
+    ProductDto result =
         storage.updateProductUnitOfMeasurement(newItem.getId(), "Gallons", 4).get();
     assertEquals("Gallons", result.getUnits());
     assertEquals(4, result.getUnitsPerCase());
@@ -124,22 +124,22 @@ class ProductServiceImplTest {
   @Test
   @DisplayName("If item is not present then empty is returned")
   void item_not_found() {
-    Optional<ProductModel> opt = storage.updateProductUnitOfMeasurement("1", "Gallons", 4);
+    Optional<ProductDto> opt = storage.updateProductUnitOfMeasurement("1", "Gallons", 4);
     assertTrue(opt.isEmpty());
   }
 
   @Test
   @DisplayName("Can update the price for an item")
   void update_price() {
-    ProductModel newItem =
+    ProductDto newItem =
         storage.createNewProduct(getDefaultItem().withLocation("Freezer").build()).get();
-    ProductModel result = storage.updateProductPrice(newItem.getId(), "0.68", "19.23").get();
+    ProductDto result = storage.updateProductPrice(newItem.getId(), "0.68", "19.23").get();
     assertEquals("0.68", result.getItemPrice());
     assertEquals("19.23", result.getCasePrice());
   }
 
-  private ProductModel.ProductModelBuilder getDefaultItem() {
-    return ProductModel.builder()
+  private ProductDto.ProductModelBuilder getDefaultItem() {
+    return ProductDto.builder()
         .withName("Bread")
         .withLocation("Pantry")
         .withCategory("Dry Goods")

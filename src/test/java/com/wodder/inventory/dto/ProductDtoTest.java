@@ -11,7 +11,7 @@ import java.util.Map;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-class ProductModelTest {
+class ProductDtoTest {
 
   @Test
   @DisplayName("Creates ProductModel from map")
@@ -20,7 +20,7 @@ class ProductModelTest {
     values.put("NAME", "bread");
     values.put("ID", "1");
     values.put("CATEGORY", "refrigerated");
-    ProductModel result = ProductModel.fromMap(values);
+    ProductDto result = ProductDto.fromMap(values);
     assertNotNull(result);
     assertEquals("1", result.getId());
     assertEquals("bread", result.getName());
@@ -33,7 +33,7 @@ class ProductModelTest {
     Map<String, String> values = new HashMap<>();
     values.put("NAME", "bread");
     values.put("CATEGORY", "refrigerated");
-    ProductModel result = ProductModel.fromMap(values);
+    ProductDto result = ProductDto.fromMap(values);
     assertNotNull(result);
     assertNull(result.getId());
     assertEquals("bread", result.getName());
@@ -43,7 +43,7 @@ class ProductModelTest {
   @Test
   @DisplayName("Null map returns an empty ProductModel")
   void nullMap() throws Exception {
-    ProductModel result = ProductModel.fromMap(null);
+    ProductDto result = ProductDto.fromMap(null);
     assertNotNull(result);
     assertGettersReturnNull(result);
   }
@@ -51,14 +51,14 @@ class ProductModelTest {
   @Test
   @DisplayName("Empty map returns an empty ProductModel")
   void emptyMap() throws Exception {
-    ProductModel result = ProductModel.fromMap(new HashMap<>());
+    ProductDto result = ProductDto.fromMap(new HashMap<>());
     assertNotNull(result);
     assertGettersReturnNull(result);
   }
 
-  private void assertGettersReturnNull(ProductModel result)
+  private void assertGettersReturnNull(ProductDto result)
       throws IllegalAccessException, InvocationTargetException {
-    Method[] methods = ProductModel.class.getDeclaredMethods();
+    Method[] methods = ProductDto.class.getDeclaredMethods();
     for (Method m : methods) {
       if (m.getName().startsWith("get")) {
         assertNullOrZero(m.invoke(result));

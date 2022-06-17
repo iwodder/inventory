@@ -1,7 +1,7 @@
 package com.wodder.inventory.console.handlers;
 
 import com.wodder.inventory.console.MenuUtils;
-import com.wodder.inventory.dto.ProductModel;
+import com.wodder.inventory.dto.ProductDto;
 import com.wodder.inventory.dto.Result;
 import java.io.PrintStream;
 import java.util.Map;
@@ -27,7 +27,7 @@ public class DeleteItemHandler extends InputHandler {
       } else {
         id = keyValues.get("ID");
       }
-      Result<Boolean, String> result = model.deleteItem(ProductModel.builder().withId(id).build());
+      Result<Boolean, String> result = model.deleteItem(ProductDto.builder().withId(id).build());
       if (result.isOk()) {
         out.printf("Successfully deleted item with id of %s.%n", id);
       } else {

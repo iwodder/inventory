@@ -1,9 +1,9 @@
 package com.wodder.inventory.domain.model.inventory;
 
 import com.wodder.inventory.domain.model.product.Price;
-import com.wodder.inventory.domain.model.product.Product;
 import com.wodder.inventory.domain.model.product.UnitOfMeasurement;
 import com.wodder.inventory.dto.InventoryItemDto;
+import com.wodder.inventory.dto.ProductDto;
 import java.util.Objects;
 
 public class Item {
@@ -72,13 +72,14 @@ public class Item {
     this.count = b.count;
   }
 
-  public static Item fromProduct(Product p) {
-    return new Item(
-        p.getName(),
-        InventoryLocation.of(p.getLocation()),
-        InventoryCategory.of(p.getCategory().getName()),
-        p.getUnits(),
-        p.getPrice());
+  public static Item fromProductDto(ProductDto p) {
+    return Item.builder()
+        .withName(p.getName())
+        .withLocation(p.getLocation())
+        .withCategory(p.getCategory())
+        .withUnits(p.getUnits(), Integer.toString(p.getUnitsPerCase()))
+        .withPricing(p.getItemPrice(), p.getCasePrice())
+        .build();
   }
 
   public static Item fromModel(InventoryItemDto model) {

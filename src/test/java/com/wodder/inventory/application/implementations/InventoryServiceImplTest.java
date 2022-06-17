@@ -44,7 +44,12 @@ class InventoryServiceImplTest {
     psf = TestPersistenceFactory.getUnpopulated();
     invSvc =
         new InventoryServiceImpl(
-            psf.getInventoryRepository(), psf.getRepository(Product.class));
+            psf.getInventoryRepository(),
+            new ProductServiceImpl(
+                psf.getRepository(Product.class),
+                psf.getRepository(Category.class),
+                psf.getRepository(Location.class)
+            ));
   }
 
   @Test

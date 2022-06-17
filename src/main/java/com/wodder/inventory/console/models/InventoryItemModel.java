@@ -1,16 +1,16 @@
 package com.wodder.inventory.console.models;
 
-import com.wodder.inventory.dto.ProductModel;
+import com.wodder.inventory.dto.ProductDto;
 import com.wodder.inventory.dto.Result;
 import java.util.List;
 
 public interface InventoryItemModel {
 
-  Result<ProductModel, String> createItem(ProductModel itemDto);
+  Result<ProductDto, String> createItem(ProductDto itemDto);
 
-  Result<Boolean, String> deleteItem(ProductModel itemDto);
+  Result<Boolean, String> deleteItem(ProductDto itemDto);
 
-  Result<ProductModel, String> updateItem(ProductModel itemDto);
+  Result<ProductDto, String> updateItem(ProductDto itemDto);
 
-  Result<List<ProductModel>, String> getItems();
+  Result<List<ProductDto>, String> getItems();
 }

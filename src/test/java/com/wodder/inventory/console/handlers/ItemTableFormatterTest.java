@@ -3,7 +3,7 @@ package com.wodder.inventory.console.handlers;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.fail;
 
-import com.wodder.inventory.dto.ProductModel;
+import com.wodder.inventory.dto.ProductDto;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -19,8 +19,8 @@ class ItemTableFormatterTest {
   @Test
   @DisplayName("Handles data smaller than column title")
   void smaller_than_column_title() {
-    List<ProductModel> items = new ArrayList<>();
-    items.add(ProductModel.builder().withId("1").withName("bread").withCategory("dry").build());
+    List<ProductDto> items = new ArrayList<>();
+    items.add(ProductDto.builder().withId("1").withName("bread").withCategory("dry").build());
     ItemTableFormatter formatter = new ItemTableFormatter(items);
     assertEquals(loadExpectedOutput("smallerColumnValue"), formatter.formatToTable());
   }

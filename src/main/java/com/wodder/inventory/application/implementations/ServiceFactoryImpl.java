@@ -33,7 +33,12 @@ public class ServiceFactoryImpl implements ServiceFactory {
       } else if (service.isAssignableFrom(InventoryService.class)) {
         return service.cast(
             new InventoryServiceImpl(
-                factory.getInventoryRepository(), factory.getRepository(Product.class)));
+                factory.getInventoryRepository(),
+                new ProductServiceImpl(
+                    factory.getRepository(Product.class),
+                    factory.getRepository(Category.class),
+                    factory.getRepository(Location.class)
+                )));
       }
     } catch (Exception e) {
       e.printStackTrace();

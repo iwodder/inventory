@@ -3,7 +3,7 @@ package com.wodder.inventory.dto;
 import java.io.Serializable;
 import java.util.Map;
 
-public class ProductModel implements Serializable {
+public class ProductDto implements Serializable {
   private static final long serialVersionUID = 1L;
 
   private String id;
@@ -16,7 +16,7 @@ public class ProductModel implements Serializable {
   private boolean active;
   private int unitsPerCase;
 
-  private ProductModel(ProductModelBuilder b) {
+  private ProductDto(ProductModelBuilder b) {
     this.id = b.id;
     this.name = b.name;
     this.category = b.category;
@@ -28,7 +28,7 @@ public class ProductModel implements Serializable {
     this.casePrice = b.casePrice;
   }
 
-  public ProductModel(ProductModel that) {
+  public ProductDto(ProductDto that) {
     this.id = that.id;
     this.name = that.name;
     this.category = that.category;
@@ -40,11 +40,11 @@ public class ProductModel implements Serializable {
     this.casePrice = that.casePrice;
   }
 
-  public ProductModel() {
+  public ProductDto() {
   }
 
-  public static ProductModel fromMap(Map<String, String> values) {
-    ProductModel result = new ProductModel();
+  public static ProductDto fromMap(Map<String, String> values) {
+    ProductDto result = new ProductDto();
     if (values != null && !values.isEmpty()) {
       result.id = values.get("ID");
       result.name = values.get("NAME");
@@ -189,8 +189,8 @@ public class ProductModel implements Serializable {
       return this;
     }
 
-    public ProductModel build() {
-      return new ProductModel(this);
+    public ProductDto build() {
+      return new ProductDto(this);
     }
   }
 }

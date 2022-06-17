@@ -7,7 +7,7 @@ import static org.mockito.Mockito.when;
 
 import com.wodder.inventory.console.ConsoleMenu;
 import com.wodder.inventory.console.menus.inventoryitems.BaseMenuTest;
-import com.wodder.inventory.dto.ProductModel;
+import com.wodder.inventory.dto.ProductDto;
 import com.wodder.inventory.dto.Result;
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -91,10 +91,10 @@ class ViewItemHandlerTest extends BaseMenuTest {
   }
 
   private void mockSuccessfulReturn() {
-    List<ProductModel> items = new ArrayList<>();
-    items.add(ProductModel.builder().withId("1").withName("bread").withCategory("dry").build());
+    List<ProductDto> items = new ArrayList<>();
+    items.add(ProductDto.builder().withId("1").withName("bread").withCategory("dry").build());
     items.add(
-        ProductModel.builder().withId("2").withName("milk").withCategory("refrigerated").build());
+        ProductDto.builder().withId("2").withName("milk").withCategory("refrigerated").build());
     when(inventoryItemModel.getItems()).thenReturn(new Result<>(items, null));
   }
 }

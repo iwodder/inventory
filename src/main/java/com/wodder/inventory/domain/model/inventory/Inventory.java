@@ -1,8 +1,8 @@
 package com.wodder.inventory.domain.model.inventory;
 
 import com.wodder.inventory.domain.model.Entity;
-import com.wodder.inventory.domain.model.product.Product;
 import com.wodder.inventory.dto.InventoryDto;
+import com.wodder.inventory.dto.ProductDto;
 import java.time.LocalDate;
 import java.util.Collection;
 import java.util.HashMap;
@@ -53,7 +53,7 @@ public class Inventory extends Entity<InventoryId> {
   }
 
   // This is deprecated in favor of creating an inventory with just ItemIds
-  public static Inventory createNewInventoryWithProducts(Collection<Product> products) {
+  public static Inventory createNewInventoryWithProducts(Collection<ProductDto> products) {
     Inventory i = new Inventory();
     products.forEach(i::addProductToInventory);
     return i;
@@ -80,8 +80,8 @@ public class Inventory extends Entity<InventoryId> {
     state.addItemToInventory(counts, generateKey(item), item);
   }
 
-  private void addProductToInventory(Product product) {
-    Item item = Item.fromProduct(product);
+  private void addProductToInventory(ProductDto product) {
+    Item item = Item.fromProductDto(product);
     addItemToInventory(item);
   }
 

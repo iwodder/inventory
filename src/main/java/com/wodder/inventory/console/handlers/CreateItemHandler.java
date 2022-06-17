@@ -1,7 +1,7 @@
 package com.wodder.inventory.console.handlers;
 
 import com.wodder.inventory.console.MenuUtils;
-import com.wodder.inventory.dto.ProductModel;
+import com.wodder.inventory.dto.ProductDto;
 import com.wodder.inventory.dto.Result;
 import java.io.PrintStream;
 import java.util.Map;
@@ -26,14 +26,14 @@ public class CreateItemHandler extends InputHandler {
 
   private void processNewItem(String in, PrintStream out) {
     Map<String, String> valuesMap = MenuUtils.extractKeyValuePairs(in);
-    ProductModel createdDto =
-        ProductModel.builder()
+    ProductDto createdDto =
+        ProductDto.builder()
             .withName(valuesMap.get("NAME"))
             .withCategory(valuesMap.get("CATEGORY"))
             .build();
-    Result<ProductModel, String> result = itemModel.createItem(createdDto);
+    Result<ProductDto, String> result = itemModel.createItem(createdDto);
     if (result.isOk()) {
-      ProductModel newItem = result.getOk();
+      ProductDto newItem = result.getOk();
       out.printf("Successfully created %s with id of %s%n", newItem.getName(), newItem.getId());
     } else {
       out.println(result.getErr());

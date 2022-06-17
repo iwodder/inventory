@@ -4,7 +4,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 import com.wodder.inventory.console.handlers.CreateItemHandler;
-import com.wodder.inventory.dto.ProductModel;
+import com.wodder.inventory.dto.ProductDto;
 import com.wodder.inventory.dto.Result;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
@@ -84,9 +84,9 @@ class CreateItemMenuTest extends BaseMenuTest {
   }
 
   class TestInventoryItemModel implements com.wodder.inventory.console.models.InventoryItemModel {
-    public ProductModel dto;
+    public ProductDto dto;
 
-    public Result<ProductModel, String> createItem(ProductModel dto) {
+    public Result<ProductDto, String> createItem(ProductDto dto) {
       this.dto = dto;
       dto.setId("1");
       if (success) {
@@ -97,17 +97,17 @@ class CreateItemMenuTest extends BaseMenuTest {
     }
 
     @Override
-    public Result<Boolean, String> deleteItem(ProductModel itemDto) {
+    public Result<Boolean, String> deleteItem(ProductDto itemDto) {
       return null;
     }
 
     @Override
-    public Result<ProductModel, String> updateItem(ProductModel itemDto) {
+    public Result<ProductDto, String> updateItem(ProductDto itemDto) {
       return null;
     }
 
     @Override
-    public Result<List<ProductModel>, String> getItems() {
+    public Result<List<ProductDto>, String> getItems() {
       return null;
     }
   }

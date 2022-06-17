@@ -1,7 +1,7 @@
 package com.wodder.inventory.domain.model.product;
 
 import com.wodder.inventory.domain.model.Entity;
-import com.wodder.inventory.dto.ProductModel;
+import com.wodder.inventory.dto.ProductDto;
 import java.math.BigDecimal;
 
 public class Product extends Entity<ProductId> {
@@ -177,9 +177,9 @@ public class Product extends Entity<ProductId> {
     return name.hashCode();
   }
 
-  public ProductModel toItemModel() {
-    ProductModel.ProductModelBuilder b =
-        ProductModel.builder()
+  public ProductDto toItemModel() {
+    ProductDto.ProductModelBuilder b =
+        ProductDto.builder()
             .withId(this.id.getId())
             .withName(this.name)
             .withCategory(this.category.getName())

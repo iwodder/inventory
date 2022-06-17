@@ -1,6 +1,6 @@
 package com.wodder.inventory.console.handlers;
 
-import com.wodder.inventory.dto.ProductModel;
+import com.wodder.inventory.dto.ProductDto;
 import com.wodder.inventory.dto.Result;
 import java.io.PrintStream;
 import java.util.List;
@@ -17,11 +17,11 @@ public class ViewItemHandler extends InputHandler {
   public void handleInput(Scanner input, PrintStream out, PrintStream err) {
     String in = input.nextLine();
     if ("all".equalsIgnoreCase(in)) {
-      Result<List<ProductModel>, String> result = model.getItems();
+      Result<List<ProductDto>, String> result = model.getItems();
       if (result.isErr()) {
         err.println(result.getErr());
       } else {
-        List<ProductModel> items = result.getOk();
+        List<ProductDto> items = result.getOk();
         ItemTableFormatter formatter = new ItemTableFormatter(items);
         out.print(formatter.formatToTable());
       }
