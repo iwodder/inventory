@@ -1,6 +1,6 @@
-# inventory
+# Inventory
 
-Recently I started reading Implementing Domain Driven Design by
+Recently, I started reading Implementing Domain Driven Design by
 Vaughn Vernon. While there are useful code examples that accompany
 the text, it is easier for me to learn the concepts through application.
 As such, I created this repository to be a basic project
