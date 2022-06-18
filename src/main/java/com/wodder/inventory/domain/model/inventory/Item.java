@@ -12,7 +12,6 @@ public class Item {
       ItemId.emptyId(),
       "null_item",
       InventoryLocation.defaultCategory(),
-      InventoryCategory.defaultCategory(),
       UnitOfMeasurement.empty(),
       Price.ofZero(),
       InventoryCount.ofZero());
@@ -20,7 +19,6 @@ public class Item {
   private final ItemId id;
   private final String name;
   private final InventoryLocation location;
-  private final InventoryCategory category;
   private final UnitOfMeasurement uom;
   private final Price price;
   private final InventoryCount count;
@@ -29,14 +27,12 @@ public class Item {
       ItemId id,
       String name,
       InventoryLocation location,
-      InventoryCategory category,
       UnitOfMeasurement uom,
       Price price,
       InventoryCount count) {
     this.id = id;
     this.name = name;
     this.location = location;
-    this.category = category;
     this.uom = uom;
     this.price = price;
     this.count = count;
@@ -45,10 +41,9 @@ public class Item {
   public Item(
       String name,
       InventoryLocation location,
-      InventoryCategory category,
       UnitOfMeasurement uom,
       Price price) {
-    this(ItemId.newId(), name, location, category, uom, price, InventoryCount.ofZero());
+    this(ItemId.newId(), name, location, uom, price, InventoryCount.ofZero());
   }
 
   Item(Item that) {
@@ -56,7 +51,6 @@ public class Item {
         that.id,
         that.name,
         that.location,
-        that.category,
         new UnitOfMeasurement(that.uom),
         new Price(that.price),
         new InventoryCount(that.count));
@@ -65,7 +59,6 @@ public class Item {
   private Item(ItemBuilder b) {
     this.id = b.id;
     this.name = b.name;
-    this.category = b.category;
     this.location = b.location;
     this.uom = b.uom;
     this.price = b.price;
@@ -76,7 +69,6 @@ public class Item {
     return Item.builder()
         .withName(p.getName())
         .withLocation(p.getLocation())
-        .withCategory(p.getCategory())
         .withUnits(p.getUnits(), Integer.toString(p.getUnitsPerCase()))
         .withPricing(p.getItemPrice(), p.getCasePrice())
         .build();
@@ -87,7 +79,6 @@ public class Item {
         ItemId.of(model.getId()),
         model.getName(),
         InventoryLocation.of(model.getLocation()),
-        InventoryCategory.of(model.getCategory()),
         new UnitOfMeasurement(model.getUnits(), Integer.parseInt(model.getItemsPerCase())),
         new Price(model.getUnitPrice(), model.getCasePrice()),
         InventoryCount.countFrom(
@@ -104,7 +95,6 @@ public class Item {
         this.id,
         this.name,
         this.location,
-        this.category,
         this.uom,
         this.price,
         count);
@@ -120,10 +110,6 @@ public class Item {
 
   public InventoryLocation getLocation() {
     return location;
-  }
-
-  public InventoryCategory getCategory() {
-    return category;
   }
 
   public UnitOfMeasurement getUom() {
@@ -155,7 +141,6 @@ public class Item {
     private ItemId id;
     private String name;
     private InventoryLocation location;
-    private InventoryCategory category;
     private UnitOfMeasurement uom;
     private Price price;
     private InventoryCount count;
@@ -171,11 +156,6 @@ public class Item {
 
     public ItemBuilder withLocation(String location) {
       this.location = InventoryLocation.of(location);
-      return this;
-    }
-
-    public ItemBuilder withCategory(String category) {
-      this.category = InventoryCategory.of(category);
       return this;
     }
 
@@ -221,8 +201,6 @@ public class Item {
 
   @Override
   public int hashCode() {
-    return Objects.hash(getName(), getLocation(), getCategory());
+    return Objects.hash(getName(), getLocation());
   }
-
-
 }

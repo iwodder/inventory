@@ -93,10 +93,6 @@ public class Inventory extends Entity<InventoryId> {
     return getItemsBy(i -> i.getLocation().equals(location));
   }
 
-  public List<Item> getItemsByCategory(InventoryCategory category) {
-    return getItemsBy(i -> i.getCategory().equals(category));
-  }
-
   public Item getItem(String s) {
     List<Item> item = getItemsBy(i -> i.getName().equalsIgnoreCase(s));
     if (item.size() == 1) {

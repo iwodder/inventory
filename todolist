@@ -15,4 +15,43 @@ Note: Inventory - is an aggregate root
 
 Note: Inventory should be able to know its total worth
 Note: Inventory is an aggregate root, it is composed of InventoryItems, InventoryItems have counts
+
+
 Creating a new inventory adds all active products as inventory items.
+
+Product should only have price, unit of measurement, case pack, and name.
+
+New product event causes an item to be created for inventory.
+
+Inventory is created and all active inventory items are added.
+
+Inventory items are uniquely identified by an Id which is the combination of name and location.
+
+Users can add an item to inventory. Items may exist in multiple locations,
+ but only one category. Inventory tracks the total dollars of all counted items.
+
+ Should the inventory bounded context be concerned with pricing and units? Or does the inventory context
+ just perform the counts (item name, item location, qty on hand). An inventory aggregate can
+ manage which location items are in for counting.
+
+Inventory Report
+A report is an value object with read-only views of the inventory. It contains all the logic/process
+for creating a report between two inventory dates.
+
+Creating a new inventory
+  - Request a list of products (ids)
+  - Query the item repository by external id
+      - Create new item if not found
+  - Load all locations
+  - Add all items to inventory
+
+Inventory Items
+  - are entities, location may change over time, name may change over time
+  - uniquely identified by an internal item id
+  -
+
+1. Remove the location from Product.
+2. Remove price and category from item
+3. Have item track external id, productId and internal id of name and location
+4. Inventory bounded context should have a series of locations
+5.

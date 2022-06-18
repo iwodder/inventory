@@ -16,7 +16,7 @@ class ItemTest {
   void value() {
    Item item = new Item(
        ItemId.newId(),
-       "Cheese", InventoryLocation.of("Refrigerator"), InventoryCategory.of("Dairy"),
+       "Cheese", InventoryLocation.of("Refrigerator"),
        new UnitOfMeasurement("ounce", 16),
        new Price("0.98", "10.00"),
        InventoryCount.countFrom("2", "1")
@@ -34,7 +34,7 @@ class ItemTest {
     Price p = new Price("0.98", "10.00");
     Item item = new Item(
         ItemId.newId(),
-        "Cheese", InventoryLocation.of("Refrigerator"), InventoryCategory.of("Dairy"),
+        "Cheese", InventoryLocation.of("Refrigerator"),
         uom,
         p,
         InventoryCount.ofZero()

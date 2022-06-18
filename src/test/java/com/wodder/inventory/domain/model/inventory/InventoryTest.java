@@ -40,7 +40,6 @@ class InventoryTest {
             ItemId.newId(),
             "2% Milk",
             InventoryLocation.of("Refrigerator"),
-            InventoryCategory.of("Dairy"),
             new UnitOfMeasurement("Gallon", 4),
             new Price("0.99", "4.98"),
             new InventoryCount(1.0, 0.25));
@@ -92,7 +91,6 @@ class InventoryTest {
                 ItemId.newId(),
                 "2% Milk",
                 InventoryLocation.of("Refrigerator"),
-                InventoryCategory.of("Dairy"),
                 new UnitOfMeasurement("Gallon", 4),
                 new Price("0.99", "4.98"),
                 new InventoryCount(1.0, 0.25))));
@@ -102,7 +100,6 @@ class InventoryTest {
                 ItemId.newId(),
                 "Shredded Cheese",
                 InventoryLocation.of("Refrigerator"),
-                InventoryCategory.of("Dairy"),
                 new UnitOfMeasurement("Gallon", 4),
                 new Price("0.99", "4.98"),
                 new InventoryCount(1.0, 0.25))));
@@ -185,32 +182,11 @@ class InventoryTest {
   }
 
   @Test
-  @DisplayName("Can query inventory items by category")
-  void query_by_category() {
-    Inventory i =
-        Inventory.createNewInventoryWithProducts(
-            List.of(
-                ProductDto.builder()
-                    .withName("2% Milk")
-                    .withCategory("Frozen")
-                    .withLocation("Freezer")
-                    .withUnitOfMeasurement("Gallon")
-                    .withItemsPerCase(4)
-                    .withItemPrice("0.99")
-                    .withCasePrice("4.98")
-                    .build()
-            ));
-    assertEquals(1, i.getItemsByCategory(InventoryCategory.of("Frozen")).size());
-    assertEquals(0, i.getItemsByCategory(InventoryCategory.of("Dairy")).size());
-  }
-
-  @Test
   @DisplayName("Should be able to query item by name")
   void query_by_name() {
     Item item = Item.builder()
         .withName("2% Milk")
         .withLocation("Refrigerator")
-        .withCategory("Dairy")
         .withUnits("Gallon", "4")
         .withPricing("0.99", "4.98")
         .withCount("1.0", "0.25")
@@ -226,7 +202,6 @@ class InventoryTest {
   @DisplayName("Should be able to retrieve all items")
   void query_all() {
     Item item = Item.builder()
-        .withCategory("Dairy")
         .withLocation("Refrigerator")
         .withName("2% Milk")
         .withUnits("Gallon", "4")
@@ -234,7 +209,6 @@ class InventoryTest {
         .withCount("1.0", "0.25")
         .build();
     Item item2 = Item.builder()
-        .withCategory("Dairy")
         .withLocation("Refrigerator")
         .withName("Chocolate Milk")
         .withUnits("Gallon", "2")

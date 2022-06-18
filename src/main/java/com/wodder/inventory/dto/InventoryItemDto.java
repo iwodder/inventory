@@ -7,7 +7,6 @@ public class InventoryItemDto {
   private String id;
   private String name;
   private String location;
-  private String category;
   private String units;
   private String itemsPerCase;
   private String unitPrice;
@@ -19,7 +18,6 @@ public class InventoryItemDto {
       String id,
       String name,
       String location,
-      String category,
       String units,
       String itemsPerCase,
       String unitPrice,
@@ -28,7 +26,6 @@ public class InventoryItemDto {
       String numberOfCases) {
     this.name = name;
     this.location = location;
-    this.category = category;
     this.units = units;
     this.itemsPerCase = itemsPerCase;
     this.unitPrice = unitPrice;
@@ -42,7 +39,6 @@ public class InventoryItemDto {
         item.getId().getValue(),
         item.getName(),
         item.getLocation().getName(),
-        item.getCategory().getName(),
         item.getUom().getUnit(),
         Integer.toString(item.getUom().getItemsPerCase()),
         item.getPrice().getUnitPrice().toString(),
@@ -73,14 +69,6 @@ public class InventoryItemDto {
 
   public void setLocation(String location) {
     this.location = location;
-  }
-
-  public String getCategory() {
-    return category;
-  }
-
-  public void setCategory(String category) {
-    this.category = category;
   }
 
   public String getUnits() {
