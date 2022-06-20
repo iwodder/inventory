@@ -2,9 +2,9 @@ package com.wodder.inventory.application.implementations;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
-import com.wodder.inventory.application.InventoryService;
 import com.wodder.inventory.application.ProductService;
 import com.wodder.inventory.application.ServiceFactory;
+import com.wodder.inventory.application.inventory.InventoryService;
 import com.wodder.inventory.persistence.TestPersistenceFactory;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;

@@ -8,7 +8,7 @@ import java.util.Objects;
 
 public class InventoryDto implements Serializable {
   private static final long serialVersionUID = 1L;
-  private final List<InventoryItemDto> items;
+  private final List<CountDto> items;
   private final String state;
   private final String id;
   private LocalDate inventoryDate;
@@ -23,8 +23,8 @@ public class InventoryDto implements Serializable {
     this("", "OPEN");
   }
 
-  public void addInventoryItem(InventoryItemDto inventoryItemDto) {
-    items.add(inventoryItemDto);
+  public void addCountDto(CountDto countDto) {
+    items.add(countDto);
   }
 
   public LocalDate getInventoryDate() {
@@ -47,7 +47,7 @@ public class InventoryDto implements Serializable {
     return id;
   }
 
-  public List<InventoryItemDto> getItems() {
+  public List<CountDto> getItems() {
     return items;
   }
 

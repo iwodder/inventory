@@ -1,13 +1,14 @@
 package com.wodder.inventory.domain.model.inventory;
 
 import com.wodder.inventory.domain.model.Entity;
+import com.wodder.inventory.dto.CountDto;
 import com.wodder.inventory.dto.InventoryDto;
-import com.wodder.inventory.dto.ProductDto;
 import java.time.LocalDate;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.function.Predicate;
@@ -32,30 +33,10 @@ public class Inventory extends Entity<InventoryId> {
     this.state = state;
   }
 
-  public Inventory(InventoryDto model) {
-    this(
-        InventoryId.inventoryIdOf(model.getId()),
-        model.getInventoryDate(),
-        InventoryState.valueOf(model.getState()));
-    model.getItems().stream()
-        .map(Item::from)
-        .forEach(
-            m -> {
-//              counts.putIfAbsent(generateKey(m), m);
-            });
-  }
-
   public Inventory(Inventory that) {
     this(that.id, that.inventoryDate, that.state);
     that.counts.forEach((k, v) ->
         this.counts.put(Item.copy(k), Count.copy(v)));
-  }
-
-  // This is deprecated in favor of creating an inventory with just ItemIds
-  public static Inventory createNewInventoryWithProducts(Collection<ProductDto> products) {
-    Inventory i = new Inventory();
-    products.forEach(i::addProductToInventory);
-    return i;
   }
 
   public static Inventory inventoryWith(Collection<Item> items) {
@@ -80,22 +61,15 @@ public class Inventory extends Entity<InventoryId> {
     state.addItemToInventory(counts, item);
   }
 
-  private void addProductToInventory(ProductDto product) {
-    Item item = Item.from(product);
-    addItemToInventory(item);
-  }
-
   public List<Item> getItemsByLocation(StorageLocation location) {
     return getItemsBy(i -> i.getLocation().equals(location));
   }
 
-  public Item getItem(String s) {
-    List<Item> item = getItemsBy(i -> i.getName().equalsIgnoreCase(s));
-    if (item.size() == 1) {
-      return item.get(0);
-    } else {
-      return Item.empty();
-    }
+  public Optional<Item> getItem(String s) {
+    return counts.keySet()
+        .stream()
+        .filter(k -> k.getName().equalsIgnoreCase(s))
+        .findFirst();
   }
 
   private List<Item> getItemsBy(Predicate<Item> p) {
@@ -116,7 +90,21 @@ public class Inventory extends Entity<InventoryId> {
   }
 
   public Optional<Count> getCount(String name) {
-    return Optional.empty();
+    List<Count> c = counts.entrySet()
+        .stream()
+        .filter(e -> e.getKey().getName().equalsIgnoreCase(name))
+        .map(Entry::getValue)
+        .collect(Collectors.toList());
+
+    if (!c.isEmpty()) {
+      Count total = Count.ofZero();
+      for (var count : c) {
+        total = total.add(count);
+      }
+      return Optional.of(total);
+    } else {
+      return Optional.empty();
+    }
   }
 
   public LocalDate getInventoryDate() {
@@ -132,9 +120,18 @@ public class Inventory extends Entity<InventoryId> {
   }
 
   public InventoryDto toModel() {
-    InventoryDto result = new InventoryDto(id.getId(), state.name());
+    InventoryDto result = new InventoryDto(id.getValue(), state.name());
     result.setInventoryDate(inventoryDate);
-//    counts.values().stream().map(Item::toModel).forEach(result::addInventoryItem);
+    counts.entrySet()
+        .stream()
+        .map(e -> {
+          Item item = e.getKey();
+          Count count = e.getValue();
+          return new CountDto(
+              item.getId().getValue(),
+              count.getUnits(),
+              count.getCases());
+        }).forEach(result::addCountDto);
     return result;
   }
 
@@ -147,12 +144,14 @@ public class Inventory extends Entity<InventoryId> {
       return false;
     }
     Inventory inventory = (Inventory) o;
-    return Objects.equals(inventoryDate, inventory.inventoryDate) && Objects.equals(id, inventory.id);
+    return
+        Objects.equals(inventoryDate, inventory.inventoryDate)
+            && Objects.equals(id, inventory.id);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(inventoryDate);
+    return Objects.hash(inventoryDate, id);
   }
 
   public Iterable<Item> getItems() {
@@ -169,7 +168,7 @@ public class Inventory extends Entity<InventoryId> {
       @Override
       void updateCount(
           Map<Item, Count> counts, String name, String location, Count count) {
-//        counts.replace(, (k, v) -> v.updateCount(count));
+        //counts.replace(, (k, v) -> v.updateCount(count));
       }
 
       @Override

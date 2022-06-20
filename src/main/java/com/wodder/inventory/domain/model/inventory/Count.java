@@ -1,44 +1,47 @@
 package com.wodder.inventory.domain.model.inventory;
 
-import com.wodder.inventory.dto.InventoryCountDto;
+import com.wodder.inventory.dto.CountDto;
 import java.util.Objects;
 
 public class Count {
 
-  private static final Count ZERO = new Count(0.0, 0.0);
+  private static final Count ZERO = new Count(0.00, 0.00);
   private double units;
   private double cases;
-  private ItemId itemId;
 
   private Count(double units, double cases) {
     setUnits(units);
     setCases(cases);
   }
 
-  private Count(ItemId itemId, double units, double cases) {
-    this.itemId = itemId;
-    setCases(cases);
-    setUnits(units);
-  }
-
   public Count(Count that) {
-    this(that.itemId, that.getUnits(), that.getCases());
+    this(that.getUnits(), that.getCases());
   }
 
-  public Count(InventoryCountDto model) {
-    this(model.getUnits(), model.getCases());
+  public Count(CountDto model) {
+    this(
+        Double.parseDouble(model.getUnits()),
+        Double.parseDouble(model.getCases())
+    );
   }
 
   public static Count ofZero() {
     return ZERO;
   }
 
-  public static Count countFrom(String units, String cases) {
+  public static Count countOf(String units, String cases) {
     return new Count(Double.parseDouble(units), Double.parseDouble(cases));
   }
 
   public static Count copy(Count other) {
     return new Count(other);
+  }
+
+  public Count add(Count other) {
+    return new Count(
+        Double.sum(this.units, other.units),
+        Double.sum(this.cases, other.cases)
+    );
   }
 
   public double getUnits() {
@@ -60,7 +63,7 @@ public class Count {
   }
 
   private void isGreaterThanZero(double count) {
-    if (Double.compare(count, 0) > -1) {
+    if (Double.compare(count, 0.00) < 0) {
       throw new IllegalArgumentException(
           "Count cannot have a negative value, was supplied " + count);
     }
@@ -82,5 +85,13 @@ public class Count {
   @Override
   public int hashCode() {
     return Objects.hash(getUnits(), getCases());
+  }
+
+  @Override
+  public String toString() {
+    return "Count{"
+        + "units=" + units
+        + ", cases=" + cases
+        + '}';
   }
 }

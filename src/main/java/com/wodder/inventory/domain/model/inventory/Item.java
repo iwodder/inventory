@@ -1,12 +1,13 @@
 package com.wodder.inventory.domain.model.inventory;
 
+import com.wodder.inventory.domain.model.Entity;
 import com.wodder.inventory.domain.model.product.Price;
 import com.wodder.inventory.domain.model.product.UnitOfMeasurement;
 import com.wodder.inventory.dto.InventoryItemDto;
 import com.wodder.inventory.dto.ProductDto;
 import java.util.Objects;
 
-public class Item {
+public class Item extends Entity<ItemId> {
 
   private static final Item EMPTY = new Item(
       ItemId.emptyId(),
@@ -14,9 +15,9 @@ public class Item {
       StorageLocation.unassigned(),
       UnitOfMeasurement.empty());
 
-  private final ItemId id;
   private final String name;
-  private final StorageLocation location;
+  private StorageLocation location;
+
   private final UnitOfMeasurement uom;
 
   public Item(
@@ -24,7 +25,7 @@ public class Item {
       String name,
       StorageLocation location,
       UnitOfMeasurement uom) {
-    this.id = id;
+    super(id);
     this.name = name;
     this.location = location;
     this.uom = uom;
@@ -37,7 +38,7 @@ public class Item {
     this(ItemId.newId(), name, location, uom);
   }
 
-  private Item(Item that) {
+  public Item(Item that) {
     this(
         that.id,
         that.name,
@@ -46,7 +47,7 @@ public class Item {
   }
 
   private Item(ItemBuilder b) {
-    this.id = b.id;
+    super(b.id);
     this.name = b.name;
     this.location = b.location;
     this.uom = b.uom;
@@ -113,6 +114,10 @@ public class Item {
     return new ItemBuilder();
   }
 
+  public void updateLocation(StorageLocation newLocation) {
+    this.location = newLocation;
+  }
+
   public static class ItemBuilder {
 
     private ItemId id;
@@ -135,6 +140,11 @@ public class Item {
 
     public ItemBuilder withUnits(String units, String qtyPerCase) {
       this.uom = UnitOfMeasurement.of(units, qtyPerCase);
+      return this;
+    }
+
+    public ItemBuilder withUnits(String units) {
+      this.uom = UnitOfMeasurement.of(units, "0");
       return this;
     }
 

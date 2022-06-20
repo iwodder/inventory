@@ -8,9 +8,6 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 
-import com.wodder.inventory.domain.model.product.UnitOfMeasurement;
-import com.wodder.inventory.dto.InventoryDto;
-import com.wodder.inventory.dto.InventoryItemDto;
 import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.List;
@@ -51,7 +48,7 @@ class InventoryTest {
             Arrays.asList(
                 Item.builder()
                     .withName("2% Milk")
-                    .withLocation("Refrigeator")
+                    .withLocation("Refrigerator")
                     .withUnits("Gallon", "4")
                     .build(),
                 Item.builder()
@@ -65,31 +62,6 @@ class InventoryTest {
 
     assertNotSame(i, i2);
     assertEquals(i.numberOfItems(), i2.numberOfItems());
-  }
-
-  @Test
-  @DisplayName("Can create an Inventory from InventoryModel")
-  void from_model() {
-    InventoryDto model = new InventoryDto();
-    model.setInventoryDate(LocalDate.now());
-    model.addInventoryItem(
-        new InventoryItemDto(
-            new Item(
-                ItemId.newId(),
-                "2% Milk",
-                StorageLocation.of("Refrigerator"),
-                new UnitOfMeasurement("Gallon", 4))));
-    model.addInventoryItem(
-        new InventoryItemDto(
-            new Item(
-                ItemId.newId(),
-                "Shredded Cheese",
-                StorageLocation.of("Refrigerator"),
-                new UnitOfMeasurement("Gallon", 4))));
-    Inventory i = new Inventory(model);
-
-    assertEquals(model.getInventoryDate(), i.getInventoryDate());
-    assertEquals(model.numberOfItems(), i.numberOfItems());
   }
 
   @Test
@@ -123,7 +95,7 @@ class InventoryTest {
     assertThrows(
         IllegalStateException.class,
         () -> i.updateInventoryCount(
-            "2% Milk", "Refrigerator", Count.countFrom("3", "4")));
+            "2% Milk", "Refrigerator", Count.countOf("3", "4")));
   }
 
   @Test
@@ -154,7 +126,9 @@ class InventoryTest {
     Inventory inventory = Inventory.emptyInventory();
     inventory.addItemToInventory(item);
 
-    assertEquals(item, inventory.getItem("2% Milk"));
+    assertEquals(
+        item,
+        inventory.getItem("2% Milk").orElseGet(() -> fail("Expected to find 2% Milk")));
   }
 
   @Test
@@ -183,7 +157,7 @@ class InventoryTest {
   void query_by_name_absent() {
     Inventory inventory = Inventory.emptyInventory();
 
-    assertEquals(Item.empty(), inventory.getItem("2% Milk"));
+    assertTrue(inventory.getItem("2% Milk").isEmpty());
   }
 
   @Test
@@ -207,9 +181,9 @@ class InventoryTest {
     List<Item> items = List.of(i, i2, i3);
     Inventory inv = Inventory.inventoryWith(items);
 
-    assertEquals(Count.ofZero(), inv.getCount("Milk").or(() -> fail("Expected to find Milk")));
-    assertEquals(Count.ofZero(), inv.getCount("Cheese").or(() -> fail("Expected to find Cheese")));
-    assertEquals(Count.ofZero(), inv.getCount("Soap").or(() -> fail("Expected to find Soap")));
+    assertEquals(Count.ofZero(), inv.getCount("Milk").orElseGet(() -> fail("Expected to find Milk")));
+    assertEquals(Count.ofZero(), inv.getCount("Cheese").orElseGet(() -> fail("Expected to find Cheese")));
+    assertEquals(Count.ofZero(), inv.getCount("Soap").orElseGet(() -> fail("Expected to find Soap")));
   }
 
   @Test
@@ -218,9 +192,15 @@ class InventoryTest {
     Item i = Item.builder().withName("Milk").withLocation("Refrigerator").build();
     Item i2 = Item.builder().withName("Milk").withLocation("Freezer").build();
 
-    List<Item> items = List.of(i, i2);
-    Inventory inv = Inventory.inventoryWith(items);
+    Inventory inv =
+        Inventory.inventoryWith(
+            List.of(i, i2)
+        );
 
-    assertEquals(Count.ofZero(), inv.getCount("Milk").or(() -> fail("Expected to find Milk")));
+    inv.updateCountFor(i, Count.countOf("1", "2"));
+    inv.updateCountFor(i2, Count.countOf("0.25", "1.5"));
+
+    Count expected = Count.countOf("1.25", "3.5");
+    assertEquals(expected, inv.getCount("Milk").orElseGet(() -> fail("Expected to find Milk")));
   }
 }

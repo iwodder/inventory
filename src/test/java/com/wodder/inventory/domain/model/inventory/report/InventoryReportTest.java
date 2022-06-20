@@ -99,11 +99,11 @@ class InventoryReportTest {
     Inventory start = new Inventory(LocalDate.of(2022, 5, 1));
     start.addItemToInventory(sampleItem);
     start.updateInventoryCount("Cheese", "Refrigerator",
-        Count.countFrom("1.0", "0.0"));
+        Count.countOf("1.0", "0.0"));
     Inventory end = new Inventory(LocalDate.of(2022, 5, 2));
     end.addItemToInventory(sampleItem);
     end.updateInventoryCount("Cheese", "Refrigerator",
-        Count.countFrom("0.5", "0.0"));
+        Count.countOf("0.5", "0.0"));
 
     InventoryReport report =
         InventoryReport.between(
@@ -126,7 +126,7 @@ class InventoryReportTest {
     Inventory end = new Inventory(LocalDate.of(2022, 5, 2));
     end.addItemToInventory(sampleItem);
     end.updateInventoryCount("Cheese", "Refrigerator",
-        Count.countFrom("0.5", "0.0"));
+        Count.countOf("0.5", "0.0"));
 
     InventoryReport report = InventoryReport.between(new Inventory(start), new Inventory(end));
     report.process();
@@ -159,7 +159,7 @@ class InventoryReportTest {
     Inventory start = new Inventory(LocalDate.of(2022, 5, 1));
     start.addItemToInventory(sampleItem);
     start.updateInventoryCount("Cheese", "Refrigerator",
-        Count.countFrom("0.5", "1.0"));
+        Count.countOf("0.5", "1.0"));
 
     Inventory end = new Inventory(LocalDate.of(2022, 5, 2));
 
@@ -180,12 +180,12 @@ class InventoryReportTest {
     Inventory start = new Inventory(LocalDate.of(2022, 5, 1));
     start.addItemToInventory(sampleItem);
     start.updateInventoryCount("Cheese", "Refrigerator",
-        Count.countFrom("0.5", "1.0"));
+        Count.countOf("0.5", "1.0"));
 
     Inventory end = new Inventory(LocalDate.of(2022, 5, 2));
     end.addItemToInventory(sampleItem);
     end.updateInventoryCount("Cheese", "Refrigerator",
-        Count.countFrom("0.5", "1.0"));
+        Count.countOf("0.5", "1.0"));
 
     InventoryReport report = InventoryReport.between(new Inventory(start), new Inventory(end));
     report.process();
@@ -205,12 +205,12 @@ class InventoryReportTest {
     Inventory start = new Inventory(LocalDate.of(2022, 5, 1));
     start.addItemToInventory(sampleItem);
     start.updateInventoryCount("Cheese", "Refrigerator",
-        Count.countFrom("0.5", "1.0"));
+        Count.countOf("0.5", "1.0"));
 
     Inventory end = new Inventory(LocalDate.of(2022, 5, 2));
     end.addItemToInventory(sampleItem);
     end.updateInventoryCount("Cheese", "Refrigerator",
-        Count.countFrom("0.5", "1.0"));
+        Count.countOf("0.5", "1.0"));
 
     InventoryReport report =
         InventoryReport.between(new Inventory(start), new Inventory(end))
@@ -232,12 +232,12 @@ class InventoryReportTest {
     Inventory start = new Inventory(LocalDate.of(2022, 5, 1));
     start.addItemToInventory(sampleItem);
     start.updateInventoryCount("Cheese", "Refrigerator",
-        Count.countFrom("0.5", "1.0"));
+        Count.countOf("0.5", "1.0"));
 
     Inventory end = new Inventory(LocalDate.of(2022, 5, 2));
     end.addItemToInventory(sampleItem);
     end.updateInventoryCount("Cheese","Refrigerator",
-        Count.countFrom("0.5", "1.0"));
+        Count.countOf("0.5", "1.0"));
 
     InventoryReport report =
         InventoryReport.between(start, end)
@@ -260,11 +260,11 @@ class InventoryReportTest {
     Inventory start = new Inventory(LocalDate.of(2022, 5, 1));
     start.addItemToInventory(sampleItem);
     start.updateInventoryCount("Cheese", "Refrigerator",
-        Count.countFrom("1.0", "0.0"));
+        Count.countOf("1.0", "0.0"));
     Inventory end = new Inventory(LocalDate.of(2022, 5, 2));
     end.addItemToInventory(sampleItem);
     end.updateInventoryCount("Cheese", "Refrigerator",
-        Count.countFrom("0.5", "0.0"));
+        Count.countOf("0.5", "0.0"));
 
     InventoryReport report =
         InventoryReport.between(
@@ -290,11 +290,11 @@ class InventoryReportTest {
     Inventory start = new Inventory(LocalDate.of(2022, 5, 1));
     start.addItemToInventory(sampleItem);
     start.updateInventoryCount("Cheese", "Refrigerator",
-        Count.countFrom("1.0", "0.0"));
+        Count.countOf("1.0", "0.0"));
     Inventory end = new Inventory(LocalDate.of(2022, 5, 2));
     end.addItemToInventory(sampleItem);
     end.updateInventoryCount("Cheese", "Refrigerator",
-        Count.countFrom("0.5", "0.0"));
+        Count.countOf("0.5", "0.0"));
 
     InventoryReport report =
         InventoryReport.between(

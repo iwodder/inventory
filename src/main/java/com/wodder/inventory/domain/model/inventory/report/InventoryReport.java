@@ -74,7 +74,7 @@ public class InventoryReport {
 
   private void processEndingInventory() {
     end.getItems().forEach((ending) -> {
-      Item starting = start.getItem(ending.getName());
+      Item starting = start.getItem(ending.getName()).get();
       usages.put(ending, Usage.of(starting.getOnHand(), ending.getOnHand()));
     });
   }
