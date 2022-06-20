@@ -21,7 +21,7 @@ class OnHandTest {
   @Test
   @DisplayName("Should calculate the total dollars of an item")
   void dollars() {
-    InventoryCount c = InventoryCount.countFrom("1", "2");
+    Count c = Count.countFrom("1", "2");
     Price p = new Price("1.0", "1.49");
     UnitOfMeasurement unitOfMeasurement = new UnitOfMeasurement("Gallons", 4);
 

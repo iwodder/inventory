@@ -3,42 +3,42 @@ package com.wodder.inventory.domain.model.inventory;
 import com.wodder.inventory.dto.InventoryCountDto;
 import java.util.Objects;
 
-public class InventoryCount {
+public class Count {
 
-  private static final InventoryCount ZERO = new InventoryCount(0.0, 0.0);
+  private static final Count ZERO = new Count(0.0, 0.0);
   private double units;
   private double cases;
   private ItemId itemId;
 
-  public InventoryCount(double units, double cases) {
+  private Count(double units, double cases) {
     setUnits(units);
     setCases(cases);
   }
 
-  private InventoryCount(ItemId itemId, double units, double cases) {
+  private Count(ItemId itemId, double units, double cases) {
     this.itemId = itemId;
     setCases(cases);
     setUnits(units);
   }
 
-  public InventoryCount(InventoryCount that) {
-    this(that.getUnits(), that.getCases());
+  public Count(Count that) {
+    this(that.itemId, that.getUnits(), that.getCases());
   }
 
-  public InventoryCount(InventoryCountDto model) {
+  public Count(InventoryCountDto model) {
     this(model.getUnits(), model.getCases());
   }
 
-  public static InventoryCount ofZero() {
+  public static Count ofZero() {
     return ZERO;
   }
 
-  public static InventoryCount countFrom(String units, String cases) {
-    return new InventoryCount(Double.parseDouble(units), Double.parseDouble(cases));
+  public static Count countFrom(String units, String cases) {
+    return new Count(Double.parseDouble(units), Double.parseDouble(cases));
   }
 
-  public static InventoryCount countFor(ItemId itemId) {
-    return new InventoryCount(itemId, 0, 0);
+  public static Count copy(Count other) {
+    return new Count(other);
   }
 
   public double getUnits() {
@@ -60,8 +60,9 @@ public class InventoryCount {
   }
 
   private void isGreaterThanZero(double count) {
-    if (count < 0.0) {
-      throw new IllegalArgumentException();
+    if (Double.compare(count, 0) > -1) {
+      throw new IllegalArgumentException(
+          "Count cannot have a negative value, was supplied " + count);
     }
   }
 
@@ -73,7 +74,7 @@ public class InventoryCount {
     if (o == null || getClass() != o.getClass()) {
       return false;
     }
-    InventoryCount that = (InventoryCount) o;
+    Count that = (Count) o;
     return Double.compare(that.getUnits(), getUnits()) == 0
         && Double.compare(that.getCases(), getCases()) == 0;
   }

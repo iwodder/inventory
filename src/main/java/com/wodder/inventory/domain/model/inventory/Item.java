@@ -10,50 +10,39 @@ public class Item {
 
   private static final Item EMPTY = new Item(
       ItemId.emptyId(),
-      "null_item",
-      InventoryLocation.defaultCategory(),
-      UnitOfMeasurement.empty(),
-      Price.ofZero(),
-      InventoryCount.ofZero());
+      "EMPTY",
+      StorageLocation.unassigned(),
+      UnitOfMeasurement.empty());
 
   private final ItemId id;
   private final String name;
-  private final InventoryLocation location;
+  private final StorageLocation location;
   private final UnitOfMeasurement uom;
-  private final Price price;
-  private final InventoryCount count;
 
   public Item(
       ItemId id,
       String name,
-      InventoryLocation location,
-      UnitOfMeasurement uom,
-      Price price,
-      InventoryCount count) {
+      StorageLocation location,
+      UnitOfMeasurement uom) {
     this.id = id;
     this.name = name;
     this.location = location;
     this.uom = uom;
-    this.price = price;
-    this.count = count;
   }
 
   public Item(
       String name,
-      InventoryLocation location,
-      UnitOfMeasurement uom,
-      Price price) {
-    this(ItemId.newId(), name, location, uom, price, InventoryCount.ofZero());
+      StorageLocation location,
+      UnitOfMeasurement uom) {
+    this(ItemId.newId(), name, location, uom);
   }
 
-  Item(Item that) {
+  private Item(Item that) {
     this(
         that.id,
         that.name,
         that.location,
-        new UnitOfMeasurement(that.uom),
-        new Price(that.price),
-        new InventoryCount(that.count));
+        new UnitOfMeasurement(that.uom));
   }
 
   private Item(ItemBuilder b) {
@@ -61,43 +50,39 @@ public class Item {
     this.name = b.name;
     this.location = b.location;
     this.uom = b.uom;
-    this.price = b.price;
-    this.count = b.count;
   }
 
-  public static Item fromProductDto(ProductDto p) {
+  public static Item copy(Item other) {
+    return new Item(other);
+  }
+
+  public static Item from(ProductDto p) {
     return Item.builder()
         .withName(p.getName())
         .withLocation(p.getLocation())
         .withUnits(p.getUnits(), Integer.toString(p.getUnitsPerCase()))
-        .withPricing(p.getItemPrice(), p.getCasePrice())
         .build();
   }
 
-  public static Item fromModel(InventoryItemDto model) {
+  public static Item from(InventoryItemDto model) {
     return new Item(
         ItemId.of(model.getId()),
         model.getName(),
-        InventoryLocation.of(model.getLocation()),
-        new UnitOfMeasurement(model.getUnits(), Integer.parseInt(model.getItemsPerCase())),
-        new Price(model.getUnitPrice(), model.getCasePrice()),
-        InventoryCount.countFrom(
-            model.getNumberOfUnits(),
-            model.getNumberOfCases()));
+        StorageLocation.of(model.getLocation()),
+        new UnitOfMeasurement(model.getUnits(), Integer.parseInt(model.getItemsPerCase()))
+    );
   }
 
   public static Item empty() {
     return EMPTY;
   }
 
-  public Item updateCount(InventoryCount count) {
+  public Item updateCount(Count count) {
     return new Item(
         this.id,
         this.name,
         this.location,
-        this.uom,
-        this.price,
-        count);
+        this.uom);
   }
 
   public ItemId getId() {
@@ -108,7 +93,7 @@ public class Item {
     return name;
   }
 
-  public InventoryLocation getLocation() {
+  public StorageLocation getLocation() {
     return location;
   }
 
@@ -116,16 +101,8 @@ public class Item {
     return uom;
   }
 
-  public Price getPrice() {
-    return price;
-  }
-
-  public InventoryCount getCount() {
-    return count;
-  }
-
   public OnHand getOnHand() {
-    return OnHand.from(count, price, uom);
+    return OnHand.from(Count.ofZero(), Price.ofZero(), uom);
   }
 
   public InventoryItemDto toModel() {
@@ -140,13 +117,10 @@ public class Item {
 
     private ItemId id;
     private String name;
-    private InventoryLocation location;
+    private StorageLocation location;
     private UnitOfMeasurement uom;
-    private Price price;
-    private InventoryCount count;
 
     private ItemBuilder() {
-      count = InventoryCount.ofZero();
     }
 
     public ItemBuilder withName(String name) {
@@ -155,22 +129,12 @@ public class Item {
     }
 
     public ItemBuilder withLocation(String location) {
-      this.location = InventoryLocation.of(location);
+      this.location = StorageLocation.of(location);
       return this;
     }
 
     public ItemBuilder withUnits(String units, String qtyPerCase) {
       this.uom = UnitOfMeasurement.of(units, qtyPerCase);
-      return this;
-    }
-
-    public ItemBuilder withPricing(String unitPrice, String casePrice) {
-      this.price = Price.of(unitPrice, casePrice);
-      return this;
-    }
-
-    public ItemBuilder withCount(String units, String cases) {
-      this.count = InventoryCount.countFrom(units, cases);
       return this;
     }
 

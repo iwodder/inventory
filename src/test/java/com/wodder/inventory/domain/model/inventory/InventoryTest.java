@@ -6,17 +6,14 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNotSame;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
 
-import com.wodder.inventory.domain.model.product.Price;
 import com.wodder.inventory.domain.model.product.UnitOfMeasurement;
 import com.wodder.inventory.dto.InventoryDto;
 import com.wodder.inventory.dto.InventoryItemDto;
-import com.wodder.inventory.dto.ProductDto;
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicInteger;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -31,19 +28,18 @@ class InventoryTest {
   }
 
   @Test
-  @DisplayName("Can add count to inventory")
+  @DisplayName("Can an add item to inventory")
   @Disabled
   void add_item() {
     Inventory inventory = Inventory.emptyInventory();
-    Item item =
-        new Item(
-            ItemId.newId(),
-            "2% Milk",
-            InventoryLocation.of("Refrigerator"),
-            new UnitOfMeasurement("Gallon", 4),
-            new Price("0.99", "4.98"),
-            new InventoryCount(1.0, 0.25));
+    Item item = Item.builder()
+        .withName("2% Milk")
+        .withLocation("Refrigerator")
+        .withUnits("Gallon", "4")
+        .build();
+
     inventory.addItemToInventory(item);
+
     assertEquals(1, inventory.numberOfItems());
   }
 
@@ -51,33 +47,24 @@ class InventoryTest {
   @DisplayName("Copy constructor makes a deep copy of counts")
   void deep_copy() {
     Inventory i =
-        Inventory.createNewInventoryWithProducts(
+        Inventory.inventoryWith(
             Arrays.asList(
-                ProductDto.builder()
+                Item.builder()
                     .withName("2% Milk")
-                    .withCategory("Dairy")
-                    .withLocation("Refrigerator")
-                    .withUnitOfMeasurement("Gallon")
-                    .withItemsPerCase(4)
-                    .withItemPrice("0.99")
-                    .withCasePrice("4.98")
+                    .withLocation("Refrigeator")
+                    .withUnits("Gallon", "4")
                     .build(),
-                ProductDto.builder()
+                Item.builder()
                     .withName("Chicken Breast")
-                    .withCategory("Meat")
                     .withLocation("Refrigerator")
-                    .withUnitOfMeasurement("Pound")
-                    .withItemsPerCase(4)
-                    .withItemPrice("0.99")
-                    .withCasePrice("4.98")
+                    .withUnits("Pound", "4")
                     .build()));
 
+
     Inventory i2 = new Inventory(i);
+
     assertNotSame(i, i2);
     assertEquals(i.numberOfItems(), i2.numberOfItems());
-    InventoryCount count1 = i.getCount("2% Milk").get();
-    InventoryCount count2 = i2.getCount("2% Milk").get();
-    assertNotSame(count1, count2);
   }
 
   @Test
@@ -90,19 +77,15 @@ class InventoryTest {
             new Item(
                 ItemId.newId(),
                 "2% Milk",
-                InventoryLocation.of("Refrigerator"),
-                new UnitOfMeasurement("Gallon", 4),
-                new Price("0.99", "4.98"),
-                new InventoryCount(1.0, 0.25))));
+                StorageLocation.of("Refrigerator"),
+                new UnitOfMeasurement("Gallon", 4))));
     model.addInventoryItem(
         new InventoryItemDto(
             new Item(
                 ItemId.newId(),
                 "Shredded Cheese",
-                InventoryLocation.of("Refrigerator"),
-                new UnitOfMeasurement("Gallon", 4),
-                new Price("0.99", "4.98"),
-                new InventoryCount(1.0, 0.25))));
+                StorageLocation.of("Refrigerator"),
+                new UnitOfMeasurement("Gallon", 4))));
     Inventory i = new Inventory(model);
 
     assertEquals(model.getInventoryDate(), i.getInventoryDate());
@@ -139,46 +122,24 @@ class InventoryTest {
     i.finish();
     assertThrows(
         IllegalStateException.class,
-        () -> i.updateInventoryCount("2% Milk", "Refrigerator", new InventoryCount(3, 4)));
-  }
-
-  @Test
-  @DisplayName("Can add product to inventory")
-  void add_product() {
-    Inventory i =
-        Inventory.createNewInventoryWithProducts(
-            List.of(
-                ProductDto.builder()
-                    .withName("2% Milk")
-                    .withCategory("Dairy")
-                    .withLocation("Refrigerator")
-                    .withUnitOfMeasurement("Gallon")
-                    .withItemsPerCase(4)
-                    .withItemPrice("0.99")
-                    .withCasePrice("4.98")
-                    .build()
-            ));
-    assertEquals(1, i.numberOfItems());
+        () -> i.updateInventoryCount(
+            "2% Milk", "Refrigerator", Count.countFrom("3", "4")));
   }
 
   @Test
   @DisplayName("Can query inventory items by location")
   void query_by_location() {
     Inventory i =
-        Inventory.createNewInventoryWithProducts(
+        Inventory.inventoryWith(
             List.of(
-                ProductDto.builder()
+                Item.builder()
                     .withName("2% Milk")
-                    .withCategory("Dairy")
                     .withLocation("Freezer")
-                    .withUnitOfMeasurement("Gallon")
-                    .withItemsPerCase(4)
-                    .withItemPrice("0.99")
-                    .withCasePrice("4.98")
+                    .withUnits("Gallon", "4")
                     .build()
             ));
-    assertEquals(1, i.getItemsByLocation(InventoryLocation.of("Freezer")).size());
-    assertEquals(0, i.getItemsByLocation(InventoryLocation.of("Pantry")).size());
+    assertEquals(1, i.getItemsByLocation(StorageLocation.of("Freezer")).size());
+    assertEquals(0, i.getItemsByLocation(StorageLocation.of("Pantry")).size());
   }
 
   @Test
@@ -188,8 +149,6 @@ class InventoryTest {
         .withName("2% Milk")
         .withLocation("Refrigerator")
         .withUnits("Gallon", "4")
-        .withPricing("0.99", "4.98")
-        .withCount("1.0", "0.25")
         .build();
 
     Inventory inventory = Inventory.emptyInventory();
@@ -202,49 +161,29 @@ class InventoryTest {
   @DisplayName("Should be able to retrieve all items")
   void query_all() {
     Item item = Item.builder()
-        .withLocation("Refrigerator")
         .withName("2% Milk")
+        .withLocation("Refrigerator")
         .withUnits("Gallon", "4")
-        .withPricing("0.99", "4.98")
-        .withCount("1.0", "0.25")
         .build();
     Item item2 = Item.builder()
-        .withLocation("Refrigerator")
         .withName("Chocolate Milk")
+        .withLocation("Refrigerator")
         .withUnits("Gallon", "2")
-        .withPricing("1.99", "4.98")
-        .withCount("1.0", "0.25")
         .build();
-    Inventory inventory = Inventory.emptyInventory();
-    inventory.addItemToInventory(item);
-    inventory.addItemToInventory(item2);
+    Inventory inventory =
+        Inventory.inventoryWith(
+            List.of(item, item2)
+        );
 
-    Iterable<Item> items = inventory.getItems();
-    AtomicInteger cnt = new AtomicInteger();
-    items.forEach((i) -> cnt.getAndIncrement());
-
-    assertEquals(2, cnt.get());
+    assertEquals(2, inventory.numberOfItems());
   }
 
   @Test
-  @DisplayName("Absent item in inventory should return an empty item")
+  @DisplayName("Item not in inventory should return empty optional")
   void query_by_name_absent() {
     Inventory inventory = Inventory.emptyInventory();
 
     assertEquals(Item.empty(), inventory.getItem("2% Milk"));
-  }
-
-  @Test
-  @DisplayName("Should create an inventory with just item ids")
-  void newInventory() {
-    List<ItemId> itemIds = new ArrayList<>();
-    itemIds.add(ItemId.of("123"));
-    itemIds.add(ItemId.of("234"));
-    itemIds.add(ItemId.of("345"));
-
-    Inventory i = Inventory.createNewInventory(itemIds);
-
-    assertEquals(3, i.numberOfItems());
   }
 
   @Test
@@ -256,5 +195,32 @@ class InventoryTest {
     assertEquals(LocalDate.now(), i.getInventoryDate());
     assertEquals(0, i.numberOfItems());
     assertTrue(i.isOpen());
+  }
+
+  @Test
+  @DisplayName("Inventory starts with zero counts for all items")
+  void zeroCount() {
+    Item i = Item.builder().withName("Milk").withLocation("Refrigerator").build();
+    Item i2 = Item.builder().withName("Cheese").withLocation("Freezer").build();
+    Item i3 = Item.builder().withName("Soap").withLocation("Dry Storage").build();
+
+    List<Item> items = List.of(i, i2, i3);
+    Inventory inv = Inventory.inventoryWith(items);
+
+    assertEquals(Count.ofZero(), inv.getCount("Milk").or(() -> fail("Expected to find Milk")));
+    assertEquals(Count.ofZero(), inv.getCount("Cheese").or(() -> fail("Expected to find Cheese")));
+    assertEquals(Count.ofZero(), inv.getCount("Soap").or(() -> fail("Expected to find Soap")));
+  }
+
+  @Test
+  @DisplayName("Inventory returns the total count for an item in multiple locations")
+  void totalCount() {
+    Item i = Item.builder().withName("Milk").withLocation("Refrigerator").build();
+    Item i2 = Item.builder().withName("Milk").withLocation("Freezer").build();
+
+    List<Item> items = List.of(i, i2);
+    Inventory inv = Inventory.inventoryWith(items);
+
+    assertEquals(Count.ofZero(), inv.getCount("Milk").or(() -> fail("Expected to find Milk")));
   }
 }

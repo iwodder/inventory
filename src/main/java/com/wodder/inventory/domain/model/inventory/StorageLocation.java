@@ -3,21 +3,21 @@ package com.wodder.inventory.domain.model.inventory;
 import java.util.Objects;
 import java.util.regex.Pattern;
 
-public class InventoryCategory {
-  private static final Pattern ALPHABETIC = Pattern.compile("\\p{Alpha}+");
+public class StorageLocation {
+  private static final Pattern LETTERS_AND_SPACES = Pattern.compile("[\\p{Alpha} ]+");
   private final String name;
 
-  private InventoryCategory(String name) {
+  private StorageLocation(String name) {
     this.name = name;
   }
 
-  public static InventoryCategory of(String name) {
+  public static StorageLocation of(String name) {
     validateName(name);
-    return new InventoryCategory(name);
+    return new StorageLocation(name);
   }
 
-  public static InventoryCategory defaultCategory() {
-    return new InventoryCategory("UNASSIGNED");
+  public static StorageLocation unassigned() {
+    return new StorageLocation("UNASSIGNED");
   }
 
   private static void validateName(String name) {
@@ -27,8 +27,8 @@ public class InventoryCategory {
     if (name.isBlank()) {
       throw new IllegalArgumentException("Name must not be blank");
     }
-    if (!ALPHABETIC.matcher(name).matches()) {
-      throw new IllegalArgumentException("Only ALPHABETIC characters are accepted");
+    if (!LETTERS_AND_SPACES.matcher(name).matches()) {
+      throw new IllegalArgumentException("Only ALPHABETIC characters and spaces are accepted");
     }
   }
 
@@ -44,7 +44,7 @@ public class InventoryCategory {
     if (o == null || getClass() != o.getClass()) {
       return false;
     }
-    InventoryCategory that = (InventoryCategory) o;
+    StorageLocation that = (StorageLocation) o;
     return name.equalsIgnoreCase(that.name);
   }
 

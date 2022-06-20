@@ -2,8 +2,8 @@ package com.wodder.inventory.application.implementations;
 
 import com.wodder.inventory.application.InventoryService;
 import com.wodder.inventory.application.ProductService;
+import com.wodder.inventory.domain.model.inventory.Count;
 import com.wodder.inventory.domain.model.inventory.Inventory;
-import com.wodder.inventory.domain.model.inventory.InventoryCount;
 import com.wodder.inventory.domain.model.inventory.InventoryId;
 import com.wodder.inventory.domain.model.inventory.Item;
 import com.wodder.inventory.domain.model.inventory.report.InventoryReport;
@@ -50,8 +50,8 @@ public class InventoryServiceImpl implements InventoryService {
     Optional<ProductDto> productOpt = productService.loadProduct(productId);
     if (opt.isPresent() && productOpt.isPresent()) {
       Inventory i = opt.get();
-      Item item = Item.fromProductDto(productOpt.get());
-      i.addItemToInventory(item.updateCount(new InventoryCount(units, cases)));
+      Item item = Item.from(productOpt.get());
+//      i.addItemToInventory(item.updateCount(new Count(units, cases)));
       return Optional.of(i.toModel());
     } else {
       return Optional.empty();
@@ -66,11 +66,11 @@ public class InventoryServiceImpl implements InventoryService {
       Inventory i = opt.get();
       for (InventoryCountDto m : counts) {
         Optional<ProductDto> p = productService.loadProduct(m.getProductId());
-        p.ifPresent(
-            (product) ->
-                i.addItemToInventory(
-                    Item.fromProductDto(product)
-                        .updateCount(new InventoryCount(m.getUnits(), m.getCases()))));
+//        p.ifPresent(
+//            (product) ->
+//                i.addItemToInventory(
+//                    Item.from(product)
+//                        .updateCount(new Count(m.getUnits(), m.getCases()))));
       }
       return Optional.of(i.toModel());
     } else {
@@ -88,8 +88,10 @@ public class InventoryServiceImpl implements InventoryService {
               i.updateInventoryCount(
                   itemModel.getName(),
                   itemModel.getLocation(),
-                  InventoryCount.countFrom(
-                      itemModel.getNumberOfUnits(), itemModel.getNumberOfCases()));
+//                  InventoryCount.countFrom(
+//                      itemModel.getNumberOfUnits(), itemModel.getNumberOfCases())
+                  Count.ofZero()
+              );
             });
     repository.updateItem(i);
   }

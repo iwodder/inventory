@@ -9,29 +9,17 @@ public class InventoryItemDto {
   private String location;
   private String units;
   private String itemsPerCase;
-  private String unitPrice;
-  private String casePrice;
-  private String numberOfUnits;
-  private String numberOfCases;
 
   public InventoryItemDto(
       String id,
       String name,
       String location,
       String units,
-      String itemsPerCase,
-      String unitPrice,
-      String casePrice,
-      String numberOfUnits,
-      String numberOfCases) {
+      String itemsPerCase) {
     this.name = name;
     this.location = location;
     this.units = units;
     this.itemsPerCase = itemsPerCase;
-    this.unitPrice = unitPrice;
-    this.casePrice = casePrice;
-    this.numberOfUnits = numberOfUnits;
-    this.numberOfCases = numberOfCases;
   }
 
   public InventoryItemDto(Item item) {
@@ -40,11 +28,7 @@ public class InventoryItemDto {
         item.getName(),
         item.getLocation().getName(),
         item.getUom().getUnit(),
-        Integer.toString(item.getUom().getItemsPerCase()),
-        item.getPrice().getUnitPrice().toString(),
-        item.getPrice().getUnitPrice().toString(),
-        Double.toString(item.getCount().getUnits()),
-        Double.toString(item.getCount().getCases()));
+        Integer.toString(item.getUom().getItemsPerCase()));
   }
 
   public String getId() {
@@ -85,37 +69,5 @@ public class InventoryItemDto {
 
   public void setItemsPerCase(String itemsPerCase) {
     this.itemsPerCase = itemsPerCase;
-  }
-
-  public String getUnitPrice() {
-    return unitPrice;
-  }
-
-  public void setUnitPrice(String unitPrice) {
-    this.unitPrice = unitPrice;
-  }
-
-  public String getCasePrice() {
-    return casePrice;
-  }
-
-  public void setCasePrice(String casePrice) {
-    this.casePrice = casePrice;
-  }
-
-  public String getNumberOfUnits() {
-    return numberOfUnits;
-  }
-
-  public void setNumberOfUnits(String numberOfUnits) {
-    this.numberOfUnits = numberOfUnits;
-  }
-
-  public String getNumberOfCases() {
-    return numberOfCases;
-  }
-
-  public void setNumberOfCases(String numberOfCases) {
-    this.numberOfCases = numberOfCases;
   }
 }

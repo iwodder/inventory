@@ -5,11 +5,11 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import com.wodder.inventory.application.InventoryService;
+import com.wodder.inventory.domain.model.inventory.Count;
 import com.wodder.inventory.domain.model.inventory.Inventory;
-import com.wodder.inventory.domain.model.inventory.InventoryCount;
 import com.wodder.inventory.domain.model.inventory.InventoryId;
-import com.wodder.inventory.domain.model.inventory.InventoryLocation;
 import com.wodder.inventory.domain.model.inventory.Item;
+import com.wodder.inventory.domain.model.inventory.StorageLocation;
 import com.wodder.inventory.domain.model.product.Category;
 import com.wodder.inventory.domain.model.product.Location;
 import com.wodder.inventory.domain.model.product.Price;
@@ -135,17 +135,16 @@ class InventoryServiceImplTest {
   @DisplayName("Should be able to generate a report between two dates")
   void inventoryReport() {
     Item sampleItem = new Item(
-        "Cheese", InventoryLocation.of("Refrigerator"),
-        new UnitOfMeasurement("Ounces", 4),
-        new Price("0.98", "3.96"));
+        "Cheese", StorageLocation.of("Refrigerator"),
+        new UnitOfMeasurement("Ounces", 4));
     Inventory start = new Inventory(LocalDate.of(2022, 5, 1));
     start.addItemToInventory(sampleItem);
     start.updateInventoryCount("Cheese", "Refrigerator",
-        InventoryCount.countFrom("1.0", "0.0"));
+        Count.countFrom("1.0", "0.0"));
     Inventory end = new Inventory(LocalDate.of(2022, 5, 2));
     end.addItemToInventory(sampleItem);
     end.updateInventoryCount("Cheese", "Refrigerator",
-        InventoryCount.countFrom("0.5", "0.0"));
+        Count.countFrom("0.5", "0.0"));
     Repository<Inventory, InventoryId> r = psf.getRepository(Inventory.class);
     r.createItem(start);
     r.createItem(end);
@@ -158,17 +157,16 @@ class InventoryServiceImplTest {
   @DisplayName("Report should include date of generation")
   void inventoryReportDate() {
     Item sampleItem = new Item(
-        "Cheese", InventoryLocation.of("Refrigerator"),
-        new UnitOfMeasurement("Ounces", 4),
-        new Price("0.98", "3.96"));
+        "Cheese", StorageLocation.of("Refrigerator"),
+        new UnitOfMeasurement("Ounces", 4));
     Inventory start = new Inventory(LocalDate.of(2022, 5, 1));
     start.addItemToInventory(sampleItem);
     start.updateInventoryCount("Cheese", "Refrigerator",
-        InventoryCount.countFrom("1.0", "0.0"));
+        Count.countFrom("1.0", "0.0"));
     Inventory end = new Inventory(LocalDate.of(2022, 5, 2));
     end.addItemToInventory(sampleItem);
     end.updateInventoryCount("Cheese", "Refrigerator",
-        InventoryCount.countFrom("0.5", "0.0"));
+        Count.countFrom("0.5", "0.0"));
     Repository<Inventory, InventoryId> r = psf.getRepository(Inventory.class);
     r.createItem(start);
     r.createItem(end);
@@ -181,17 +179,16 @@ class InventoryServiceImplTest {
   @DisplayName("Should generate an inventory report")
   void generate() {
     Item sampleItem = new Item(
-        "Cheese", InventoryLocation.of("Refrigerator"),
-        new UnitOfMeasurement("Ounces", 4),
-        new Price("0.98", "3.96"));
+        "Cheese", StorageLocation.of("Refrigerator"),
+        new UnitOfMeasurement("Ounces", 4));
     Inventory start = new Inventory(LocalDate.of(2022, 5, 1));
     start.addItemToInventory(sampleItem);
     start.updateInventoryCount("Cheese", "Refrigerator",
-        InventoryCount.countFrom("1.0", "0.0"));
+        Count.countFrom("1.0", "0.0"));
     Inventory end = new Inventory(LocalDate.of(2022, 5, 2));
     end.addItemToInventory(sampleItem);
     end.updateInventoryCount("Cheese", "Refrigerator",
-        InventoryCount.countFrom("0.5", "0.0"));
+        Count.countFrom("0.5", "0.0"));
     Repository<Inventory, InventoryId> r = psf.getRepository(Inventory.class);
     r.createItem(start);
     r.createItem(end);
