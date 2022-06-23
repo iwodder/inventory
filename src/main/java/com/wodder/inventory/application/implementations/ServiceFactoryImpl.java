@@ -10,7 +10,6 @@ import com.wodder.inventory.domain.model.product.Category;
 import com.wodder.inventory.domain.model.product.Location;
 import com.wodder.inventory.domain.model.product.Product;
 import com.wodder.inventory.persistence.PersistenceFactory;
-import javax.enterprise.inject.Produces;
 import javax.inject.Inject;
 
 public class ServiceFactoryImpl implements ServiceFactory {
@@ -55,10 +54,5 @@ public class ServiceFactoryImpl implements ServiceFactory {
       e.printStackTrace();
     }
     return null;
-  }
-
-  @Produces
-  public ItemService itemService() {
-    return new ItemServiceImpl(factory.getRepository(Item.class));
   }
 }

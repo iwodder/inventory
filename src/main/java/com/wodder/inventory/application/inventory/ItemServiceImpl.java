@@ -6,12 +6,15 @@ import com.wodder.inventory.domain.model.inventory.StorageLocation;
 import com.wodder.inventory.dto.ItemDto;
 import com.wodder.inventory.persistence.Repository;
 import java.util.Optional;
+import javax.inject.Inject;
+import javax.inject.Named;
 
 
 public class ItemServiceImpl implements ItemService {
   private final Repository<Item, ItemId> repository;
 
-  public ItemServiceImpl(Repository<Item, ItemId> repository) {
+  @Inject
+  public ItemServiceImpl(@Named("InMemoryItemRepository") Repository<Item, ItemId> repository) {
     this.repository = repository;
   }
 
@@ -25,6 +28,15 @@ public class ItemServiceImpl implements ItemService {
     Item result = repository.createItem(newItem);
 
     return result.getId().getValue();
+  }
+
+  @Override
+  public String addItem(AddItemCommand command) {
+    return addItem(
+        command.getProductId(),
+        command.getName(),
+        command.getLocation(),
+        command.getMeasurementUnit());
   }
 
   @Override

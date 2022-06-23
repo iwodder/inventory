@@ -1,27 +1,24 @@
 package com.wodder.inventory.apapters;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
 
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.wodder.inventory.application.inventory.ItemService;
+import com.wodder.inventory.application.inventory.ItemServiceImpl;
+import com.wodder.inventory.domain.model.inventory.Item;
+import com.wodder.inventory.persistence.TestPersistenceFactory;
 import javax.ws.rs.client.Entity;
+import javax.ws.rs.core.Application;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import org.glassfish.jersey.internal.inject.AbstractBinder;
 import org.glassfish.jersey.server.ResourceConfig;
 import org.glassfish.jersey.test.JerseyTest;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-// Demonstrates unit testing JAX-RS/Jersey REST APIS using Weld
-// Weld-SE
-class InventoryRestAdapterTest extends JerseyTest {
-
-  @Override
-  protected ResourceConfig configure() {
-    return new ResourceConfig(InventoryRestAdapter.class);
-  }
+// Demonstrates unit testing JAX-RS/Jersey REST APIS using HK2
+// HK2 is manually configured in this example
+class InventoryRestAdapterTestTwo extends JerseyTest {
 
   @Test
   @DisplayName("Unrecognized item id returns a 404")
@@ -45,20 +42,23 @@ class InventoryRestAdapterTest extends JerseyTest {
   @Test
   @DisplayName("Creating an item returns the id")
   void createItem() {
-    ObjectMapper mapper = new ObjectMapper();
-    ObjectNode input = mapper.createObjectNode();
-    input.put("productId", "123");
-    input.put("name", "Chocolate Milk");
-    input.put("location", "Refrigerator");
-    input.put("measurementUnit", "Gallons");
-
-    Response r = target("inventory/item")
-        .request()
-        .post(Entity.json(input.toString()));
+    Response r = target("inventory/item").request().post(Entity.text("TEST"));
 
     assertEquals(200, r.getStatus());
-    JsonNode response = r.readEntity(JsonNode.class);
+    assertEquals("{\"id\":\"item123\"}", r.readEntity(String.class));
+  }
 
-    assertFalse(response.get("id").toString().isBlank());
+  @Override
+  protected Application configure() {
+    return new ResourceConfig(InventoryRestAdapter.class).register(new TestBinder());
+  }
+
+  public static class TestBinder extends AbstractBinder {
+
+    @Override
+    protected void configure() {
+      bind(new ItemServiceImpl(TestPersistenceFactory.getPopulated().getRepository(Item.class)))
+          .to(ItemService.class);
+    }
   }
 }

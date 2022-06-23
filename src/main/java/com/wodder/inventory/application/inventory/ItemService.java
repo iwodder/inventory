@@ -7,6 +7,8 @@ public interface ItemService {
 
   String addItem(String productId, String name, String location, String measurementUnit);
 
+  String addItem(AddItemCommand command);
+
   Optional<ItemDto> loadItem(String id);
 
   void deleteItem(String id);

@@ -1,9 +1,12 @@
 package com.wodder.inventory.apapters;
 
+import com.wodder.inventory.application.inventory.AddItemCommand;
 import com.wodder.inventory.application.inventory.ItemService;
 import com.wodder.inventory.dto.ItemDto;
 import java.util.Optional;
 import javax.inject.Inject;
+import javax.json.Json;
+import javax.json.JsonObject;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
@@ -13,10 +16,12 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 @Path("inventory")
 public class InventoryRestAdapter {
-
+  private static final Logger LOGGER = LoggerFactory.getLogger(InventoryRestAdapter.class);
   private final ItemService service;
 
   @Inject
@@ -39,8 +44,11 @@ public class InventoryRestAdapter {
   @POST
   @Path("item")
   @Produces(MediaType.APPLICATION_JSON)
-  @Consumes(MediaType.APPLICATION_JSON)
-  public Response createItem(ItemDto itemDto) {
-    return Response.serverError().build();
+  @Consumes({MediaType.APPLICATION_JSON, MediaType.TEXT_PLAIN})
+  public Response createItem(AddItemCommand command) {
+    LOGGER.info("createItem >> Received json {}", command);
+    String id = service.addItem(command);
+    JsonObject obj = Json.createObjectBuilder().add("id", id).build();
+    return Response.ok(obj.toString()).build();
   }
 }
