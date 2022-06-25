@@ -2,24 +2,32 @@ package com.wodder.inventory.dto;
 
 import java.io.Serializable;
 
-public class InventoryCountDto implements Serializable {
+public class CountDto implements Serializable {
   private static final long serialVersionUID = 1L;
+  private String itemId;
   private String productId;
   private double units;
   private double cases;
 
-  public InventoryCountDto(double units, double cases) {
+  public CountDto(double units, double cases) {
     this.units = units;
     this.cases = cases;
   }
 
-  public InventoryCountDto(String productId) {
+  public CountDto(String productId) {
     this.productId = productId;
     this.units = 0.0;
     this.cases = 0.0;
   }
 
-  public InventoryCountDto(String productId, double units, double cases) {
+  public CountDto(String productId, double units, double cases) {
+    this.productId = productId;
+    this.units = units;
+    this.cases = cases;
+  }
+
+  public CountDto(String itemId, String productId, double units, double cases) {
+    this.itemId = itemId;
     this.productId = productId;
     this.units = units;
     this.cases = cases;
@@ -33,19 +41,27 @@ public class InventoryCountDto implements Serializable {
     this.productId = productId;
   }
 
-  public double getUnits() {
-    return units;
+  public String getUnits() {
+    return Double.toString(units);
   }
 
   public void setUnits(double units) {
     this.units = units;
   }
 
-  public double getCases() {
-    return cases;
+  public String getCases() {
+    return Double.toString(cases);
   }
 
   public void setCases(double cases) {
     this.cases = cases;
+  }
+
+  public String getItemId() {
+    return itemId;
+  }
+
+  public void setItemId(String itemId) {
+    this.itemId = itemId;
   }
 }

@@ -2,6 +2,7 @@ package com.wodder.inventory.persistence;
 
 import com.wodder.inventory.domain.model.Entity;
 import com.wodder.inventory.domain.model.inventory.Inventory;
+import com.wodder.inventory.domain.model.inventory.Item;
 import com.wodder.inventory.domain.model.product.Category;
 import com.wodder.inventory.domain.model.product.Location;
 import com.wodder.inventory.domain.model.product.Price;
@@ -13,12 +14,14 @@ public class TestPersistenceFactory implements PersistenceFactory {
   private final InMemoryCategoryRepository categoryRepository;
   private final InMemoryLocationRepository locationRepository;
   private final InMemoryInventoryRepository inventoryRepository;
+  private final InMemoryItemRepository itemRepository;
 
   private TestPersistenceFactory() {
     productRepository = new InMemoryProductRepository();
     categoryRepository = new InMemoryCategoryRepository();
     locationRepository = new InMemoryLocationRepository();
     inventoryRepository = new InMemoryInventoryRepository();
+    itemRepository = new InMemoryItemRepository();
   }
 
   public static PersistenceFactory getUnpopulated() {
@@ -59,6 +62,10 @@ public class TestPersistenceFactory implements PersistenceFactory {
       @SuppressWarnings("unchecked")
       Repository<T, U> c = (Repository<T, U>) productRepository;
       return c;
+    } else if (clazz.isAssignableFrom(Item.class)) {
+      @SuppressWarnings("unchecked")
+      Repository<T, U> c = (Repository<T, U>) itemRepository;
+      return c;
     }
     return null;
   }
@@ -98,5 +105,30 @@ public class TestPersistenceFactory implements PersistenceFactory {
     productRepository.createItem(
         new Product(
             "Pistachios", c4, l1, new UnitOfMeasurement("Pounds", 1), new Price("10.29", "10.29")));
+
+    itemRepository.createItem(
+        Item.builder()
+            .withId("item123")
+            .withName("2% Milk")
+            .withLocation("Refrigerator")
+            .withUnits("Gallon")
+            .build()
+    );
+    itemRepository.createItem(
+        Item.builder()
+            .withId("item234")
+            .withName("Fabric Softener")
+            .withLocation("Laundry Room")
+            .withUnits("Gallon")
+            .build()
+    );
+    itemRepository.createItem(
+        Item.builder()
+            .withId("item345")
+            .withName("Chicken Breast")
+            .withLocation("Refrigerator")
+            .withUnits("Pounds")
+            .build()
+    );
   }
 }

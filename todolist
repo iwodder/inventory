@@ -46,9 +46,19 @@ Creating a new inventory
   - Add all items to inventory
 
 Inventory Items
-  - are entities, location may change over time, name may change over time
+  - are unique with respect to name and location
   - uniquely identified by an internal item id
   -
+
+
+
+Managing Item Locations for Inventory
+ - Should inventory be a mapping between items to locations? -> It is but its not in the sense of a RDBS.
+ - Should Item know it's location? Yes, but how to handle....
+    - Item is identified by an ID but...
+        - the storage location and name must be unique
+ - Should Location know which items it has?
+    - No because this gets back to being a mapping table.
 
 1. Remove the location from Product.
 2. Remove price and category from item

@@ -23,7 +23,7 @@ public class InventoryId {
     return new InventoryId();
   }
 
-  public String getId() {
+  public String getValue() {
     return id;
   }
 

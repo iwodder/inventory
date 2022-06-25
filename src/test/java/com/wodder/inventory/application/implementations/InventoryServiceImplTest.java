@@ -1,29 +1,20 @@
 package com.wodder.inventory.application.implementations;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
 
-import com.wodder.inventory.application.InventoryService;
+import com.wodder.inventory.application.inventory.InventoryService;
+import com.wodder.inventory.application.inventory.InventoryServiceImpl;
+import com.wodder.inventory.domain.model.inventory.Count;
 import com.wodder.inventory.domain.model.inventory.Inventory;
-import com.wodder.inventory.domain.model.inventory.InventoryCount;
-import com.wodder.inventory.domain.model.inventory.InventoryId;
-import com.wodder.inventory.domain.model.inventory.InventoryLocation;
 import com.wodder.inventory.domain.model.inventory.Item;
-import com.wodder.inventory.domain.model.product.Category;
-import com.wodder.inventory.domain.model.product.Location;
-import com.wodder.inventory.domain.model.product.Price;
-import com.wodder.inventory.domain.model.product.Product;
-import com.wodder.inventory.domain.model.product.ProductId;
-import com.wodder.inventory.domain.model.product.UnitOfMeasurement;
-import com.wodder.inventory.dto.InventoryCountDto;
-import com.wodder.inventory.dto.InventoryDto;
-import com.wodder.inventory.dto.ReportDto;
+import com.wodder.inventory.domain.model.inventory.ItemId;
+import com.wodder.inventory.dto.CountDto;
 import com.wodder.inventory.persistence.PersistenceFactory;
 import com.wodder.inventory.persistence.Repository;
 import com.wodder.inventory.persistence.TestPersistenceFactory;
 import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
 import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
@@ -41,166 +32,97 @@ class InventoryServiceImplTest {
   @BeforeEach
   void setup() {
     psf = TestPersistenceFactory.getUnpopulated();
-    invSvc =
-        new InventoryServiceImpl(
-            psf.getInventoryRepository(),
-            new ProductServiceImpl(
-                psf.getRepository(Product.class),
-                psf.getRepository(Category.class),
-                psf.getRepository(Location.class)
-            ));
-  }
-
-  @Test
-  @DisplayName("Newly created inventory has today's date")
-  void createInventory() {
-    InventoryDto mdl = invSvc.createInventory();
-    assertInventoryDateIsToday(mdl);
+    invSvc = new InventoryServiceImpl(psf.getInventoryRepository(), psf.getRepository(Item.class));
   }
 
   @Test
   @DisplayName("Creating a new inventory saves it to the database")
-  void createInventory1() {
-    InventoryDto model = invSvc.createInventory();
-    InventoryDto result = invSvc.loadInventory(model.getId()).get();
+  void createInv() {
+    Inventory model = invSvc.createInventory();
+
+    Inventory result =
+        invSvc.loadInventory(model.getId().getValue())
+            .orElseGet(() ->
+                fail(String.format("Expected to find inventory of id [ %s ]", model.getId())));
+
     assertEquals(model, result);
+    assertInventoryDateIsToday(model);
   }
 
   @Test
   @DisplayName("Inventory is created with active products")
-  void createInventory2() {
-    initializeProducts();
-    InventoryDto dto = invSvc.createInventory();
+  void populatedInv() {
+    initializeItems();
+    Inventory dto = invSvc.createInventory();
+
     assertCorrectItemsInInventory(3, dto);
   }
 
   @Test
   @DisplayName("Inventory is created without any products")
-  void createInventory3() {
-    InventoryDto dto = invSvc.createEmptyInventory();
+  void emptyInv() {
+    Inventory dto = invSvc.createEmptyInventory();
+
     assertCorrectItemsInInventory(0, dto);
-    assertResultIsPresent(invSvc.loadInventory(dto.getId()));
   }
 
   @Test
-  @DisplayName("Can add a single count to inventory")
+  @DisplayName("Can change a single count to inventory")
   void addInventoryCount() {
-    InventoryDto dto = invSvc.createInventory();
-    initializeProducts();
+    initializeItems();
+    Inventory dto = invSvc.createInventory();
 
-    InventoryDto model = invSvc.addInventoryCount(dto.getId(), "234", 2.0, 0.25).get();
+    Inventory result = invSvc.changeInventoryCount(
+        dto.getId().getValue(),
+        "item:123",
+        "2.0",
+        "0.25").get();
 
-    assertCorrectItemsInInventory(1, model);
+
+    assertEquals(Count.countOf("2.0", "0.25"), result.getCount("2% Milk").get());
   }
 
   @Test
   @DisplayName("Cannot add inventory count to non-existent inventory")
   void addInventoryCountUnknown() {
-    assertResultIsEmpty(invSvc.addInventoryCount("123", "abc", 2.0, 0.25));
+    assertResultIsEmpty(invSvc.changeInventoryCount("123", "abc", "2.0", "0.25"));
   }
 
   @Test
   @DisplayName("Can add multiple inventory counts to inventory")
   void addInventoryCounts() {
-    initializeProducts();
-    InventoryDto inv = invSvc.createInventory();
+    initializeItems();
+    String id = invSvc.createInventory().getId().getValue();
 
-    InventoryDto m =
-        invSvc
-            .addInventoryCounts(
-                inv.getId(),
+    Inventory m =
+        invSvc.updateInventoryCounts(
+                id,
                 Arrays.asList(
-                    new InventoryCountDto("234", 1.0, 1.0),
-                    new InventoryCountDto("345", .23, 0.25),
-                    new InventoryCountDto("456", 1.1, 1.23)))
+                    new CountDto("item:123", 1.0, 1.0),
+                    new CountDto("item:234", .23, 0.25),
+                    new CountDto("item:345", 1.1, 1.23)))
             .get();
 
-    assertCorrectItemsInInventory(3, m);
+    assertEquals(
+        Count.countOf("1.0", "1.0"), invSvc.getCount(id, "item:123").get());
+    assertEquals(
+        Count.countOf(".23", ".25"), invSvc.getCount(id, "item:234").get());
+    assertEquals(
+        Count.countOf("1.1", "1.23"), invSvc.getCount(id, "item:345").get());
   }
 
   @Test
   @DisplayName("Should be able to load a saved inventory")
   void loadInventory() {
-    InventoryDto dto = invSvc.createInventory();
-    assertResultIsPresent(invSvc.loadInventory(dto.getId()));
+    Inventory dto = invSvc.createInventory();
+
+    assertResultIsPresent(invSvc.loadInventory(dto.getId().getValue()));
   }
 
   @Test
   @DisplayName("Should not find non-existent inventory id")
   void loadInventory2() {
     assertResultIsEmpty(invSvc.loadInventory("abc-123"));
-  }
-
-  @Test
-  @DisplayName("Should be able to generate a report between two dates")
-  void inventoryReport() {
-    Item sampleItem = new Item(
-        "Cheese", InventoryLocation.of("Refrigerator"),
-        new UnitOfMeasurement("Ounces", 4),
-        new Price("0.98", "3.96"));
-    Inventory start = new Inventory(LocalDate.of(2022, 5, 1));
-    start.addItemToInventory(sampleItem);
-    start.updateInventoryCount("Cheese", "Refrigerator",
-        InventoryCount.countFrom("1.0", "0.0"));
-    Inventory end = new Inventory(LocalDate.of(2022, 5, 2));
-    end.addItemToInventory(sampleItem);
-    end.updateInventoryCount("Cheese", "Refrigerator",
-        InventoryCount.countFrom("0.5", "0.0"));
-    Repository<Inventory, InventoryId> r = psf.getRepository(Inventory.class);
-    r.createItem(start);
-    r.createItem(end);
-
-    ReportDto dto = invSvc.generateInventoryReport(LocalDate.of(2022, 5, 1), LocalDate.of(2022, 5, 2));
-    assertNotNull(dto);
-  }
-
-  @Test
-  @DisplayName("Report should include date of generation")
-  void inventoryReportDate() {
-    Item sampleItem = new Item(
-        "Cheese", InventoryLocation.of("Refrigerator"),
-        new UnitOfMeasurement("Ounces", 4),
-        new Price("0.98", "3.96"));
-    Inventory start = new Inventory(LocalDate.of(2022, 5, 1));
-    start.addItemToInventory(sampleItem);
-    start.updateInventoryCount("Cheese", "Refrigerator",
-        InventoryCount.countFrom("1.0", "0.0"));
-    Inventory end = new Inventory(LocalDate.of(2022, 5, 2));
-    end.addItemToInventory(sampleItem);
-    end.updateInventoryCount("Cheese", "Refrigerator",
-        InventoryCount.countFrom("0.5", "0.0"));
-    Repository<Inventory, InventoryId> r = psf.getRepository(Inventory.class);
-    r.createItem(start);
-    r.createItem(end);
-
-    ReportDto dto = invSvc.generateInventoryReport(LocalDate.of(2022, 5, 1), LocalDate.of(2022, 5, 2));
-    assertEquals(LocalDate.now().format(DateTimeFormatter.ISO_DATE), dto.getGenerationDate());
-  }
-
-  @Test
-  @DisplayName("Should generate an inventory report")
-  void generate() {
-    Item sampleItem = new Item(
-        "Cheese", InventoryLocation.of("Refrigerator"),
-        new UnitOfMeasurement("Ounces", 4),
-        new Price("0.98", "3.96"));
-    Inventory start = new Inventory(LocalDate.of(2022, 5, 1));
-    start.addItemToInventory(sampleItem);
-    start.updateInventoryCount("Cheese", "Refrigerator",
-        InventoryCount.countFrom("1.0", "0.0"));
-    Inventory end = new Inventory(LocalDate.of(2022, 5, 2));
-    end.addItemToInventory(sampleItem);
-    end.updateInventoryCount("Cheese", "Refrigerator",
-        InventoryCount.countFrom("0.5", "0.0"));
-    Repository<Inventory, InventoryId> r = psf.getRepository(Inventory.class);
-    r.createItem(start);
-    r.createItem(end);
-
-    ReportDto dto = invSvc.generateInventoryReport(
-        LocalDate.of(2022, 5, 1),
-        LocalDate.of(2022, 5, 2));
-
-    assertEquals(1, dto.getUsageCnt());
   }
 
   private void assertResultIsEmpty(Optional<?> result) {
@@ -211,48 +133,39 @@ class InventoryServiceImplTest {
     assertTrue(result.isPresent());
   }
 
-  private void assertCorrectItemsInInventory(int numberOfItems, InventoryDto m) {
+  private void assertCorrectItemsInInventory(int numberOfItems, Inventory m) {
     assertEquals(numberOfItems, m.numberOfItems());
   }
 
-  private void assertInventoryDateIsToday(InventoryDto mdl) {
+  private void assertInventoryDateIsToday(Inventory mdl) {
     assertEquals(LocalDate.now(), mdl.getInventoryDate());
   }
 
-  private void initializeProducts() {
-    Repository<Product, ProductId> product = psf.getRepository(Product.class);
-    product.createItem(
-        new Product(
-            ProductId.productIdOf("234"),
-            "2% Milk",
-            new Category("Dairy"),
-            new Location("Refrigerator"),
-            new UnitOfMeasurement("GAL", 4),
-            new Price("2.35", "11.00")));
-    product.createItem(
-        new Product(
-            ProductId.productIdOf("345"),
-            "Cheese",
-            new Category("Dairy"),
-            new Location("Refrigerator"),
-            new UnitOfMeasurement("GAL", 4),
-            new Price("2.35", "11.00")));
-    product.createItem(
-        new Product(
-            ProductId.productIdOf("456"),
-            "Yogurt",
-            new Category("Dairy"),
-            new Location("Refrigerator"),
-            new UnitOfMeasurement("GAL", 4),
-            new Price("2.35", "11.00")));
-    Product p = new Product(
-        ProductId.productIdOf("456"),
-        "Yogurt",
-        new Category("Dairy"),
-        new Location("Refrigerator"),
-        new UnitOfMeasurement("GAL", 4),
-        new Price("2.35", "11.00"));
-    p.inactivate();
-    product.createItem(p);
+  private void initializeItems() {
+    Repository<Item, ItemId> itemRepository = psf.getRepository(Item.class);
+    itemRepository.createItem(
+        Item.builder()
+            .withId("item:123")
+            .withName("2% Milk")
+            .withLocation("Refrigerator")
+            .withUnits("Gallon")
+            .build()
+    );
+    itemRepository.createItem(
+        Item.builder()
+            .withId("item:234")
+            .withName("Fabric Softener")
+            .withLocation("Laundry Room")
+            .withUnits("Gallon")
+            .build()
+    );
+    itemRepository.createItem(
+        Item.builder()
+            .withId("item:345")
+            .withName("Chicken Breast")
+            .withLocation("Refrigerator")
+            .withUnits("Pounds")
+            .build()
+    );
   }
 }

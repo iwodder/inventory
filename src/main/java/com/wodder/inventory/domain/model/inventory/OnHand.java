@@ -7,12 +7,12 @@ import java.util.Objects;
 
 public class OnHand {
 
-  private final InventoryCount count;
+  private final Count count;
   private final Price price;
   private final UnitOfMeasurement uom;
 
 
-  private OnHand(InventoryCount count, Price price, UnitOfMeasurement uom) {
+  private OnHand(Count count, Price price, UnitOfMeasurement uom) {
     this.count = count;
     this.price = price;
     this.uom = uom;
@@ -20,13 +20,13 @@ public class OnHand {
 
   public static OnHand zero() {
     return new OnHand(
-        InventoryCount.ofZero(),
+        Count.ofZero(),
         Price.ofZero(),
         UnitOfMeasurement.empty()
     );
   }
 
-  public static OnHand from(InventoryCount count, Price price, UnitOfMeasurement uom) {
+  public static OnHand from(Count count, Price price, UnitOfMeasurement uom) {
     return new OnHand(count, price, uom);
   }
 
