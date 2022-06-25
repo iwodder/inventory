@@ -8,6 +8,7 @@ import javax.inject.Inject;
 import javax.json.Json;
 import javax.json.JsonObject;
 import javax.ws.rs.Consumes;
+import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
@@ -33,6 +34,7 @@ public class InventoryRestAdapter {
   @Path("{itemId}")
   @Produces(MediaType.APPLICATION_JSON)
   public Response getItem(@PathParam("itemId") String id) {
+    LOGGER.info("getItem >> Received id {}", id);
     Optional<ItemDto> dto = service.loadItem(id);
     if (dto.isPresent()) {
       return Response.ok(dto.get()).build();
@@ -44,11 +46,22 @@ public class InventoryRestAdapter {
   @POST
   @Path("item")
   @Produces(MediaType.APPLICATION_JSON)
-  @Consumes({MediaType.APPLICATION_JSON, MediaType.TEXT_PLAIN})
+  @Consumes(MediaType.APPLICATION_JSON)
   public Response createItem(AddItemCommand command) {
-    LOGGER.info("createItem >> Received json {}", command);
+    LOGGER.info("createItem >> Received command {}", command);
     String id = service.addItem(command);
     JsonObject obj = Json.createObjectBuilder().add("id", id).build();
     return Response.ok(obj.toString()).build();
+  }
+
+  @DELETE
+  @Path("{itemId}")
+  @Produces(MediaType.APPLICATION_JSON)
+  public Response deleteItem(@PathParam("itemId") String id) {
+    LOGGER.info("deleteItem >> Received id {}", id);
+    service.deleteItem(id);
+    return Response.ok(
+        Json.createObjectBuilder().add("result", "success").build().toString()
+    ).build();
   }
 }

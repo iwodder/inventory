@@ -61,4 +61,13 @@ class InventoryRestAdapterTest extends JerseyTest {
 
     assertFalse(response.get("id").toString().isBlank());
   }
+
+  @Test
+  @DisplayName("Deleting an item returns 200 and success")
+  void deleteItem() {
+    Response r = target("inventory/item123").request(MediaType.APPLICATION_JSON).delete();
+
+    assertEquals(200, r.getStatus());
+    assertEquals("{\"result\":\"success\"}", r.readEntity(String.class));
+  }
 }
