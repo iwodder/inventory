@@ -22,6 +22,7 @@ public class ItemServiceImpl implements ItemService {
   public String addItem(String productId, String name, String location, String measurementUnit) {
     Item newItem = Item.builder()
         .withName(name)
+        .withProductId(productId)
         .withLocation(location)
         .withUnits(measurementUnit)
         .build();
@@ -46,6 +47,7 @@ public class ItemServiceImpl implements ItemService {
     return opt.map((item) ->
         ItemDto.builder()
             .withId(item.getId().getValue())
+            .withProductId(item.getProductId())
             .withName(item.getName())
             .withLocation(item.getLocation().getName())
             .build());

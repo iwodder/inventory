@@ -4,6 +4,7 @@ import java.io.Serializable;
 
 public class CountDto implements Serializable {
   private static final long serialVersionUID = 1L;
+  private String itemId;
   private String productId;
   private double units;
   private double cases;
@@ -20,6 +21,13 @@ public class CountDto implements Serializable {
   }
 
   public CountDto(String productId, double units, double cases) {
+    this.productId = productId;
+    this.units = units;
+    this.cases = cases;
+  }
+
+  public CountDto(String itemId, String productId, double units, double cases) {
+    this.itemId = itemId;
     this.productId = productId;
     this.units = units;
     this.cases = cases;
@@ -47,5 +55,13 @@ public class CountDto implements Serializable {
 
   public void setCases(double cases) {
     this.cases = cases;
+  }
+
+  public String getItemId() {
+    return itemId;
+  }
+
+  public void setItemId(String itemId) {
+    this.itemId = itemId;
   }
 }

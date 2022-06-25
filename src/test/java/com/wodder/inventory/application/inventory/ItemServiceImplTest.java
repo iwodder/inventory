@@ -36,6 +36,7 @@ class ItemServiceImplTest {
     assertNotEquals("", id);
     assertEquals("2% Milk", item.getName());
     assertEquals("Refrigerator", item.getLocation());
+    assertEquals("p123", item.getProductId());
   }
 
   @Test

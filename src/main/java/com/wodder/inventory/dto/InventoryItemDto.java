@@ -5,6 +5,7 @@ import com.wodder.inventory.domain.model.inventory.Item;
 public class InventoryItemDto {
 
   private String id;
+  private String productId;
   private String name;
   private String location;
   private String units;
@@ -22,9 +23,25 @@ public class InventoryItemDto {
     this.itemsPerCase = itemsPerCase;
   }
 
+  public InventoryItemDto(
+      String id,
+      String productId,
+      String name,
+      String location,
+      String units,
+      String itemsPerCase) {
+    this.id = id;
+    this.productId = productId;
+    this.name = name;
+    this.location = location;
+    this.units = units;
+    this.itemsPerCase = itemsPerCase;
+  }
+
   public InventoryItemDto(Item item) {
     this(
         item.getId().getValue(),
+        item.getProductId(),
         item.getName(),
         item.getLocation().getName(),
         item.getUom().getUnit(),
@@ -69,5 +86,13 @@ public class InventoryItemDto {
 
   public void setItemsPerCase(String itemsPerCase) {
     this.itemsPerCase = itemsPerCase;
+  }
+
+  public String getProductId() {
+    return productId;
+  }
+
+  public void setProductId(String productId) {
+    this.productId = productId;
   }
 }

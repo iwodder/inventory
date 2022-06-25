@@ -227,6 +227,7 @@ class InventoryReportTest {
   void received() {
     Item sampleItem = new Item(
         ItemId.of("123"),
+        "p123",
         "Cheese", StorageLocation.of("Refrigerator"),
         new UnitOfMeasurement("Ounces", 4));
     Inventory start = new Inventory(LocalDate.of(2022, 5, 1));

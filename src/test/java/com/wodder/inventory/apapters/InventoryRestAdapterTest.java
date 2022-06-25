@@ -37,8 +37,9 @@ class InventoryRestAdapterTest extends JerseyTest {
     Response r = target("inventory/item123").request(MediaType.APPLICATION_JSON).get();
 
     assertEquals(200, r.getStatus());
+    assertEquals(MediaType.APPLICATION_JSON_TYPE, r.getMediaType());
     assertEquals(
-        "{\"id\":\"item123\",\"name\":\"2% Milk\",\"location\":\"Refrigerator\"}",
+        "{\"id\":\"item123\",\"productId\":\"p123\",\"name\":\"2% Milk\",\"location\":\"Refrigerator\"}",
         r.readEntity(String.class));
   }
 

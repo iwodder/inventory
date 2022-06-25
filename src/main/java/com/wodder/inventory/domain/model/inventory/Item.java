@@ -11,22 +11,25 @@ public class Item extends Entity<ItemId> {
 
   private static final Item EMPTY = new Item(
       ItemId.emptyId(),
+      "N/A",
       "EMPTY",
       StorageLocation.unassigned(),
       UnitOfMeasurement.empty());
 
   private final String name;
+  private final String productId;
   private StorageLocation location;
-
   private final UnitOfMeasurement uom;
 
   public Item(
       ItemId id,
+      String productId,
       String name,
       StorageLocation location,
       UnitOfMeasurement uom) {
     super(id);
     this.name = name;
+    this.productId = productId;
     this.location = location;
     this.uom = uom;
   }
@@ -35,12 +38,13 @@ public class Item extends Entity<ItemId> {
       String name,
       StorageLocation location,
       UnitOfMeasurement uom) {
-    this(ItemId.newId(), name, location, uom);
+    this(ItemId.newId(), "", name, location, uom);
   }
 
   public Item(Item that) {
     this(
         that.id,
+        that.productId,
         that.name,
         that.location,
         new UnitOfMeasurement(that.uom));
@@ -49,6 +53,7 @@ public class Item extends Entity<ItemId> {
   private Item(ItemBuilder b) {
     super(b.id);
     this.name = b.name;
+    this.productId = b.productId;
     this.location = b.location;
     this.uom = b.uom;
   }
@@ -68,6 +73,7 @@ public class Item extends Entity<ItemId> {
   public static Item from(InventoryItemDto model) {
     return new Item(
         ItemId.of(model.getId()),
+        model.getProductId(),
         model.getName(),
         StorageLocation.of(model.getLocation()),
         new UnitOfMeasurement(model.getUnits(), Integer.parseInt(model.getItemsPerCase()))
@@ -81,6 +87,7 @@ public class Item extends Entity<ItemId> {
   public Item updateCount(Count count) {
     return new Item(
         this.id,
+        this.productId,
         this.name,
         this.location,
         this.uom);
@@ -102,6 +109,10 @@ public class Item extends Entity<ItemId> {
     return uom;
   }
 
+  public String getProductId() {
+    return productId;
+  }
+
   public OnHand getOnHand() {
     return OnHand.from(Count.ofZero(), Price.ofZero(), uom);
   }
@@ -121,6 +132,7 @@ public class Item extends Entity<ItemId> {
   public static class ItemBuilder {
 
     private ItemId id;
+    private String productId;
     private String name;
     private StorageLocation location;
     private UnitOfMeasurement uom;
@@ -150,6 +162,11 @@ public class Item extends Entity<ItemId> {
 
     public ItemBuilder withId(String id) {
       this.id = ItemId.of(id);
+      return this;
+    }
+
+    public ItemBuilder withProductId(String productId) {
+      this.productId = productId;
       return this;
     }
 

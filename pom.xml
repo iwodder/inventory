@@ -19,12 +19,14 @@
         <jersey.version>2.36</jersey.version>
         <hibernate.version>5.2.10.Final</hibernate.version>
         <h2.version>2.1.212</h2.version>
-        <primefaces.version>10.0.0</primefaces.version>
         <mockito.version>4.0.0</mockito.version>
         <jacoco.version>0.8.8</jacoco.version>
         <checkstyle.version>3.1.2</checkstyle.version>
         <weld3.version>3.1.7.SP1</weld3.version>
         <jackson.json.version>2.13.3</jackson.json.version>
+        <logback.version>1.2.11</logback.version>
+        <slf4j.version>1.7.36</slf4j.version>
+        <jsonp.version>1.1.4</jsonp.version>
     </properties>
 
     <dependencyManagement>
@@ -59,16 +61,6 @@
             <version>${h2.version}</version>
         </dependency>
         <dependency>
-            <groupId>org.primefaces</groupId>
-            <artifactId>primefaces</artifactId>
-            <version>${primefaces.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.webjars.npm</groupId>
-            <artifactId>primeflex</artifactId>
-            <version>3.0.1</version>
-        </dependency>
-        <dependency>
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter-api</artifactId>
             <scope>test</scope>
@@ -95,7 +87,6 @@
             <version>${mockito.version}</version>
             <scope>test</scope>
         </dependency>
-        <!-- Jersey -->
         <dependency>
             <groupId>org.glassfish.jersey.test-framework</groupId>
             <artifactId>jersey-test-framework-util</artifactId>
@@ -106,12 +97,6 @@
             <artifactId>jersey-test-framework-provider-inmemory</artifactId>
             <scope>test</scope>
         </dependency>
-<!--        <dependency>-->
-<!--            <groupId>org.jboss.weld.se</groupId>-->
-<!--            <artifactId>weld-se</artifactId>-->
-<!--            <version>2.4.8.Final</version>-->
-<!--            <scope>test</scope>-->
-<!--        </dependency>-->
         <dependency>
             <groupId>org.jboss.weld.se</groupId>
             <artifactId>weld-se-core</artifactId>
@@ -123,7 +108,6 @@
             <artifactId>jersey-cdi2-se</artifactId>
             <scope>test</scope>
         </dependency>
-
         <dependency>
             <groupId>org.glassfish.jersey.media</groupId>
             <artifactId>jersey-media-json-jackson</artifactId>
@@ -136,23 +120,22 @@
         <dependency>
             <groupId>org.glassfish</groupId>
             <artifactId>javax.json</artifactId>
-            <version>1.1.4</version>
+            <version>${jsonp.version}</version>
         </dependency>
-
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-api</artifactId>
-            <version>1.7.36</version>
+            <version>${slf4j.version}</version>
         </dependency>
         <dependency>
             <groupId>ch.qos.logback</groupId>
             <artifactId>logback-core</artifactId>
-            <version>1.2.11</version>
+            <version>${logback.version}</version>
         </dependency>
         <dependency>
             <groupId>ch.qos.logback</groupId>
             <artifactId>logback-classic</artifactId>
-            <version>1.2.11</version>
+            <version>${logback.version}</version>
         </dependency>
     </dependencies>
     <build>
@@ -192,12 +175,12 @@
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
                 <version>3.8.1</version>
-<!--                <configuration>-->
-<!--                    <compilerArgs>-->
-<!--                        <arg>-Werror</arg>-->
-<!--                        <arg>-Xlint:all</arg>-->
-<!--                    </compilerArgs>-->
-<!--                </configuration>-->
+                <configuration>
+                    <compilerArgs>
+                        <arg>-Werror</arg>
+                        <arg>-Xlint:all</arg>
+                    </compilerArgs>
+                </configuration>
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
