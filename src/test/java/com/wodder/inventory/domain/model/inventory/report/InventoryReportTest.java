@@ -11,8 +11,8 @@ import com.wodder.inventory.domain.model.inventory.Inventory;
 import com.wodder.inventory.domain.model.inventory.Item;
 import com.wodder.inventory.domain.model.inventory.ItemId;
 import com.wodder.inventory.domain.model.inventory.StorageLocation;
+import com.wodder.inventory.domain.model.inventory.Unit;
 import com.wodder.inventory.domain.model.product.Category;
-import com.wodder.inventory.domain.model.product.UnitOfMeasurement;
 import com.wodder.inventory.dto.ReportDto;
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -95,7 +95,7 @@ class InventoryReportTest {
   void itemUsage() {
     Item sampleItem = new Item(
         "Cheese", StorageLocation.of("Refrigerator"),
-        new UnitOfMeasurement("Ounces", 4));
+        Unit.of("Ounces"));
     Inventory start = new Inventory(LocalDate.of(2022, 5, 1));
     start.addItemToInventory(sampleItem);
     start.updateInventoryCount("Cheese", "Refrigerator",
@@ -121,7 +121,7 @@ class InventoryReportTest {
   void absentItemUsage() {
     Item sampleItem = new Item(
         "Cheese", StorageLocation.of("Refrigerator"),
-        new UnitOfMeasurement("Ounces", 4));
+        Unit.of("Ounces"));
     Inventory start = new Inventory(LocalDate.of(2022, 5, 1));
     Inventory end = new Inventory(LocalDate.of(2022, 5, 2));
     end.addItemToInventory(sampleItem);
@@ -155,7 +155,7 @@ class InventoryReportTest {
   void absentEndingItemUsage() {
     Item sampleItem = new Item(
         "Cheese", StorageLocation.of("Refrigerator"),
-        new UnitOfMeasurement("Ounces", 4));
+        Unit.of("Ounces"));
     Inventory start = new Inventory(LocalDate.of(2022, 5, 1));
     start.addItemToInventory(sampleItem);
     start.updateInventoryCount("Cheese", "Refrigerator",
@@ -176,7 +176,7 @@ class InventoryReportTest {
   void noUsage() {
     Item sampleItem = new Item(
         "Cheese", StorageLocation.of("Refrigerator"),
-        new UnitOfMeasurement("Ounces", 4));
+        Unit.of("Ounces"));
     Inventory start = new Inventory(LocalDate.of(2022, 5, 1));
     start.addItemToInventory(sampleItem);
     start.updateInventoryCount("Cheese", "Refrigerator",
@@ -200,7 +200,7 @@ class InventoryReportTest {
   void noReceived() {
     Item sampleItem = new Item(
         "Cheese", StorageLocation.of("Refrigerator"),
-        new UnitOfMeasurement("Ounces", 4)
+        Unit.of("Ounces")
     );
     Inventory start = new Inventory(LocalDate.of(2022, 5, 1));
     start.addItemToInventory(sampleItem);
@@ -229,7 +229,7 @@ class InventoryReportTest {
         ItemId.of("123"),
         "p123",
         "Cheese", StorageLocation.of("Refrigerator"),
-        new UnitOfMeasurement("Ounces", 4));
+        Unit.of("Ounces"));
     Inventory start = new Inventory(LocalDate.of(2022, 5, 1));
     start.addItemToInventory(sampleItem);
     start.updateInventoryCount("Cheese", "Refrigerator",
@@ -257,7 +257,7 @@ class InventoryReportTest {
   void toDto() {
     Item sampleItem = new Item(
         "Cheese", StorageLocation.of("Refrigerator"),
-        new UnitOfMeasurement("Ounces", 4));
+        Unit.of("Ounces"));
     Inventory start = new Inventory(LocalDate.of(2022, 5, 1));
     start.addItemToInventory(sampleItem);
     start.updateInventoryCount("Cheese", "Refrigerator",
@@ -287,7 +287,7 @@ class InventoryReportTest {
   void toDtoItem() {
     Item sampleItem = new Item(
         "Cheese", StorageLocation.of("Refrigerator"),
-        new UnitOfMeasurement("Ounces", 4));
+        Unit.of("Ounces"));
     Inventory start = new Inventory(LocalDate.of(2022, 5, 1));
     start.addItemToInventory(sampleItem);
     start.updateInventoryCount("Cheese", "Refrigerator",

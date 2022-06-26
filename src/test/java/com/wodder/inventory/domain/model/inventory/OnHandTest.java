@@ -3,7 +3,6 @@ package com.wodder.inventory.domain.model.inventory;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import com.wodder.inventory.domain.model.product.Price;
-import com.wodder.inventory.domain.model.product.UnitOfMeasurement;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
@@ -23,9 +22,9 @@ class OnHandTest {
   void dollars() {
     Count c = Count.countOf("1", "2");
     Price p = new Price("1.0", "1.49");
-    UnitOfMeasurement unitOfMeasurement = new UnitOfMeasurement("Gallons", 4);
+    Unit unit = Unit.of("Gallons");
 
-    OnHand onHand = OnHand.from(c, p, unitOfMeasurement);
+    OnHand onHand = OnHand.from(c, p, unit);
 
     assertEquals(3.98, onHand.getTotalDollars());
   }

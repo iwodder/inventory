@@ -4,8 +4,8 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import com.wodder.inventory.domain.model.inventory.Count;
 import com.wodder.inventory.domain.model.inventory.OnHand;
+import com.wodder.inventory.domain.model.inventory.Unit;
 import com.wodder.inventory.domain.model.product.Price;
-import com.wodder.inventory.domain.model.product.UnitOfMeasurement;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
@@ -15,7 +15,7 @@ class UsageTest {
   @DisplayName("Should calculate the used number of units")
   void units() {
     Price p = new Price("1.0", "1.5");
-    UnitOfMeasurement uom = new UnitOfMeasurement("Gallons", 4);
+    Unit uom = Unit.of("Gallons");
     OnHand start = OnHand.from(Count.countOf("1", "2"), p, uom);
     OnHand end = OnHand.from(Count.countOf("0", "2"), p, uom);
 
@@ -28,7 +28,7 @@ class UsageTest {
   @DisplayName("Should calculate the used number of dollars")
   void dollars() {
     Price p = new Price("1.0", "1.5");
-    UnitOfMeasurement uom = new UnitOfMeasurement("Gallons", 4);
+    Unit uom = Unit.of("Gallons");
     OnHand start = OnHand.from(Count.countOf("1", "2"), p, uom);
     OnHand end = OnHand.from(Count.countOf("0", "2"), p, uom);
 
@@ -41,7 +41,7 @@ class UsageTest {
   @DisplayName("Should be able to add number of received units")
   void addUnits() {
     Price p = new Price("1.0", "1.5");
-    UnitOfMeasurement uom = new UnitOfMeasurement("Gallons", 4);
+    Unit uom = Unit.of("Gallons");
     OnHand start = OnHand.from(Count.countOf("1", "2"), p, uom);
     OnHand end = OnHand.from(Count.countOf("0", "2"), p, uom);
 

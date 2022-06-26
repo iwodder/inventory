@@ -1,7 +1,6 @@
 package com.wodder.inventory.domain.model.inventory;
 
 import com.wodder.inventory.domain.model.product.Price;
-import com.wodder.inventory.domain.model.product.UnitOfMeasurement;
 import java.math.BigDecimal;
 import java.util.Objects;
 
@@ -9,10 +8,10 @@ public class OnHand {
 
   private final Count count;
   private final Price price;
-  private final UnitOfMeasurement uom;
+  private final Unit uom;
 
 
-  private OnHand(Count count, Price price, UnitOfMeasurement uom) {
+  private OnHand(Count count, Price price, Unit uom) {
     this.count = count;
     this.price = price;
     this.uom = uom;
@@ -22,11 +21,11 @@ public class OnHand {
     return new OnHand(
         Count.ofZero(),
         Price.ofZero(),
-        UnitOfMeasurement.empty()
+        Unit.empty()
     );
   }
 
-  public static OnHand from(Count count, Price price, UnitOfMeasurement uom) {
+  public static OnHand from(Count count, Price price, Unit uom) {
     return new OnHand(count, price, uom);
   }
 

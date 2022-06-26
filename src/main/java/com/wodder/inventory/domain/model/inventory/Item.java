@@ -2,7 +2,6 @@ package com.wodder.inventory.domain.model.inventory;
 
 import com.wodder.inventory.domain.model.Entity;
 import com.wodder.inventory.domain.model.product.Price;
-import com.wodder.inventory.domain.model.product.UnitOfMeasurement;
 import com.wodder.inventory.dto.InventoryItemDto;
 import com.wodder.inventory.dto.ProductDto;
 import java.util.Objects;
@@ -14,19 +13,19 @@ public class Item extends Entity<ItemId> {
       "N/A",
       "EMPTY",
       StorageLocation.unassigned(),
-      UnitOfMeasurement.empty());
+      Unit.empty());
 
   private final String name;
   private final String productId;
   private StorageLocation location;
-  private final UnitOfMeasurement uom;
+  private final Unit uom;
 
   public Item(
       ItemId id,
       String productId,
       String name,
       StorageLocation location,
-      UnitOfMeasurement uom) {
+      Unit uom) {
     super(id);
     this.name = name;
     this.productId = productId;
@@ -37,7 +36,7 @@ public class Item extends Entity<ItemId> {
   public Item(
       String name,
       StorageLocation location,
-      UnitOfMeasurement uom) {
+      Unit uom) {
     this(ItemId.newId(), "", name, location, uom);
   }
 
@@ -47,7 +46,7 @@ public class Item extends Entity<ItemId> {
         that.productId,
         that.name,
         that.location,
-        new UnitOfMeasurement(that.uom));
+        that.uom);
   }
 
   private Item(ItemBuilder b) {
@@ -76,7 +75,7 @@ public class Item extends Entity<ItemId> {
         model.getProductId(),
         model.getName(),
         StorageLocation.of(model.getLocation()),
-        new UnitOfMeasurement(model.getUnits(), Integer.parseInt(model.getItemsPerCase()))
+        Unit.of(model.getUnits())
     );
   }
 
@@ -105,7 +104,7 @@ public class Item extends Entity<ItemId> {
     return location;
   }
 
-  public UnitOfMeasurement getUom() {
+  public Unit getUom() {
     return uom;
   }
 
@@ -135,7 +134,7 @@ public class Item extends Entity<ItemId> {
     private String productId;
     private String name;
     private StorageLocation location;
-    private UnitOfMeasurement uom;
+    private Unit uom;
 
     private ItemBuilder() {
     }
@@ -151,12 +150,12 @@ public class Item extends Entity<ItemId> {
     }
 
     public ItemBuilder withUnits(String units, String qtyPerCase) {
-      this.uom = UnitOfMeasurement.of(units, qtyPerCase);
+      this.uom = Unit.of(units);
       return this;
     }
 
     public ItemBuilder withUnits(String units) {
-      this.uom = UnitOfMeasurement.of(units, "0");
+      this.uom = Unit.of(units);
       return this;
     }
 
