@@ -13,7 +13,7 @@ public interface ItemService {
 
   void deleteItem(String id);
 
-  void moveItem(String id, String location);
+  Optional<ItemDto> moveItem(String id, String location);
 
   String duplicateItem(String id, String location);
 }

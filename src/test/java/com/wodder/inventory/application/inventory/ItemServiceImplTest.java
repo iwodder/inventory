@@ -64,10 +64,10 @@ class ItemServiceImplTest {
         "Gallons"
     );
 
-    itemService.moveItem(id, "Pantry");
+    ItemDto result = itemService.moveItem(id, "Pantry")
+        .orElseGet(() -> fail("Expected to get present value, but it was missing."));
 
-    ItemDto item = itemService.loadItem(id).orElseGet(() -> fail("Couldn't locate item by id"));
-    assertEquals("Pantry", item.getLocation());
+    assertEquals("Pantry", result.getLocation());
   }
 
   @Test

@@ -71,4 +71,36 @@ class InventoryRestAdapterTest extends JerseyTest {
     assertEquals(200, r.getStatus());
     assertEquals("{\"result\":\"success\"}", r.readEntity(String.class));
   }
+
+  @Test
+  @DisplayName("Moving an item returns 200 and an updated item json")
+  void moveItem() {
+    ObjectMapper mapper = new ObjectMapper();
+    ObjectNode input = mapper
+        .createObjectNode()
+        .put("location", "pantry");
+
+    Response r = target("inventory/item123")
+        .request(MediaType.APPLICATION_JSON)
+        .put(Entity.json(input.toString()));
+
+    JsonNode json = r.readEntity(JsonNode.class);
+    assertEquals(200, r.getStatus());
+    assertEquals("pantry", json.get("location").textValue());
+  }
+
+  @Test
+  @DisplayName("Moving an unknown item returns a 404")
+  void moveItemMissing() {
+    ObjectMapper mapper = new ObjectMapper();
+    ObjectNode input = mapper
+        .createObjectNode()
+        .put("location", "pantry");
+
+    Response r = target("inventory/item123456")
+        .request(MediaType.APPLICATION_JSON)
+        .put(Entity.json(input.toString()));
+
+    assertEquals(404, r.getStatus());
+  }
 }

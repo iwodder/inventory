@@ -1,5 +1,6 @@
 package com.wodder.inventory.apapters;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import com.wodder.inventory.application.inventory.AddItemCommand;
 import com.wodder.inventory.application.inventory.ItemService;
 import com.wodder.inventory.dto.ItemDto;
@@ -11,6 +12,7 @@ import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
+import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
@@ -63,5 +65,20 @@ public class InventoryRestAdapter {
     return Response.ok(
         Json.createObjectBuilder().add("result", "success").build().toString()
     ).build();
+  }
+
+  @PUT
+  @Path("{itemId}")
+  @Produces(MediaType.APPLICATION_JSON)
+  public Response moveLocations(
+      @PathParam("itemId") String id, JsonNode location) {
+    LOGGER.info("moveLocations >> Received id {} and location {}", id, location);
+    String loc = location.get("location").textValue();
+    Optional<ItemDto> result = service.moveItem(id, loc);
+    if (result.isPresent()) {
+      return Response.ok(result.get()).build();
+    } else {
+      return Response.status(Status.NOT_FOUND).build();
+    }
   }
 }

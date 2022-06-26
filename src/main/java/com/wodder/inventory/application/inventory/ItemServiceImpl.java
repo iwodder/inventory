@@ -6,12 +6,20 @@ import com.wodder.inventory.domain.model.inventory.StorageLocation;
 import com.wodder.inventory.dto.ItemDto;
 import com.wodder.inventory.persistence.Repository;
 import java.util.Optional;
+import java.util.function.Function;
 import javax.inject.Inject;
 import javax.inject.Named;
 
 
 public class ItemServiceImpl implements ItemService {
   private final Repository<Item, ItemId> repository;
+  private static final Function<Item, ItemDto> itemMapper = (item) ->
+      ItemDto.builder()
+      .withId(item.getId().getValue())
+      .withProductId(item.getProductId())
+      .withName(item.getName())
+      .withLocation(item.getLocation().getName())
+      .build();
 
   @Inject
   public ItemServiceImpl(@Named("InMemoryItemRepository") Repository<Item, ItemId> repository) {
@@ -44,13 +52,7 @@ public class ItemServiceImpl implements ItemService {
   public Optional<ItemDto> loadItem(String id) {
     Optional<Item> opt = repository.loadById(ItemId.of(id));
 
-    return opt.map((item) ->
-        ItemDto.builder()
-            .withId(item.getId().getValue())
-            .withProductId(item.getProductId())
-            .withName(item.getName())
-            .withLocation(item.getLocation().getName())
-            .build());
+    return opt.map(itemMapper);
   }
 
   @Override
@@ -59,12 +61,14 @@ public class ItemServiceImpl implements ItemService {
   }
 
   @Override
-  public void moveItem(String id, String location) {
+  public Optional<ItemDto> moveItem(String id, String location) {
     Optional<Item> opt = repository.loadById(ItemId.of(id));
     if (opt.isPresent()) {
       Item item = opt.get();
       item.updateLocation(StorageLocation.of(location));
-      repository.updateItem(item);
+      return repository.updateItem(item).map(itemMapper);
+    } else {
+      return Optional.empty();
     }
   }
 
