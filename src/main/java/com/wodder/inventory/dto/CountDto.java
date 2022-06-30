@@ -1,12 +1,16 @@
 package com.wodder.inventory.dto;
 
-import java.io.Serializable;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
-public class CountDto implements Serializable {
-  private static final long serialVersionUID = 1L;
+public class CountDto  {
+
+  @JsonProperty
   private String itemId;
+  @JsonProperty
   private String productId;
+  @JsonProperty
   private double units;
+  @JsonProperty
   private double cases;
 
   public CountDto(double units, double cases) {

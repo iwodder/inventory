@@ -117,6 +117,11 @@
             <artifactId>jackson-annotations</artifactId>
             <version>${jackson.json.version}</version>
         </dependency>
+        <dependency> <!-- Needed to work with Java 8+ DateTime -->
+            <groupId>com.fasterxml.jackson.datatype</groupId>
+            <artifactId>jackson-datatype-jsr310</artifactId>
+            <version>${jackson.json.version}</version>
+        </dependency>
         <dependency>
             <groupId>org.glassfish</groupId>
             <artifactId>javax.json</artifactId>

@@ -50,7 +50,7 @@ class InventoryRestAdapterTestTwo extends JerseyTest {
 
   @Override
   protected Application configure() {
-    return new ResourceConfig(InventoryRestAdapter.class).register(new TestBinder());
+    return new ResourceConfig(ItemRestAdapter.class).register(new TestBinder());
   }
 
   public static class TestBinder extends AbstractBinder {

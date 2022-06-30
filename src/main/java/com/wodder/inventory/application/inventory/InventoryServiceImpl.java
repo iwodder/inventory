@@ -12,15 +12,18 @@ import com.wodder.inventory.persistence.Repository;
 import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
+import javax.inject.Inject;
+import javax.inject.Named;
 
 public class InventoryServiceImpl implements InventoryService {
 
   private final InventoryRepository repository;
   private final Repository<Item, ItemId> itemRepository;
 
+  @Inject
   public InventoryServiceImpl(
       InventoryRepository repository,
-      Repository<Item, ItemId> itemRepository) {
+      @Named("InMemoryItemRepository") Repository<Item, ItemId> itemRepository) {
     this.repository = repository;
     this.itemRepository = itemRepository;
   }
