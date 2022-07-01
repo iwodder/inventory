@@ -67,7 +67,7 @@ public class InventoryServiceImpl implements InventoryService {
     if (opt.isPresent()) {
       Inventory i = opt.get();
       for (var count : counts) {
-        Optional<Item> itemOptional = itemRepository.loadById(ItemId.of(count.getProductId()));
+        Optional<Item> itemOptional = itemRepository.loadById(ItemId.of(count.getItemId()));
         if (itemOptional.isPresent()) {
           i.updateCountFor(itemOptional.get(), Count.countOf(count.getUnits(), count.getCases()));
         }

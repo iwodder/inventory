@@ -9,28 +9,11 @@ public class CountDto  {
   @JsonProperty
   private String productId;
   @JsonProperty
-  private double units;
+  private String units;
   @JsonProperty
-  private double cases;
+  private String cases;
 
-  public CountDto(double units, double cases) {
-    this.units = units;
-    this.cases = cases;
-  }
-
-  public CountDto(String productId) {
-    this.productId = productId;
-    this.units = 0.0;
-    this.cases = 0.0;
-  }
-
-  public CountDto(String productId, double units, double cases) {
-    this.productId = productId;
-    this.units = units;
-    this.cases = cases;
-  }
-
-  public CountDto(String itemId, String productId, double units, double cases) {
+  public CountDto(String itemId, String productId, String units, String cases) {
     this.itemId = itemId;
     this.productId = productId;
     this.units = units;
@@ -46,18 +29,18 @@ public class CountDto  {
   }
 
   public String getUnits() {
-    return Double.toString(units);
+    return units;
   }
 
-  public void setUnits(double units) {
+  public void setUnits(String units) {
     this.units = units;
   }
 
   public String getCases() {
-    return Double.toString(cases);
+    return cases;
   }
 
-  public void setCases(double cases) {
+  public void setCases(String cases) {
     this.cases = cases;
   }
 

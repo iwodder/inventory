@@ -3,7 +3,9 @@ package com.wodder.inventory.domain.model.inventory;
 import com.wodder.inventory.domain.model.Entity;
 import com.wodder.inventory.dto.CountDto;
 import com.wodder.inventory.dto.InventoryDto;
+import java.text.DecimalFormat;
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
@@ -121,7 +123,7 @@ public class Inventory extends Entity<InventoryId> {
 
   public InventoryDto toModel() {
     InventoryDto result = new InventoryDto(id.getValue(), state.name());
-    result.setInventoryDate(inventoryDate);
+    result.setInventoryDate(inventoryDate.format(DateTimeFormatter.ISO_DATE));
     counts.entrySet()
         .stream()
         .map(e -> {
@@ -129,8 +131,9 @@ public class Inventory extends Entity<InventoryId> {
           Count count = e.getValue();
           return new CountDto(
               item.getId().getValue(),
-              count.getUnits(),
-              count.getCases());
+              item.getProductId(),
+              new DecimalFormat("##0.00").format(count.getUnits()),
+              new DecimalFormat("##0.00").format(count.getCases()));
         }).forEach(result::addCountDto);
     return result;
   }

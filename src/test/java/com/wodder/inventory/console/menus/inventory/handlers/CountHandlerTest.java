@@ -5,6 +5,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import com.wodder.inventory.console.menus.inventoryitems.BaseMenuTest;
 import com.wodder.inventory.dto.InventoryDto;
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
@@ -34,7 +35,7 @@ class CountHandlerTest extends BaseMenuTest {
 
   private void setupInventoryModel() {
     model = new InventoryDto();
-    model.setInventoryDate(LocalDate.now());
+    model.setInventoryDate(LocalDate.now().format(DateTimeFormatter.ISO_DATE));
     //		model.addInventoryCountModel(new InventoryCountModel(1L, "Bananas", "Fruit", "Pantry"));
     //		model.addInventoryCountModel(new InventoryCountModel(2L, "Apples", "Fruit", "Pantry"));
     //		model.addInventoryCountModel(new InventoryCountModel(3L, "Spinach", "Vegetables",

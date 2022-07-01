@@ -1,9 +1,6 @@
 package com.wodder.inventory.dto;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.annotation.JsonFormat.Shape;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -17,8 +14,7 @@ public class InventoryDto {
   @JsonProperty
   private String id;
   @JsonProperty
-  @JsonFormat(shape = Shape.STRING, pattern = "yyyy-MM-dd")
-  private LocalDate inventoryDate;
+  private String inventoryDate;
 
   public InventoryDto(String id, String state) {
     this.id = id;
@@ -34,11 +30,11 @@ public class InventoryDto {
     items.add(countDto);
   }
 
-  public LocalDate getInventoryDate() {
+  public String getInventoryDate() {
     return inventoryDate;
   }
 
-  public void setInventoryDate(LocalDate inventoryDate) {
+  public void setInventoryDate(String inventoryDate) {
     this.inventoryDate = inventoryDate;
   }
 

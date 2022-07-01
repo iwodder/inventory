@@ -11,11 +11,14 @@ import com.wodder.inventory.domain.model.inventory.Inventory;
 import com.wodder.inventory.domain.model.inventory.Item;
 import com.wodder.inventory.domain.model.inventory.ItemId;
 import com.wodder.inventory.dto.CountDto;
+import com.wodder.inventory.dto.InventoryDto;
 import com.wodder.inventory.persistence.PersistenceFactory;
 import com.wodder.inventory.persistence.Repository;
 import com.wodder.inventory.persistence.TestPersistenceFactory;
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -50,7 +53,7 @@ class InventoryServiceImplTest {
   }
 
   @Test
-  @DisplayName("Inventory is created with active products")
+  @DisplayName("Inventory is created with active items")
   void populatedInv() {
     initializeItems();
     Inventory dto = invSvc.createInventory();
@@ -59,7 +62,7 @@ class InventoryServiceImplTest {
   }
 
   @Test
-  @DisplayName("Inventory is created without any products")
+  @DisplayName("Inventory can be created without any item")
   void emptyInv() {
     Inventory dto = invSvc.createEmptyInventory();
 
@@ -89,8 +92,8 @@ class InventoryServiceImplTest {
   }
 
   @Test
-  @DisplayName("Can add multiple inventory counts to inventory")
-  void addInventoryCounts() {
+  @DisplayName("Can update multiple inventory counts in inventory")
+  void updateInventoryCounts() {
     initializeItems();
     String id = invSvc.createInventory().getId().getValue();
 
@@ -98,9 +101,9 @@ class InventoryServiceImplTest {
         invSvc.updateInventoryCounts(
                 id,
                 Arrays.asList(
-                    new CountDto("item:123", 1.0, 1.0),
-                    new CountDto("item:234", .23, 0.25),
-                    new CountDto("item:345", 1.1, 1.23)))
+                    new CountDto("item:123", "p123","1.0", "1.0"),
+                    new CountDto("item:234", "p234", ".23", "0.25"),
+                    new CountDto("item:345","p345" , "1.1", "1.23")))
             .get();
 
     assertEquals(
@@ -117,6 +120,30 @@ class InventoryServiceImplTest {
     Inventory dto = invSvc.createInventory();
 
     assertResultIsPresent(invSvc.loadInventory(dto.getId().getValue()));
+  }
+
+  @Test
+  @DisplayName("Should properly convert to a dto model")
+  void toModel() {
+    Inventory i = Inventory.inventoryWith(List.of(Item.builder()
+        .withId("item:123")
+        .withProductId("p321")
+        .withName("2% Milk")
+        .withLocation("Refrigerator")
+        .withUnits("Gallon")
+        .build()));
+
+    InventoryDto dto = i.toModel();
+
+    String date = LocalDate.now().format(DateTimeFormatter.ISO_DATE);
+    assertEquals(date, dto.getInventoryDate());
+    assertEquals("OPEN", dto.getState());
+    assertEquals(1, dto.getItems().size());
+    CountDto count = dto.getItems().get(0);
+    assertEquals("item:123", count.getItemId());
+    assertEquals("p321", count.getProductId());
+    assertEquals("0.00", count.getUnits());
+    assertEquals("0.00", count.getCases());
   }
 
   @Test
@@ -146,6 +173,7 @@ class InventoryServiceImplTest {
     itemRepository.createItem(
         Item.builder()
             .withId("item:123")
+            .withProductId("p321")
             .withName("2% Milk")
             .withLocation("Refrigerator")
             .withUnits("Gallon")
@@ -154,6 +182,7 @@ class InventoryServiceImplTest {
     itemRepository.createItem(
         Item.builder()
             .withId("item:234")
+            .withProductId("p432")
             .withName("Fabric Softener")
             .withLocation("Laundry Room")
             .withUnits("Gallon")
@@ -162,6 +191,7 @@ class InventoryServiceImplTest {
     itemRepository.createItem(
         Item.builder()
             .withId("item:345")
+            .withProductId("p543")
             .withName("Chicken Breast")
             .withLocation("Refrigerator")
             .withUnits("Pounds")
