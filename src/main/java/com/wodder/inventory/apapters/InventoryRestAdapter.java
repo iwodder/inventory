@@ -2,9 +2,9 @@ package com.wodder.inventory.apapters;
 
 import com.wodder.inventory.application.inventory.InventoryService;
 import com.wodder.inventory.domain.model.inventory.Inventory;
-import com.wodder.inventory.dto.InventoryDto;
 import javax.inject.Inject;
-import javax.ws.rs.GET;
+import javax.ws.rs.Consumes;
+import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
@@ -22,13 +22,12 @@ public class InventoryRestAdapter {
     this.service = service;
   }
 
-  @GET
+  @POST
   @Produces(MediaType.APPLICATION_JSON)
-  public Response newInventory() {
-    LOGGER.info("newInventory >> Creating new inventory");
+  @Consumes(MediaType.APPLICATION_JSON)
+  public Response newInventory(CreateCommand command) {
+    LOGGER.info("Creating new inventory, input was {}", command);
     Inventory i = service.createInventory();
-    InventoryDto dto = i.toModel();
-    LOGGER.info("Inventory Json {}", dto);
-    return Response.ok(dto).build();
+    return Response.ok(i.toModel()).build();
   }
 }
