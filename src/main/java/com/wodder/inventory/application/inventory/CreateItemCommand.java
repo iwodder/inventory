@@ -1,6 +1,6 @@
 package com.wodder.inventory.application.inventory;
 
-public class AddItemCommand {
+public class CreateItemCommand {
 
   private String productId;
   private String name;

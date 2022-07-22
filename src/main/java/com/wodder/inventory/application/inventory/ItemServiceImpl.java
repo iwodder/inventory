@@ -40,7 +40,7 @@ public class ItemServiceImpl implements ItemService {
   }
 
   @Override
-  public String addItem(AddItemCommand command) {
+  public String addItem(CreateItemCommand command) {
     return addItem(
         command.getProductId(),
         command.getName(),
@@ -73,13 +73,14 @@ public class ItemServiceImpl implements ItemService {
   }
 
   @Override
-  public String duplicateItem(String id, String location) {
+  public String copyItemToNewLocation(String id, String location) {
     Optional<Item> opt = repository.loadById(ItemId.of(id));
     if (opt.isPresent()) {
       Item item = opt.get();
       Item dup =
           Item.builder()
               .withName(item.getName())
+              .withProductId(item.getProductId())
               .withLocation(location)
               .withUnits(item.getUom().getUnit())
               .build();

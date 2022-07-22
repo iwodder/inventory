@@ -80,12 +80,13 @@ class ItemServiceImplTest {
         "Gallons"
     );
 
-    String duplicateId = itemService.duplicateItem(id, "Pantry");
+    String duplicateId = itemService.copyItemToNewLocation(id, "Pantry");
 
     ItemDto dup = itemService.loadItem(duplicateId).orElseGet(() -> fail("Couldn't locate item by duplicateId"));
     ItemDto orig = itemService.loadItem(id).orElseGet(() -> fail("Couldn't locate item by id"));
 
     assertEquals(orig.getName(), dup.getName());
+    assertEquals(orig.getProductId(), dup.getProductId());
     assertNotEquals(orig.getLocation(), dup.getLocation());
   }
 }

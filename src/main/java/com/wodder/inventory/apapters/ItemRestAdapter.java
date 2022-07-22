@@ -1,7 +1,8 @@
 package com.wodder.inventory.apapters;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import com.wodder.inventory.application.inventory.AddItemCommand;
+import com.wodder.inventory.application.inventory.CopyItemCommand;
+import com.wodder.inventory.application.inventory.CreateItemCommand;
 import com.wodder.inventory.application.inventory.ItemService;
 import com.wodder.inventory.dto.ItemDto;
 import java.util.Optional;
@@ -49,7 +50,7 @@ public class ItemRestAdapter {
   @Path("item")
   @Produces(MediaType.APPLICATION_JSON)
   @Consumes(MediaType.APPLICATION_JSON)
-  public Response createItem(AddItemCommand command) {
+  public Response createItem(CreateItemCommand command) {
     LOGGER.info("createItem >> Received command {}", command);
     String id = service.addItem(command);
     JsonObject obj = Json.createObjectBuilder().add("id", id).build();
@@ -80,5 +81,16 @@ public class ItemRestAdapter {
     } else {
       return Response.status(Status.NOT_FOUND).build();
     }
+  }
+
+  @POST
+  @Path("copy")
+  @Consumes(MediaType.APPLICATION_JSON)
+  @Produces(MediaType.APPLICATION_JSON)
+  public Response copyItem(CopyItemCommand c) {
+    LOGGER.info("copyItem >> Received command {}", c);
+    String id = service.copyItemToNewLocation(c.getItemId(), c.getLocation());
+    JsonObject obj = Json.createObjectBuilder().add("id", id).build();
+    return Response.ok(obj.toString()).build();
   }
 }

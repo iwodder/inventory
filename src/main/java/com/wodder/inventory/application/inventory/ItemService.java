@@ -7,7 +7,7 @@ public interface ItemService {
 
   String addItem(String productId, String name, String location, String measurementUnit);
 
-  String addItem(AddItemCommand command);
+  String addItem(CreateItemCommand command);
 
   Optional<ItemDto> loadItem(String id);
 
@@ -15,5 +15,5 @@ public interface ItemService {
 
   Optional<ItemDto> moveItem(String id, String location);
 
-  String duplicateItem(String id, String location);
+  String copyItemToNewLocation(String id, String location);
 }

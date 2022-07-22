@@ -6,6 +6,7 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.wodder.inventory.application.inventory.CopyItemCommand;
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
@@ -102,5 +103,21 @@ class ItemRestAdapterTest extends JerseyTest {
         .put(Entity.json(input.toString()));
 
     assertEquals(404, r.getStatus());
+  }
+
+  @Test
+  @DisplayName("Copying item returns a 200 and json response")
+  void copyItem() {
+    CopyItemCommand c = new CopyItemCommand();
+    c.setItemId("item123");
+    c.setLocation("freezer");
+
+    Response r = target("item/copy")
+        .request(MediaType.APPLICATION_JSON)
+        .post(Entity.json(c));
+
+    assertEquals(200, r.getStatus());
+    JsonNode node = r.readEntity(JsonNode.class);
+    assertFalse(node.get("id").textValue().isBlank());
   }
 }
