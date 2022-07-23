@@ -62,14 +62,6 @@ class InventoryServiceImplTest {
   }
 
   @Test
-  @DisplayName("Inventory can be created without any item")
-  void emptyInv() {
-    Inventory dto = invSvc.createEmptyInventory();
-
-    assertCorrectItemsInInventory(0, dto);
-  }
-
-  @Test
   @DisplayName("Can change a single count to inventory")
   void addInventoryCount() {
     initializeItems();

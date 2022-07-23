@@ -11,8 +11,6 @@ public interface InventoryService {
 
   Inventory createInventory();
 
-  Inventory createEmptyInventory();
-
   Optional<Inventory> changeInventoryCount(
       String inventoryId, String itemId, String units, String cases);
 

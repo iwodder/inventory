@@ -24,9 +24,9 @@ public class InventoryRestAdapter {
 
   @POST
   @Produces(MediaType.APPLICATION_JSON)
-  @Consumes(MediaType.APPLICATION_JSON)
-  public Response newInventory(CreateCommand command) {
-    LOGGER.info("Creating new inventory, input was {}", command);
+  @Consumes(MediaType.WILDCARD)
+  public Response newInventory() {
+    LOGGER.info("Creating new inventory.");
     Inventory i = service.createInventory();
     return Response.ok(i.toModel()).build();
   }

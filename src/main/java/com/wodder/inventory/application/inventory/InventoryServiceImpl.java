@@ -37,11 +37,6 @@ public class InventoryServiceImpl implements InventoryService {
   }
 
   @Override
-  public Inventory createEmptyInventory() {
-    return repository.createItem(Inventory.emptyInventory());
-  }
-
-  @Override
   public Optional<Inventory> changeInventoryCount(
       String inventoryId,
       String itemId,
@@ -49,6 +44,7 @@ public class InventoryServiceImpl implements InventoryService {
       String cases) {
     Optional<Inventory> opt = repository.loadById(InventoryId.inventoryIdOf(inventoryId));
     Optional<Item> itemOpt = itemRepository.loadById(ItemId.of(itemId));
+
     if (opt.isPresent() && itemOpt.isPresent()) {
       Inventory i = opt.get();
       Item item = itemOpt.get();
@@ -66,15 +62,18 @@ public class InventoryServiceImpl implements InventoryService {
     Optional<Inventory> opt = repository.loadById(InventoryId.inventoryIdOf(inventoryId));
     if (opt.isPresent()) {
       Inventory i = opt.get();
-      for (var count : counts) {
-        Optional<Item> itemOptional = itemRepository.loadById(ItemId.of(count.getItemId()));
-        if (itemOptional.isPresent()) {
-          i.updateCountFor(itemOptional.get(), Count.countOf(count.getUnits(), count.getCases()));
-        }
-      }
+      counts.forEach(c -> updateItemCount(i, c));
       return Optional.of(i);
     } else {
       return Optional.empty();
+    }
+  }
+
+  private void updateItemCount(Inventory i, CountDto c) {
+    Optional<Item> opt = itemRepository.loadById(ItemId.of(c.getItemId()));
+    if (opt.isPresent()) {
+      Item item = opt.get();
+      i.updateCountFor(item, Count.countOf(c.getUnits(), c.getCases()));
     }
   }
 

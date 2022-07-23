@@ -5,7 +5,6 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import javax.ws.rs.client.Entity;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
@@ -26,7 +25,7 @@ class InventoryRestAdapterTest extends JerseyTest {
   void newInventory() {
     Response r = target("inventory")
         .request(MediaType.APPLICATION_JSON)
-        .post(Entity.json("{}"));
+        .post(null);
 
     assertEquals(Status.OK.getStatusCode(), r.getStatus(), "Expected OK (200) status code.");
     JsonNode entity = r.readEntity(JsonNode.class);
