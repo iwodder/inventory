@@ -82,12 +82,11 @@ public class Inventory extends Entity<InventoryId> {
     return counts.keySet().size();
   }
 
-  public Optional<Count> getCount(String name, StorageLocation location) {
-    Optional<Item> key = counts.keySet()
-        .stream()
-        .filter(item -> item.getName().equalsIgnoreCase(name))
-        .filter(item -> item.getLocation().equals(location))
-        .findAny();
+  public Optional<Count> getCount(ItemId id) {
+    Optional<Item> key =
+        counts.keySet().stream()
+            .filter(item -> item.getId().equals(id))
+            .findAny();
     return key.map(counts::get);
   }
 

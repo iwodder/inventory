@@ -144,6 +144,22 @@ class InventoryServiceImplTest {
     assertResultIsEmpty(invSvc.loadInventory("abc-123"));
   }
 
+  @Test
+  @DisplayName("Should be able to load the count from inventory")
+  void load_count() {
+    initializeItems();
+    InventoryDto dto = invSvc.createInventory().toModel();
+    invSvc.changeInventoryCount(dto.getId(), "item:123", "0.5", "2");
+    invSvc.changeInventoryCount(dto.getId(), "item:234", "1", "2");
+
+    Optional<Count> c = invSvc.getCount(dto.getId(), "item:123");
+
+    assertTrue(c.isPresent());
+    Count count = c.get();
+    assertEquals(2.0, count.getCases());
+    assertEquals(.5, count.getUnits());
+  }
+
   private void assertResultIsEmpty(Optional<?> result) {
     assertTrue(result.isEmpty());
   }

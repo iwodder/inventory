@@ -91,12 +91,10 @@ public class InventoryServiceImpl implements InventoryService {
   @Override
   public Optional<Count> getCount(String inventoryId, String itemId) {
     Optional<Inventory> opt = repository.loadById(InventoryId.inventoryIdOf(inventoryId));
-    Optional<Item> opt2 = itemRepository.loadById(ItemId.of(itemId));
 
-    if (opt.isPresent() && opt2.isPresent()) {
+    if (opt.isPresent()) {
       Inventory inv = opt.get();
-      Item item = opt2.get();
-      return inv.getCount(item.getName(), item.getLocation());
+      return inv.getCount(ItemId.of(itemId));
     } else {
       return Optional.empty();
     }
