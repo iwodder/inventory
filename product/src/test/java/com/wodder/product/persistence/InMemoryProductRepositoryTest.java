@@ -7,7 +7,6 @@ import static org.junit.jupiter.api.Assertions.assertNotSame;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import com.wodder.product.domain.model.product.Category;
-import com.wodder.product.domain.model.product.Location;
 import com.wodder.product.domain.model.product.Product;
 import com.wodder.product.domain.model.product.ProductId;
 import java.util.List;
@@ -28,7 +27,7 @@ class InMemoryProductRepositoryTest {
   @DisplayName("Can load a saved item")
   void loadItem() {
     Product item1 =
-        new Product("2% Milk", new Category("REFRIGERATED"), new Location("REFRIGERATOR"));
+        new Product("2% Milk", new Category("REFRIGERATED"));
     ProductId id = inventoryItemStorage.createItem(item1).getId();
 
     Optional<Product> result = inventoryItemStorage.loadById(id);
@@ -50,11 +49,11 @@ class InMemoryProductRepositoryTest {
     ProductId id =
         inventoryItemStorage
             .createItem(
-                new Product("2% MILK", new Category("REFRIGERATED"), new Location("REFRIGERATOR")))
+                new Product("2% MILK", new Category("REFRIGERATED")))
             .getId();
 
     Product item2 =
-        new Product(id, "2% MILK", new Category("REFRIGERATED"), new Location("REFRIGERATOR"));
+        new Product(id, "2% MILK", new Category("REFRIGERATED"));
     Optional<Product> result = inventoryItemStorage.updateItem(item2);
     assertTrue(result.isPresent());
     Product updated = result.get();
@@ -70,8 +69,7 @@ class InMemoryProductRepositoryTest {
         new Product(
             ProductId.productIdOf("1"),
             "2% Milk",
-            new Category("REFRIGERATED"),
-            new Location("REFRIGERATOR"));
+            new Category("REFRIGERATED"));
     Optional<Product> result = inventoryItemStorage.updateItem(item);
     assertFalse(result.isPresent());
   }
@@ -80,7 +78,7 @@ class InMemoryProductRepositoryTest {
   @DisplayName("Can store an item")
   void createItem() {
     Product item =
-        new Product("2% Milk", new Category("REFRIGERATED"), new Location("REFRIGERATOR"));
+        new Product("2% Milk", new Category("REFRIGERATED"));
     Product result = inventoryItemStorage.createItem(item);
     assertNotNull(result);
   }
@@ -89,7 +87,7 @@ class InMemoryProductRepositoryTest {
   @DisplayName("Can delete an item")
   void deleteItem() {
     Product item =
-        new Product("2% Milk", new Category("REFRIGERATED"), new Location("REFRIGERATOR"));
+        new Product("2% Milk", new Category("REFRIGERATED"));
     ProductId id = inventoryItemStorage.createItem(item).getId();
 
     assertTrue(inventoryItemStorage.deleteItem(id));
@@ -106,7 +104,7 @@ class InMemoryProductRepositoryTest {
   @DisplayName("Can load all inventory items")
   void load_all_items() {
     inventoryItemStorage.createItem(
-        new Product("2% Milk", new Category("Refrigerated"), new Location("REFRIGERATOR")));
+        new Product("2% Milk", new Category("Refrigerated")));
     List<Product> items = inventoryItemStorage.loadAllItems();
     assertNotNull(items);
     assertFalse(items.isEmpty());
@@ -116,9 +114,9 @@ class InMemoryProductRepositoryTest {
   @Test
   @DisplayName("Can load all active inventory items")
   void load_active() {
-    Product i1 = new Product("Bananas", new Category("Fruit"), new Location("Pantry"));
-    Product i2 = new Product("Kiwis", new Category("Fruit"), new Location("Counter"));
-    Product i3 = new Product("Apples", new Category("Fruit"), new Location("Counter"));
+    Product i1 = new Product("Bananas", new Category("Fruit"));
+    Product i2 = new Product("Kiwis", new Category("Fruit"));
+    Product i3 = new Product("Apples", new Category("Fruit"));
     i3.inactivate();
     inventoryItemStorage.createItem(i1);
     inventoryItemStorage.createItem(i2);

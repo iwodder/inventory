@@ -12,8 +12,8 @@ class ProductTest {
   @Test
   @DisplayName("Identical values are equal")
   void inventory_item_is_equal_based_on_desc() {
-    Product inv = new Product("2% Milk", new Category("Dry Goods"), new Location("pantry"));
-    Product inv2 = new Product("2% Milk", new Category("Chemicals"), new Location("laundry"));
+    Product inv = new Product("2% Milk", new Category("Dry Goods"));
+    Product inv2 = new Product("2% Milk", new Category("Chemicals"));
     assertEquals(inv, inv2);
   }
 
@@ -23,7 +23,7 @@ class ProductTest {
     assertThrows(
         IllegalArgumentException.class,
         () -> {
-          Product i = new Product(null, new Category("Dry Goods"), new Location("Pantry"));
+          Product i = new Product(null, new Category("Dry Goods"));
         });
   }
 
@@ -33,7 +33,7 @@ class ProductTest {
     assertThrows(
         IllegalArgumentException.class,
         () -> {
-          Product i = new Product("", new Category("Dry Goods"), new Location("Pantry"));
+          Product i = new Product("", new Category("Dry Goods"));
         });
   }
 
@@ -43,14 +43,14 @@ class ProductTest {
     assertThrows(
         IllegalArgumentException.class,
         () -> {
-          Product i = new Product("Bread", null, new Location("Pantry"));
+          Product i = new Product("Bread", null);
         });
   }
 
   @Test
   @DisplayName("Can successfully update a category")
   void update_category() {
-    Product i = new Product("Bread", new Category("Dry Goods"), new Location("Pantry"));
+    Product i = new Product("Bread", new Category("Dry Goods"));
     Category newCategory = new Category("Refrigerated");
     i.updateCategory(newCategory);
     assertEquals(newCategory, i.getCategory());
@@ -59,7 +59,7 @@ class ProductTest {
   @Test
   @DisplayName("Trying to update with the same category causes IllegalArgumentException")
   void update_same_category() {
-    final Product i = new Product("Bread", new Category("Dry Goods"), new Location("Pantry"));
+    final Product i = new Product("Bread", new Category("Dry Goods"));
     assertThrows(IllegalArgumentException.class, () -> i.updateCategory(new Category("Dry Goods")));
   }
 
@@ -72,7 +72,6 @@ class ProductTest {
             ProductId.generateId(),
             "Bread",
             new Category("Dry Goods"),
-            new Location("Pantry"),
             uom);
     assertEquals(uom, i.getUnits());
     assertEquals(4, i.getUnitsPerCase());
@@ -86,7 +85,6 @@ class ProductTest {
             ProductId.generateId(),
             "Bread",
             new Category("Dry Goods"),
-            new Location("Pantry"),
             new UnitOfMeasurement("Loaves", 4));
     UnitOfMeasurement newUom = new UnitOfMeasurement("Slices", 1200);
     i.updateUnitOfMeasurement(newUom);
@@ -103,7 +101,6 @@ class ProductTest {
             ProductId.generateId(),
             "Bread",
             new Category("Dry Goods"),
-            new Location("Pantry"),
             new UnitOfMeasurement("Loaves", 4),
             p);
     assertEquals(new BigDecimal("0.99"), i.getUnitPrice());
@@ -119,7 +116,6 @@ class ProductTest {
             ProductId.generateId(),
             "Bread",
             new Category("Dry Goods"),
-            new Location("Pantry"),
             new UnitOfMeasurement("Loaves", 4),
             new Price(new BigDecimal("0.99"), new BigDecimal("3.96")));
     i.updatePrice(p);

@@ -2,18 +2,15 @@ package com.wodder.product.persistence;
 
 import com.wodder.product.domain.model.product.Category;
 import com.wodder.product.domain.model.product.Entity;
-import com.wodder.product.domain.model.product.Location;
 import com.wodder.product.domain.model.product.Product;
 
 public class PersistenceFactoryImpl implements PersistenceFactory {
   private final ProductRepository productRepository;
   private final InMemoryCategoryRepository categoryRepository;
-  private final InMemoryLocationRepository locationRepository;
 
   public PersistenceFactoryImpl() {
     productRepository = new InMemoryProductRepository();
     categoryRepository = new InMemoryCategoryRepository();
-    locationRepository = new InMemoryLocationRepository();
   }
 
   @Override
@@ -26,10 +23,6 @@ public class PersistenceFactoryImpl implements PersistenceFactory {
     if (clazz.isAssignableFrom(Category.class)) {
       @SuppressWarnings("unchecked")
       Repository<T, U> c = (Repository<T, U>) categoryRepository;
-      return c;
-    } else if (clazz.isAssignableFrom(Location.class)) {
-      @SuppressWarnings("unchecked")
-      Repository<T, U> c = (Repository<T, U>) locationRepository;
       return c;
     } else if (clazz.isAssignableFrom(Product.class)) {
       @SuppressWarnings("unchecked")

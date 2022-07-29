@@ -11,7 +11,6 @@ public interface ProductService {
   Optional<ProductDto> createNewProduct(
       String name,
       String category,
-      String location,
       String unit,
       int unitsPerCase,
       String unitPrice,
@@ -20,8 +19,6 @@ public interface ProductService {
   Boolean deleteProduct(String productId);
 
   Optional<ProductDto> updateProductCategory(String productId, String category);
-
-  Optional<ProductDto> updateProductLocation(String productId, String location);
 
   Optional<ProductDto> updateProductName(String productId, String name);
 

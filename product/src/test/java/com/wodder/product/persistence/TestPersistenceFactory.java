@@ -2,7 +2,6 @@ package com.wodder.product.persistence;
 
 import com.wodder.product.domain.model.product.Category;
 import com.wodder.product.domain.model.product.Entity;
-import com.wodder.product.domain.model.product.Location;
 import com.wodder.product.domain.model.product.Price;
 import com.wodder.product.domain.model.product.Product;
 import com.wodder.product.domain.model.product.UnitOfMeasurement;
@@ -10,12 +9,10 @@ import com.wodder.product.domain.model.product.UnitOfMeasurement;
 public class TestPersistenceFactory implements PersistenceFactory {
   private final InMemoryProductRepository productRepository;
   private final InMemoryCategoryRepository categoryRepository;
-  private final InMemoryLocationRepository locationRepository;
 
   private TestPersistenceFactory() {
     productRepository = new InMemoryProductRepository();
     categoryRepository = new InMemoryCategoryRepository();
-    locationRepository = new InMemoryLocationRepository();
   }
 
   public static PersistenceFactory getUnpopulated() {
@@ -39,10 +36,6 @@ public class TestPersistenceFactory implements PersistenceFactory {
       @SuppressWarnings("unchecked")
       Repository<T, U> c = (Repository<T, U>) categoryRepository;
       return c;
-    } else if (clazz.isAssignableFrom(Location.class)) {
-      @SuppressWarnings("unchecked")
-      Repository<T, U> c = (Repository<T, U>) locationRepository;
-      return c;
     } else if (clazz.isAssignableFrom(Product.class)) {
       @SuppressWarnings("unchecked")
       Repository<T, U> c = (Repository<T, U>) productRepository;
@@ -52,15 +45,6 @@ public class TestPersistenceFactory implements PersistenceFactory {
   }
 
   private void populateWithData() {
-    Location l1 = new Location("Pantry");
-    Location l2 = new Location("Refrigerator");
-    Location l3 = new Location("Freezer");
-    Location l4 = new Location("Laundry Room");
-
-    locationRepository.createItem(l1);
-    locationRepository.createItem(l2);
-    locationRepository.createItem(l3);
-    locationRepository.createItem(l4);
 
     Category c1 = new Category("Frozen");
     Category c2 = new Category("Dairy");
@@ -76,15 +60,15 @@ public class TestPersistenceFactory implements PersistenceFactory {
 
     productRepository.createItem(
         new Product(
-            "2% Milk", c2, l2, new UnitOfMeasurement("Gallons", 2), new Price("2.98", "5.96")));
+            "2% Milk", c2, new UnitOfMeasurement("Gallons", 2), new Price("2.98", "5.96")));
     productRepository.createItem(
         new Product(
-            "Greek Yogurt", c2, l2, new UnitOfMeasurement("Quarts", 2), new Price("1.99", "4.98")));
+            "Greek Yogurt", c2, new UnitOfMeasurement("Quarts", 2), new Price("1.99", "4.98")));
     productRepository.createItem(
         new Product(
-            "Ice", c2, l2, new UnitOfMeasurement("Fluid Ounces", 12), new Price("0.99", "10.99")));
+            "Ice", c2, new UnitOfMeasurement("Fluid Ounces", 12), new Price("0.99", "10.99")));
     productRepository.createItem(
         new Product(
-            "Pistachios", c4, l1, new UnitOfMeasurement("Pounds", 1), new Price("10.29", "10.29")));
+            "Pistachios", c4, new UnitOfMeasurement("Pounds", 1), new Price("10.29", "10.29")));
   }
 }

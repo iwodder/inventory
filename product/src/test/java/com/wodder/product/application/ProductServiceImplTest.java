@@ -6,7 +6,6 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import com.wodder.product.domain.model.product.Category;
-import com.wodder.product.domain.model.product.Location;
 import com.wodder.product.domain.model.product.Product;
 import com.wodder.product.dto.ProductDto;
 import com.wodder.product.persistence.PersistenceFactory;
@@ -27,8 +26,7 @@ class ProductServiceImplTest {
     storage =
         new ProductServiceImpl(
             psf.getRepository(Product.class),
-            psf.getRepository(Category.class),
-            psf.getRepository(Location.class));
+            psf.getRepository(Category.class));
   }
 
   @Test
@@ -85,15 +83,6 @@ class ProductServiceImplTest {
   }
 
   @Test
-  @DisplayName("Can update an item's location")
-  void update_location() {
-    ProductDto newItem =
-        storage.createNewProduct(getDefaultItem().withLocation("Freezer").build()).get();
-    ProductDto result = storage.updateProductLocation(newItem.getId(), "Pantry").get();
-    assertEquals(result.getLocation(), "Pantry");
-  }
-
-  @Test
   @DisplayName("Id is required to load item")
   void read_item_bo_id() {
     Optional<ProductDto> item = storage.loadProduct(null);
@@ -113,7 +102,7 @@ class ProductServiceImplTest {
   @DisplayName("Can update the Unit of Measurement for an item")
   void update_uom() {
     ProductDto newItem =
-        storage.createNewProduct(getDefaultItem().withLocation("Freezer").build()).get();
+        storage.createNewProduct(getDefaultItem().build()).get();
     ProductDto result =
         storage.updateProductUnitOfMeasurement(newItem.getId(), "Gallons", 4).get();
     assertEquals("Gallons", result.getUnits());
@@ -131,7 +120,7 @@ class ProductServiceImplTest {
   @DisplayName("Can update the price for an item")
   void update_price() {
     ProductDto newItem =
-        storage.createNewProduct(getDefaultItem().withLocation("Freezer").build()).get();
+        storage.createNewProduct(getDefaultItem().build()).get();
     ProductDto result = storage.updateProductPrice(newItem.getId(), "0.68", "19.23").get();
     assertEquals("0.68", result.getItemPrice());
     assertEquals("19.23", result.getCasePrice());
@@ -140,7 +129,6 @@ class ProductServiceImplTest {
   private ProductDto.ProductModelBuilder getDefaultItem() {
     return ProductDto.builder()
         .withName("Bread")
-        .withLocation("Pantry")
         .withCategory("Dry Goods")
         .withUnitOfMeasurement("case")
         .withItemPrice("5.99")

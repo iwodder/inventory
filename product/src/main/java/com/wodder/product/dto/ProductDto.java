@@ -9,7 +9,6 @@ public class ProductDto implements Serializable {
   private String id;
   private String name;
   private String category;
-  private String location;
   private String units;
   private String itemPrice;
   private String casePrice;
@@ -20,7 +19,6 @@ public class ProductDto implements Serializable {
     this.id = b.id;
     this.name = b.name;
     this.category = b.category;
-    this.location = b.location;
     this.active = b.active;
     this.units = b.units;
     this.unitsPerCase = b.itemsPerCase;
@@ -33,7 +31,6 @@ public class ProductDto implements Serializable {
     this.name = that.name;
     this.category = that.category;
     this.active = that.active;
-    this.location = that.location;
     this.units = that.units;
     this.unitsPerCase = that.unitsPerCase;
     this.itemPrice = that.itemPrice;
@@ -89,14 +86,6 @@ public class ProductDto implements Serializable {
     this.active = active;
   }
 
-  public String getLocation() {
-    return location;
-  }
-
-  public void setLocation(String location) {
-    this.location = location;
-  }
-
   public String getUnits() {
     return units;
   }
@@ -133,7 +122,6 @@ public class ProductDto implements Serializable {
     private String id;
     private String name;
     private String category;
-    private String location;
     private String units;
     private String itemPrice;
     private String casePrice;
@@ -156,11 +144,6 @@ public class ProductDto implements Serializable {
 
     public ProductModelBuilder withCategory(String category) {
       this.category = category;
-      return this;
-    }
-
-    public ProductModelBuilder withLocation(String location) {
-      this.location = location;
       return this;
     }
 

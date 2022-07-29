@@ -2,8 +2,6 @@ package com.wodder.product.application;
 
 import com.wodder.product.domain.model.product.Category;
 import com.wodder.product.domain.model.product.CategoryId;
-import com.wodder.product.domain.model.product.Location;
-import com.wodder.product.domain.model.product.LocationId;
 import com.wodder.product.domain.model.product.Price;
 import com.wodder.product.domain.model.product.Product;
 import com.wodder.product.domain.model.product.ProductId;
@@ -18,15 +16,12 @@ class ProductServiceImpl implements ProductService {
 
   private final Repository<Product, ProductId> productRepository;
   private final Repository<Category, CategoryId> categoryRepository;
-  private final Repository<Location, LocationId> locationRepository;
 
   ProductServiceImpl(
       Repository<Product, ProductId> productRepository,
-      Repository<Category, CategoryId> categoryRepository,
-      Repository<Location, LocationId> locationRepository) {
+      Repository<Category, CategoryId> categoryRepository) {
     this.productRepository = productRepository;
     this.categoryRepository = categoryRepository;
-    this.locationRepository = locationRepository;
   }
 
   @Override
@@ -34,7 +29,6 @@ class ProductServiceImpl implements ProductService {
     return createNewProduct(
         newItem.getName(),
         newItem.getCategory(),
-        newItem.getLocation(),
         newItem.getUnits(),
         newItem.getUnitsPerCase(),
         newItem.getItemPrice(),
@@ -45,7 +39,6 @@ class ProductServiceImpl implements ProductService {
   public Optional<ProductDto> createNewProduct(
       String name,
       String category,
-      String location,
       String unit,
       int unitsPerCase,
       String unitPrice,
@@ -55,16 +48,10 @@ class ProductServiceImpl implements ProductService {
             .loadByItem(new Category(category))
             .orElseGet(() -> categoryRepository.createItem(new Category(category)));
 
-    Location loc =
-        locationRepository
-            .loadByItem(new Location(location))
-            .orElseGet(() -> locationRepository.createItem(new Location(location)));
-
     Product item =
         new Product(
             name,
             cat,
-            loc,
             new UnitOfMeasurement(unit, unitsPerCase),
             new Price(unitPrice, casePrice));
 
@@ -82,20 +69,6 @@ class ProductServiceImpl implements ProductService {
       return Optional.empty();
     } else {
       return processCategoryUpdate(productId, category);
-    }
-  }
-
-  @Override
-  public Optional<ProductDto> updateProductLocation(String productId, String location) {
-    Optional<Product> opt = productRepository.loadById(ProductId.productIdOf(productId));
-    Optional<Location> loc = locationRepository.loadByItem(new Location(location));
-    if (opt.isPresent() && loc.isPresent()) {
-      Product item = opt.get();
-      item.updateLocation(loc.get());
-      productRepository.updateItem(item);
-      return Optional.of(item.toItemModel());
-    } else {
-      return Optional.empty();
     }
   }
 
