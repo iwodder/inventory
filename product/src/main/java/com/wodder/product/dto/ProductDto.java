@@ -14,6 +14,7 @@ public class ProductDto implements Serializable {
   private String casePrice;
   private boolean active;
   private int unitsPerCase;
+  private String externalId;
 
   private ProductDto(ProductModelBuilder b) {
     this.id = b.id;
@@ -24,6 +25,7 @@ public class ProductDto implements Serializable {
     this.unitsPerCase = b.itemsPerCase;
     this.itemPrice = b.itemPrice;
     this.casePrice = b.casePrice;
+    this.externalId = b.externalId;
   }
 
   public ProductDto(ProductDto that) {
@@ -35,6 +37,7 @@ public class ProductDto implements Serializable {
     this.unitsPerCase = that.unitsPerCase;
     this.itemPrice = that.itemPrice;
     this.casePrice = that.casePrice;
+    this.externalId = that.externalId;
   }
 
   public ProductDto() {
@@ -118,6 +121,10 @@ public class ProductDto implements Serializable {
     this.casePrice = casePrice;
   }
 
+  public String getExternalId() {
+    return externalId;
+  }
+
   public static class ProductModelBuilder {
     private String id;
     private String name;
@@ -127,6 +134,7 @@ public class ProductDto implements Serializable {
     private String casePrice;
     private int itemsPerCase;
     private boolean active;
+    private String externalId;
 
     private ProductModelBuilder() {
       // no-op
@@ -169,6 +177,11 @@ public class ProductDto implements Serializable {
 
     public ProductModelBuilder isActive(boolean active) {
       this.active = active;
+      return this;
+    }
+
+    public ProductModelBuilder withExternalId(String externalId) {
+      this.externalId = externalId;
       return this;
     }
 

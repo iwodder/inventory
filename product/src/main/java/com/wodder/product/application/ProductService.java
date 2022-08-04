@@ -16,6 +16,8 @@ public interface ProductService {
       String unitPrice,
       String casePrice);
 
+  String createProduct(CreateProductCommand cmd);
+
   Boolean deleteProduct(String productId);
 
   Optional<ProductDto> updateProductCategory(String productId, String category);
@@ -30,4 +32,6 @@ public interface ProductService {
   Optional<ProductDto> loadProduct(String productId);
 
   List<ProductDto> loadAllActiveProducts();
+
+  Boolean receiveShipmentOfProducts(ReceiveShipmentCommand cmd);
 }

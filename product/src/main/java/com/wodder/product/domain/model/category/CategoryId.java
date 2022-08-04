@@ -1,4 +1,4 @@
-package com.wodder.product.domain.model.product;
+package com.wodder.product.domain.model.category;
 
 import java.util.Objects;
 import java.util.UUID;

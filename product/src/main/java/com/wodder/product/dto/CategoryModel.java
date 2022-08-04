@@ -1,7 +1,7 @@
 package com.wodder.product.dto;
 
 
-import com.wodder.product.domain.model.product.Category;
+import com.wodder.product.domain.model.category.Category;
 
 public class CategoryModel {
   private String name;

@@ -1,5 +1,6 @@
-package com.wodder.product.domain.model.product;
+package com.wodder.product.domain.model.category;
 
+import com.wodder.product.domain.model.product.Entity;
 import com.wodder.product.dto.CategoryModel;
 import java.util.Objects;
 

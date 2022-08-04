@@ -3,7 +3,7 @@ package com.wodder.product.domain.model.product;
 import java.math.BigDecimal;
 
 public class Price {
-  private static final Price ZERO = new Price("0", "0");
+  private static final Price ZERO = new Price("0.00", "0.00");
   private final BigDecimal unitPrice;
   private final BigDecimal casePrice;
 
@@ -29,6 +29,12 @@ public class Price {
   }
 
   public static Price of(String unitPrice, String casePrice) {
+    if (unitPrice == null) {
+      throw new IllegalArgumentException("A unit price is required for pricing.");
+    }
+    if (casePrice == null) {
+      casePrice = "0.00";
+    }
     return new Price(unitPrice, casePrice);
   }
 

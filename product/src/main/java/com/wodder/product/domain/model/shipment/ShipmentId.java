@@ -1,26 +1,25 @@
-package com.wodder.product.domain.model.product;
+package com.wodder.product.domain.model.shipment;
 
 import java.util.Objects;
 import java.util.UUID;
 
-public class ProductId {
-
+public class ShipmentId {
   private final String id;
 
-  ProductId() {
+  ShipmentId() {
     id = UUID.randomUUID().toString();
   }
 
-  private ProductId(String id) {
+  private ShipmentId(String id) {
     this.id = id;
   }
 
-  public static ProductId generateId() {
-    return new ProductId();
+  public static ShipmentId generateId() {
+    return new ShipmentId();
   }
 
-  public static ProductId productIdOf(String value) {
-    return new ProductId(value);
+  public static ShipmentId of(String value) {
+    return new ShipmentId(value);
   }
 
   public String getId() {
@@ -32,20 +31,15 @@ public class ProductId {
     if (this == o) {
       return true;
     }
-    if (!(o instanceof ProductId)) {
+    if (!(o instanceof ShipmentId)) {
       return false;
     }
-    ProductId that = (ProductId) o;
+    ShipmentId that = (ShipmentId) o;
     return Objects.equals(id, that.id);
   }
 
   @Override
   public int hashCode() {
     return Objects.hash(id);
-  }
-
-  @Override
-  public String toString() {
-    return this.id;
   }
 }

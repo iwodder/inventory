@@ -35,7 +35,7 @@ class PriceTest {
   @DisplayName("Should be able to create a zero price")
   void zero() {
     Price p = Price.ofZero();
-    assertEquals(BigDecimal.ZERO, p.getUnitPrice());
-    assertEquals(BigDecimal.ZERO, p.getCasePrice());
+    assertEquals(new BigDecimal("0.00"), p.getUnitPrice());
+    assertEquals(new BigDecimal("0.00"), p.getCasePrice());
   }
 }

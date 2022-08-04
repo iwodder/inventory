@@ -1,27 +1,37 @@
 package com.wodder.product.application;
 
-import com.wodder.product.domain.model.product.Category;
-import com.wodder.product.domain.model.product.CategoryId;
+import com.wodder.product.domain.model.category.Category;
+import com.wodder.product.domain.model.category.CategoryId;
+import com.wodder.product.domain.model.product.ExternalId;
 import com.wodder.product.domain.model.product.Price;
 import com.wodder.product.domain.model.product.Product;
 import com.wodder.product.domain.model.product.ProductId;
 import com.wodder.product.domain.model.product.UnitOfMeasurement;
+import com.wodder.product.domain.model.shipment.LineItem;
+import com.wodder.product.domain.model.shipment.Shipment;
+import com.wodder.product.domain.model.shipment.ShipmentDomainService;
+import com.wodder.product.domain.model.shipment.ShipmentId;
 import com.wodder.product.dto.ProductDto;
+import com.wodder.product.persistence.ProductRepository;
 import com.wodder.product.persistence.Repository;
+import com.wodder.product.persistence.ShipmentRepository;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
 class ProductServiceImpl implements ProductService {
 
-  private final Repository<Product, ProductId> productRepository;
+  private final ProductRepository productRepository;
   private final Repository<Category, CategoryId> categoryRepository;
+  private final ShipmentRepository shipmentRepository;
 
   ProductServiceImpl(
-      Repository<Product, ProductId> productRepository,
-      Repository<Category, CategoryId> categoryRepository) {
+      ProductRepository productRepository,
+      Repository<Category, CategoryId> categoryRepository,
+      ShipmentRepository shipmentRepository) {
     this.productRepository = productRepository;
     this.categoryRepository = categoryRepository;
+    this.shipmentRepository = shipmentRepository;
   }
 
   @Override
@@ -56,6 +66,27 @@ class ProductServiceImpl implements ProductService {
             new Price(unitPrice, casePrice));
 
     return Optional.of(productRepository.createItem(item)).map(Product::toItemModel);
+  }
+
+  @Override
+  public String createProduct(CreateProductCommand cmd) {
+    Optional<Category> opt =
+        categoryRepository.loadById(CategoryId.categoryIdOf(cmd.getCategoryId()));
+
+    if (opt.isPresent()) {
+      UnitOfMeasurement uom = UnitOfMeasurement.of(cmd.getUnits(), cmd.getCasePack());
+      Price price = Price.of(cmd.getUnitPrice(), cmd.getCasePrice());
+      Category c = opt.get();
+      Product newProduct = productRepository.createItem(
+          Product.from(
+              ExternalId.of(cmd.getExternalId()),
+              cmd.getName(), c, uom, price));
+
+      return newProduct.getId().toString();
+    } else {
+      throw new IllegalArgumentException(
+          String.format("Unknown categoryId{ %s }", cmd.getCategoryId()));
+    }
   }
 
   @Override
@@ -133,6 +164,32 @@ class ProductServiceImpl implements ProductService {
       return Optional.empty();
     }
     return productRepository.loadById(ProductId.productIdOf(productId)).map(Product::toItemModel);
+  }
+
+  @Override
+  public Boolean receiveShipmentOfProducts(ReceiveShipmentCommand cmd) {
+    ShipmentId id = ShipmentId.of(cmd.getShipmentId());
+    Optional<Shipment> opt = shipmentRepository.loadById(id);
+    if (opt.isEmpty()) {
+      Shipment s = ShipmentDomainService.addLineItems(Shipment.from(id), cmd);
+      shipmentRepository.createItem(s);
+
+      for (LineItem e : s.getLineItems()) {
+        ExternalId externalId = ExternalId.of(e.getId().getValue());
+        Optional<Product> p = productRepository.loadByExternalId(externalId);
+        Product product = p.orElseGet(() -> productRepository.createItem(
+            Product.from(
+                externalId,
+                e.getName(),
+                Category.defaultCategory(),
+                UnitOfMeasurement.of(e.getUnits().getValue(), e.getPack().getValue()),
+                Price.of(e.getPrice().getItemPrice(), e.getPrice().getCasePrice())
+            )));
+      }
+      return true;
+    } else {
+      throw new IllegalArgumentException("Shipment with id {} was already received");
+    }
   }
 
   @Override

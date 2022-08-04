@@ -4,8 +4,8 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import com.wodder.product.domain.model.product.Category;
-import com.wodder.product.domain.model.product.CategoryId;
+import com.wodder.product.domain.model.category.Category;
+import com.wodder.product.domain.model.category.CategoryId;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;

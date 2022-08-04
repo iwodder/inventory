@@ -1,7 +1,7 @@
 package com.wodder.product.application;
 
-import com.wodder.product.domain.model.product.Category;
-import com.wodder.product.domain.model.product.CategoryId;
+import com.wodder.product.domain.model.category.Category;
+import com.wodder.product.domain.model.category.CategoryId;
 import com.wodder.product.dto.CategoryModel;
 import com.wodder.product.persistence.Repository;
 import java.util.List;

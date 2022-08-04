@@ -2,6 +2,7 @@ package com.wodder.product.domain.model.product;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+import com.wodder.product.domain.model.category.Category;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 

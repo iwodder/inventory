@@ -1,8 +1,8 @@
 package com.wodder.product.persistence;
 
 
-import com.wodder.product.domain.model.product.Category;
-import com.wodder.product.domain.model.product.CategoryId;
+import com.wodder.product.domain.model.category.Category;
+import com.wodder.product.domain.model.category.CategoryId;
 import com.wodder.product.domain.model.product.Price;
 import com.wodder.product.domain.model.product.Product;
 import com.wodder.product.domain.model.product.ProductId;

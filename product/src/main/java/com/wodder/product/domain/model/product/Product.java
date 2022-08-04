@@ -1,9 +1,12 @@
 package com.wodder.product.domain.model.product;
 
+import com.wodder.product.domain.model.category.Category;
 import com.wodder.product.dto.ProductDto;
 import java.math.BigDecimal;
 
 public class Product extends Entity<ProductId> {
+
+  private ExternalId externalId;
   private String name;
   private Category category;
   private UnitOfMeasurement uom;
@@ -11,7 +14,7 @@ public class Product extends Entity<ProductId> {
   private boolean active;
 
   public Product(String name, Category category) {
-    this(ProductId.generateId(), name, category, true, null, null);
+    this(ProductId.generateId(), name, category, true, null, null, null);
   }
 
   public Product(
@@ -19,16 +22,16 @@ public class Product extends Entity<ProductId> {
       Category category,
       UnitOfMeasurement unitOfMeasurement,
       Price price) {
-    this(ProductId.generateId(), name, category, true, unitOfMeasurement, price);
+    this(ProductId.generateId(), name, category, true, unitOfMeasurement, price, null);
   }
 
   public Product(ProductId id, String name, Category category) {
-    this(id, name, category, true, null, null);
+    this(id, name, category, true, null, null, null);
   }
 
   public Product(
       ProductId id, String name, Category category, UnitOfMeasurement uom) {
-    this(id, name, category, true, uom, null);
+    this(id, name, category, true, uom, null, null);
   }
 
   public Product(
@@ -37,7 +40,7 @@ public class Product extends Entity<ProductId> {
       Category category,
       UnitOfMeasurement uom,
       Price price) {
-    this(id, name, category, true, uom, price);
+    this(id, name, category, true, uom, price, null);
   }
 
   public Product(Product that) {
@@ -47,16 +50,24 @@ public class Product extends Entity<ProductId> {
     this.active = that.active;
     this.uom = that.uom;
     this.price = that.price;
+    this.externalId = that.externalId;
   }
 
   private Product(
-      ProductId id, String name, Category c, Boolean a, UnitOfMeasurement u, Price p) {
+      ProductId id, String name, Category c, Boolean a, UnitOfMeasurement u,
+      Price p, ExternalId externalId) {
     super(id);
     setName(name);
     setCategory(c);
     this.active = a;
     this.uom = u;
     this.price = p;
+    this.externalId = externalId;
+  }
+
+  public static Product from(
+      ExternalId ext, String name, Category cat, UnitOfMeasurement uom, Price price) {
+    return new Product(ProductId.generateId(), name, cat, true, uom, price, ext);
   }
 
   public String getName() {
@@ -134,6 +145,10 @@ public class Product extends Entity<ProductId> {
     return price;
   }
 
+  public ExternalId getExternalId() {
+    return externalId;
+  }
+
   @Override
   public boolean equals(Object o) {
     if (this == o) {
@@ -166,6 +181,9 @@ public class Product extends Entity<ProductId> {
     if (this.price != null) {
       b.withItemPrice(price.getUnitPrice().toString())
           .withCasePrice(price.getCasePrice().toString());
+    }
+    if (this.externalId != null) {
+      b.withExternalId(externalId.getId());
     }
     return b.build();
   }
