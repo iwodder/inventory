@@ -80,14 +80,14 @@ class ProductServiceImplTest {
   @DisplayName("Can load existing item")
   void read_item() {
     ProductDto newItem = storage.createNewProduct(getDefaultItem().build()).get();
-    Optional<ProductDto> result = storage.loadProduct(newItem.getId());
+    Optional<ProductDto> result = storage.loadProductById(newItem.getId());
     assertTrue(result.isPresent());
   }
 
   @Test
   @DisplayName("Id is required to load item")
   void read_item_bo_id() {
-    Optional<ProductDto> item = storage.loadProduct(null);
+    Optional<ProductDto> item = storage.loadProductById(null);
     assertFalse(item.isPresent());
   }
 
@@ -141,7 +141,7 @@ class ProductServiceImplTest {
 
     String id = storage.createProduct(cmd);
 
-    Optional<ProductDto> opt2 = storage.loadProduct(id);
+    Optional<ProductDto> opt2 = storage.loadProductById(id);
     assertTrue(opt2.isPresent(), () -> String.format("Expected to find Product with id {%s}", id));
     ProductDto dto = opt2.get();
     assertEquals("Cheddar Cheese", dto.getName(),
@@ -229,6 +229,34 @@ class ProductServiceImplTest {
         .stream()
         .anyMatch(p -> p.getExternalId().equals("item123"))
     );
+  }
+
+  @Test
+  @DisplayName("Receiving a shipment should update the quantity in-stock for a product")
+  void updates_in_stock() {
+    ReceiveShipmentCommand cmd = new ReceiveShipmentCommand();
+    cmd.setShipmentId("s1");
+    cmd.addItem(new Item()
+        .setId("item1")
+        .setName("Cheddar Cheese")
+        .setUnits("ounces")
+        .setItemsPerCase("4")
+        .setItemPrice("0.56")
+        .setCasePrice("0.00")
+        .setNumberOfCases("0")
+        .setNumberOfItems("4"));
+
+    assertTrue(storage.receiveShipmentOfProducts(cmd));
+    Optional<ProductDto> opt = storage.loadProductByExternalId("item1");
+    assertTrue(opt.isPresent());
+    ProductDto dto = opt.get();
+    assertEquals("4", dto.getQtyOnHand());
+  }
+
+  @Test
+  @DisplayName("Should be able to load a product by external id")
+  void load_by_external() {
+    assertTrue(storage.loadProductByExternalId("item1").isPresent());
   }
 
   private ProductDto.ProductModelBuilder getDefaultItem() {

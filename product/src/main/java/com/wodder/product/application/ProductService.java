@@ -29,7 +29,8 @@ public interface ProductService {
 
   Optional<ProductDto> updateProductPrice(String productId, String unitPrice, String casePrice);
 
-  Optional<ProductDto> loadProduct(String productId);
+  Optional<ProductDto> loadProductById(String productId);
+  Optional<ProductDto> loadProductByExternalId(String externalId);
 
   List<ProductDto> loadAllActiveProducts();
 

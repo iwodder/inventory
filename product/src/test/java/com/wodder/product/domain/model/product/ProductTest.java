@@ -123,4 +123,38 @@ class ProductTest {
     assertEquals(new BigDecimal("1.99"), i.getUnitPrice());
     assertEquals(new BigDecimal("10.96"), i.getCasePrice());
   }
+
+  @Test
+  @DisplayName("Can successfully add received quantity")
+  void receive_qty() {
+    Product p = Product.from(
+        ExternalId.of("e123"),
+        "Cheese",
+        Category.defaultCategory(),
+        UnitOfMeasurement.of("ounces", "4"),
+        Price.of("0.50", "1.00")
+    );
+
+    p.receiveQty(Quantity.of("1"));
+
+    assertEquals(Quantity.of("1"), p.getQtyOnHand());
+  }
+
+  @Test
+  @DisplayName("Receiving a quantity adds to the current quantity")
+  void receive_qty_adds() {
+   Product p = new Product(
+              ProductId.productIdOf("p123"),
+              ExternalId.of("e123"),
+          "Cheese",
+              Category.defaultCategory(),
+              UnitOfMeasurement.of("Ounces", "5"),
+              Price.of("0.50", "1.00"),
+              Quantity.of("1")
+       );
+
+   p.receiveQty(Quantity.of("1"));
+
+   assertEquals(Quantity.of("2"), p.getQtyOnHand());
+  }
 }

@@ -11,6 +11,7 @@ public class Product extends Entity<ProductId> {
   private Category category;
   private UnitOfMeasurement uom;
   private Price price;
+  private Quantity quantity = Quantity.zero();
   private boolean active;
 
   public Product(String name, Category category) {
@@ -43,6 +44,23 @@ public class Product extends Entity<ProductId> {
     this(id, name, category, true, uom, price, null);
   }
 
+  public Product(
+      ProductId id,
+      ExternalId externalId,
+      String name,
+      Category category,
+      UnitOfMeasurement unitOfMeasurement,
+      Price price,
+      Quantity quantity) {
+    super(id);
+    this.externalId = externalId;
+    this.name = name;
+    this.category = category;
+    this.uom = unitOfMeasurement;
+    this.price = price;
+    this.quantity = quantity;
+  }
+
   public Product(Product that) {
     super(that.id);
     this.name = that.name;
@@ -51,6 +69,7 @@ public class Product extends Entity<ProductId> {
     this.uom = that.uom;
     this.price = that.price;
     this.externalId = that.externalId;
+    this.quantity = that.quantity;
   }
 
   private Product(
@@ -173,6 +192,7 @@ public class Product extends Entity<ProductId> {
             .withId(this.id.getId())
             .withName(this.name)
             .withCategory(this.category.getName())
+            .withQuantityOnHand(String.valueOf(quantity.getAmount()))
             .isActive(this.active);
 
     if (this.uom != null) {
@@ -186,5 +206,13 @@ public class Product extends Entity<ProductId> {
       b.withExternalId(externalId.getId());
     }
     return b.build();
+  }
+
+  public void receiveQty(Quantity of) {
+    this.quantity = quantity.add(of);
+  }
+
+  public Quantity getQtyOnHand() {
+    return quantity;
   }
 }

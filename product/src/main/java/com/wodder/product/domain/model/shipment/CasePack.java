@@ -15,4 +15,8 @@ public class CasePack {
   public String getValue() {
     return pack;
   }
+
+  public int getItemsPerCase() {
+    return Integer.parseInt(pack);
+  }
 }

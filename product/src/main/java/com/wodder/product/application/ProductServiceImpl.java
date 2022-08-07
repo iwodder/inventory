@@ -6,6 +6,7 @@ import com.wodder.product.domain.model.product.ExternalId;
 import com.wodder.product.domain.model.product.Price;
 import com.wodder.product.domain.model.product.Product;
 import com.wodder.product.domain.model.product.ProductId;
+import com.wodder.product.domain.model.product.Quantity;
 import com.wodder.product.domain.model.product.UnitOfMeasurement;
 import com.wodder.product.domain.model.shipment.LineItem;
 import com.wodder.product.domain.model.shipment.Shipment;
@@ -159,11 +160,19 @@ class ProductServiceImpl implements ProductService {
   }
 
   @Override
-  public Optional<ProductDto> loadProduct(String productId) {
+  public Optional<ProductDto> loadProductById(String productId) {
     if (productId == null) {
       return Optional.empty();
     }
     return productRepository.loadById(ProductId.productIdOf(productId)).map(Product::toItemModel);
+  }
+
+  @Override
+  public Optional<ProductDto> loadProductByExternalId(String externalId) {
+    if (externalId == null || externalId.isBlank()) {
+      return Optional.empty();
+    }
+    return productRepository.loadByExternalId(ExternalId.of(externalId)).map(Product::toItemModel);
   }
 
   @Override
@@ -185,6 +194,8 @@ class ProductServiceImpl implements ProductService {
                 UnitOfMeasurement.of(e.getUnits().getValue(), e.getPack().getValue()),
                 Price.of(e.getPrice().getItemPrice(), e.getPrice().getCasePrice())
             )));
+
+        product.receiveQty(Quantity.of(e.getNumberOfPieces()));
       }
       return true;
     } else {

@@ -15,6 +15,7 @@ public class ProductDto implements Serializable {
   private boolean active;
   private int unitsPerCase;
   private String externalId;
+  private String qtyOnHand;
 
   private ProductDto(ProductModelBuilder b) {
     this.id = b.id;
@@ -26,6 +27,7 @@ public class ProductDto implements Serializable {
     this.itemPrice = b.itemPrice;
     this.casePrice = b.casePrice;
     this.externalId = b.externalId;
+    this.qtyOnHand = b.qtyOnHand;
   }
 
   public ProductDto(ProductDto that) {
@@ -125,6 +127,18 @@ public class ProductDto implements Serializable {
     return externalId;
   }
 
+  public void setExternalId(String externalId) {
+    this.externalId = externalId;
+  }
+
+  public String getQtyOnHand() {
+    return qtyOnHand;
+  }
+
+  public void setQtyOnHand(String qtyOnHand) {
+    this.qtyOnHand = qtyOnHand;
+  }
+
   public static class ProductModelBuilder {
     private String id;
     private String name;
@@ -135,6 +149,7 @@ public class ProductDto implements Serializable {
     private int itemsPerCase;
     private boolean active;
     private String externalId;
+    private String qtyOnHand;
 
     private ProductModelBuilder() {
       // no-op
@@ -182,6 +197,11 @@ public class ProductDto implements Serializable {
 
     public ProductModelBuilder withExternalId(String externalId) {
       this.externalId = externalId;
+      return this;
+    }
+
+    public ProductModelBuilder withQuantityOnHand(String qtyOnHand) {
+      this.qtyOnHand = qtyOnHand;
       return this;
     }
 

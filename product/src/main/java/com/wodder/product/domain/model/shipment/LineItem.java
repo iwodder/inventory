@@ -41,6 +41,10 @@ public class LineItem {
     this.pack = b.casePack;
   }
 
+  public String getNumberOfPieces() {
+    return qty.calculatePieces(pack);
+  }
+
   public static Builder builder() {
     return new Builder();
   }
@@ -82,6 +86,11 @@ public class LineItem {
 
     public Builder withUnits(String units) {
       this.units = Units.of(units);
+      return this;
+    }
+
+    public Builder withQuantityReceived(String units, String cases) {
+      this.qtyRecieved = QtyRecieved.from(units, cases);
       return this;
     }
 

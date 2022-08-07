@@ -11,14 +11,16 @@ public class ShipmentDomainService {
     List<LineItem> items = new ArrayList<>();
     cmd.getItems()
         .forEachRemaining(i ->
-            items.add(LineItem.builder()
-            .withId(i.getId())
-            .withName(i.getName())
-            .withCasePack(i.getItemsPerCase())
-            .withUnits(i.getUnits())
-            .withItemPrice(i.getItemPrice())
-            .withCasePrice(i.getCasePrice())
-            .build())
+            items.add(
+                LineItem.builder()
+                    .withId(i.getId())
+                    .withName(i.getName())
+                    .withCasePack(i.getItemsPerCase())
+                    .withUnits(i.getUnits())
+                    .withItemPrice(i.getItemPrice())
+                    .withCasePrice(i.getCasePrice())
+                    .withQuantityReceived(i.getNumberOfItems(), i.getNumberOfCases())
+                    .build())
         );
     return from.withLineItems(items);
   }
