@@ -7,7 +7,7 @@ import java.math.BigDecimal;
 public class Product extends Entity<ProductId> {
 
   private ExternalId externalId;
-  private String name;
+  private ProductName name;
   private Category category;
   private UnitOfMeasurement uom;
   private Price price;
@@ -54,7 +54,7 @@ public class Product extends Entity<ProductId> {
       Quantity quantity) {
     super(id);
     this.externalId = externalId;
-    this.name = name;
+    this.name = ProductName.of(name);
     this.category = category;
     this.uom = unitOfMeasurement;
     this.price = price;
@@ -89,15 +89,12 @@ public class Product extends Entity<ProductId> {
     return new Product(ProductId.generateId(), name, cat, true, uom, price, ext);
   }
 
-  public String getName() {
+  public ProductName getName() {
     return name;
   }
 
   public void setName(String name) {
-    if (name == null || name.isBlank()) {
-      throw new IllegalArgumentException(name == null ? "Name was null" : "Name was blank");
-    }
-    this.name = name;
+    this.name = ProductName.of(name);
   }
 
   public Category getCategory() {
@@ -190,7 +187,7 @@ public class Product extends Entity<ProductId> {
     ProductDto.ProductModelBuilder b =
         ProductDto.builder()
             .withId(this.id.getId())
-            .withName(this.name)
+            .withName(this.name.getValue())
             .withCategory(this.category.getName())
             .withQuantityOnHand(String.valueOf(quantity.getAmount()))
             .isActive(this.active);
