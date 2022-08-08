@@ -121,9 +121,10 @@ class ProductServiceImplTest {
   @Test
   @DisplayName("Can update the price for an item")
   void update_price() {
-    ProductDto newItem =
-        storage.createNewProduct(getDefaultItem().build()).get();
+    ProductDto newItem = storage.createNewProduct(getDefaultItem().build()).get();
+
     ProductDto result = storage.updateProductPrice(newItem.getId(), "0.68", "19.23").get();
+
     assertEquals("0.68", result.getItemPrice());
     assertEquals("19.23", result.getCasePrice());
   }

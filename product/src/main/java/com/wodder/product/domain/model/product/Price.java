@@ -3,47 +3,34 @@ package com.wodder.product.domain.model.product;
 import java.math.BigDecimal;
 
 public class Price {
-  private static final Price ZERO = new Price("0.00", "0.00");
-  private final BigDecimal unitPrice;
-  private final BigDecimal casePrice;
+  private static final Price ZERO = new Price("0.00");
+  private final BigDecimal value;
 
-  public Price(String unitPrice, String casePrice) {
-    this(new BigDecimal(unitPrice), new BigDecimal(casePrice));
+  public Price(String value) {
+    this(new BigDecimal(value));
   }
 
-  public Price(BigDecimal unitPrice, BigDecimal casePrice) {
-    this.unitPrice = unitPrice;
-    this.casePrice = casePrice;
-  }
-
-  public Price(BigDecimal unitPrice) {
-    this(unitPrice, null);
+  public Price(BigDecimal value) {
+    this.value = value;
   }
 
   public Price(Price that) {
-    this(that.getUnitPrice(), that.getCasePrice());
+    this(that.getValue());
   }
 
   public static Price ofZero() {
     return ZERO;
   }
 
-  public static Price of(String unitPrice, String casePrice) {
-    if (unitPrice == null) {
-      throw new IllegalArgumentException("A unit price is required for pricing.");
+  public static Price of(String value) {
+    if (value == null || value.isBlank()) {
+      throw new IllegalArgumentException("Price is required");
     }
-    if (casePrice == null) {
-      casePrice = "0.00";
-    }
-    return new Price(unitPrice, casePrice);
+    return new Price(value);
   }
 
-  public BigDecimal getUnitPrice() {
-    return unitPrice;
-  }
-
-  public BigDecimal getCasePrice() {
-    return casePrice;
+  public BigDecimal getValue() {
+    return value;
   }
 
   @Override
@@ -56,25 +43,17 @@ public class Price {
     }
 
     Price price = (Price) o;
-    if (!getUnitPrice().equals(price.getUnitPrice())) {
-      return false;
-    }
-    return getCasePrice().equals(price.getCasePrice());
+    return value.equals(price.getValue());
   }
 
   @Override
   public int hashCode() {
-    int result = getUnitPrice().hashCode();
-    result = 31 * result + getCasePrice().hashCode();
-    return result;
+    int result = getValue().hashCode();
+    return 31 * result;
   }
 
   @Override
   public String toString() {
-    if (casePrice != null) {
-      return String.format("Item Price=$%.2f, Case Price=$%.2f", unitPrice, casePrice);
-    } else {
-      return String.format("Item Price=$%.2f, Case Price=N/A", unitPrice);
-    }
+    return "Price{value=" + value + '}';
   }
 }

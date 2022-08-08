@@ -35,9 +35,7 @@ public class ProductName {
 
   @Override
   public String toString() {
-    return "ProductName{" +
-        "name='" + name + '\'' +
-        '}';
+    return "ProductName{name='" + name + "\'}";
   }
 
   public String getValue() {

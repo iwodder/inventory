@@ -2,7 +2,6 @@ package com.wodder.product.domain.model.product;
 
 import com.wodder.product.domain.model.category.Category;
 import com.wodder.product.dto.ProductDto;
-import java.math.BigDecimal;
 
 public class Product extends Entity<ProductId> {
 
@@ -10,7 +9,8 @@ public class Product extends Entity<ProductId> {
   private ProductName name;
   private Category category;
   private UnitOfMeasurement uom;
-  private Price price;
+  private Price unitPrice;
+  private Price casePrice;
   private Quantity quantity = Quantity.zero();
   private boolean active;
 
@@ -22,8 +22,8 @@ public class Product extends Entity<ProductId> {
       String name,
       Category category,
       UnitOfMeasurement unitOfMeasurement,
-      Price price) {
-    this(ProductId.generateId(), name, category, true, unitOfMeasurement, price, null);
+      Price unitPrice) {
+    this(ProductId.generateId(), name, category, true, unitOfMeasurement, unitPrice, null);
   }
 
   public Product(ProductId id, String name, Category category) {
@@ -40,8 +40,8 @@ public class Product extends Entity<ProductId> {
       String name,
       Category category,
       UnitOfMeasurement uom,
-      Price price) {
-    this(id, name, category, true, uom, price, null);
+      Price unitPrice) {
+    this(id, name, category, true, uom, unitPrice, null);
   }
 
   public Product(
@@ -50,14 +50,14 @@ public class Product extends Entity<ProductId> {
       String name,
       Category category,
       UnitOfMeasurement unitOfMeasurement,
-      Price price,
+      Price unitPrice,
       Quantity quantity) {
     super(id);
     this.externalId = externalId;
     this.name = ProductName.of(name);
     this.category = category;
     this.uom = unitOfMeasurement;
-    this.price = price;
+    this.unitPrice = unitPrice;
     this.quantity = quantity;
   }
 
@@ -67,7 +67,8 @@ public class Product extends Entity<ProductId> {
     this.category = that.category;
     this.active = that.active;
     this.uom = that.uom;
-    this.price = that.price;
+    this.unitPrice = that.unitPrice;
+    this.casePrice = that.casePrice;
     this.externalId = that.externalId;
     this.quantity = that.quantity;
   }
@@ -80,8 +81,20 @@ public class Product extends Entity<ProductId> {
     setCategory(c);
     this.active = a;
     this.uom = u;
-    this.price = p;
+    this.unitPrice = p;
     this.externalId = externalId;
+  }
+
+  private Product(Builder b) {
+    super(b.id);
+    this.name = b.name;
+    this.externalId = b.extId;
+    this.category = b.category;
+    this.active = b.active;
+    this.uom = b.uom;
+    this.unitPrice = b.unitPrice;
+    this.casePrice = b.casePrice;
+    this.quantity = b.quantity;
   }
 
   public static Product from(
@@ -129,8 +142,12 @@ public class Product extends Entity<ProductId> {
     this.uom = uom;
   }
 
-  public void updatePrice(Price price) {
-    this.price = price;
+  public void updateUnitPrice(Price price) {
+    this.unitPrice = price;
+  }
+
+  public void updateCasePrice(Price price) {
+    this.casePrice = price;
   }
 
   public boolean isActive() {
@@ -149,20 +166,24 @@ public class Product extends Entity<ProductId> {
     return uom.getItemsPerCase();
   }
 
-  public BigDecimal getUnitPrice() {
-    return price.getUnitPrice();
+  public Price getCasePrice() {
+    return this.casePrice;
   }
 
-  public BigDecimal getCasePrice() {
-    return price.getCasePrice();
-  }
-
-  public Price getPrice() {
-    return price;
+  public Price getUnitPrice() {
+    return unitPrice;
   }
 
   public ExternalId getExternalId() {
     return externalId;
+  }
+
+  public void receiveQty(Quantity of) {
+    this.quantity = quantity.add(of);
+  }
+
+  public Quantity getQtyOnHand() {
+    return quantity;
   }
 
   @Override
@@ -195,9 +216,11 @@ public class Product extends Entity<ProductId> {
     if (this.uom != null) {
       b.withUnitOfMeasurement(uom.getUnit()).withItemsPerCase(uom.getItemsPerCase());
     }
-    if (this.price != null) {
-      b.withItemPrice(price.getUnitPrice().toString())
-          .withCasePrice(price.getCasePrice().toString());
+    if (this.unitPrice != null) {
+      b.withItemPrice(unitPrice.getValue().toString());
+    }
+    if (this.casePrice != null) {
+      b.withCasePrice(casePrice.getValue().toString());
     }
     if (this.externalId != null) {
       b.withExternalId(externalId.getId());
@@ -205,11 +228,66 @@ public class Product extends Entity<ProductId> {
     return b.build();
   }
 
-  public void receiveQty(Quantity of) {
-    this.quantity = quantity.add(of);
+  public static Builder builder(ProductId id, ProductName name) {
+    return new Builder(id, name);
   }
 
-  public Quantity getQtyOnHand() {
-    return quantity;
+  public static class Builder {
+    private ProductName name;
+    private ProductId id;
+    private ExternalId extId;
+    private Category category;
+    private boolean active;
+    private UnitOfMeasurement uom;
+    private Price unitPrice;
+    private Price casePrice;
+    private Quantity quantity;
+
+    private Builder(ProductId id, ProductName name) {
+      if (name == null) {
+        throw new IllegalArgumentException("ProductName is required.");
+      }
+      this.id = id;
+      this.name = name;
+    }
+
+    public Builder withExternalId(ExternalId id) {
+      this.extId = id;
+      return this;
+    }
+
+    public Builder withCategory(Category c) {
+      this.category = c;
+      return this;
+    }
+
+    public Builder isActive(boolean a) {
+      this.active = a;
+      return this;
+    }
+
+    public Builder withUnitsOfMeasurement(UnitOfMeasurement uom) {
+      this.uom = uom;
+      return this;
+    }
+
+    public Builder withUnitPrice(Price p) {
+      this.unitPrice = p;
+      return this;
+    }
+
+    public Builder withCasePrice(Price p) {
+      this.casePrice = p;
+      return this;
+    }
+
+    public Builder withStockedCount(Quantity qty) {
+      this.quantity = qty;
+      return this;
+    }
+
+    public Product build() {
+      return new Product(this);
+    }
   }
 }

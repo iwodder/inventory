@@ -69,15 +69,15 @@ public class TestPersistenceFactory implements PersistenceFactory {
 
     productRepository.createItem(
         Product.from(ExternalId.of("item1"),
-            "2% Milk", c2, new UnitOfMeasurement("Gallons", 2), new Price("2.98", "5.96")));
+            "2% Milk", c2, new UnitOfMeasurement("Gallons", 2), new Price("2.98")));
     productRepository.createItem(
         Product.from(ExternalId.of("item2"),
-            "Greek Yogurt", c2, new UnitOfMeasurement("Quarts", 2), new Price("1.99", "4.98")));
+            "Greek Yogurt", c2, new UnitOfMeasurement("Quarts", 2), new Price("1.99")));
     productRepository.createItem(
         Product.from(ExternalId.of("item3"),
-            "Ice", c2, new UnitOfMeasurement("Fluid Ounces", 12), new Price("0.99", "10.99")));
+            "Ice", c2, new UnitOfMeasurement("Fluid Ounces", 12), new Price("0.99")));
     productRepository.createItem(
         Product.from(ExternalId.of("item4"),
-            "Pistachios", c4, new UnitOfMeasurement("Pounds", 1), new Price("10.29", "10.29")));
+            "Pistachios", c4, new UnitOfMeasurement("Pounds", 1), new Price("10.29")));
   }
 }

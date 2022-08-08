@@ -45,8 +45,6 @@ public class Quantity {
 
   @Override
   public String toString() {
-    return "Quantity{" +
-        "amt=" + amt +
-        '}';
+    return "Quantity{amt=" + amt + '}';
   }
 }

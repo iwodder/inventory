@@ -4,7 +4,6 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import com.wodder.product.domain.model.category.Category;
-import java.math.BigDecimal;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
@@ -24,7 +23,7 @@ class ProductTest {
     assertThrows(
         IllegalArgumentException.class,
         () -> {
-          Product i = new Product(null, new Category("Dry Goods"));
+          Product.builder(ProductId.generateId(), null).build();
         });
   }
 
@@ -33,9 +32,7 @@ class ProductTest {
   void blank_name() {
     assertThrows(
         IllegalArgumentException.class,
-        () -> {
-          Product i = new Product("", new Category("Dry Goods"));
-        });
+        () -> Product.builder(ProductId.generateId(), ProductName.of("")).build());
   }
 
   @Test
@@ -69,11 +66,10 @@ class ProductTest {
   void has_uom() {
     UnitOfMeasurement uom = new UnitOfMeasurement("Loaves", 4);
     Product i =
-        new Product(
-            ProductId.generateId(),
-            "Bread",
-            new Category("Dry Goods"),
-            uom);
+        Product.builder(ProductId.generateId(), ProductName.of("Bread"))
+            .withCategory(Category.of("Dry Goods"))
+            .withUnitsOfMeasurement(uom)
+            .build();
     assertEquals(uom, i.getUnits());
     assertEquals(4, i.getUnitsPerCase());
   }
@@ -94,34 +90,35 @@ class ProductTest {
   }
 
   @Test
-  @DisplayName("Inventory Item can be created with a price")
+  @DisplayName("Product can be created with a price")
   void has_price() {
-    Price p = new Price(new BigDecimal("0.99"), new BigDecimal("3.96"));
     Product i =
-        new Product(
-            ProductId.generateId(),
-            "Bread",
-            new Category("Dry Goods"),
-            new UnitOfMeasurement("Loaves", 4),
-            p);
-    assertEquals(new BigDecimal("0.99"), i.getUnitPrice());
-    assertEquals(new BigDecimal("3.96"), i.getCasePrice());
+        Product.builder(ProductId.generateId(), ProductName.of("Bread"))
+            .withCategory(Category.of("Dry Goods"))
+            .withUnitsOfMeasurement(UnitOfMeasurement.of("Loaves", "4"))
+            .withUnitPrice(Price.of("0.99"))
+            .withCasePrice(Price.of("3.96"))
+            .build();
+
+    assertEquals(Price.of("0.99"), i.getUnitPrice());
+    assertEquals(Price.of("3.96"), i.getCasePrice());
   }
 
   @Test
   @DisplayName("Can successfully update an item's price")
   void update_price() {
-    Price p = new Price(new BigDecimal("1.99"), new BigDecimal("10.96"));
     Product i =
-        new Product(
-            ProductId.generateId(),
-            "Bread",
-            new Category("Dry Goods"),
-            new UnitOfMeasurement("Loaves", 4),
-            new Price(new BigDecimal("0.99"), new BigDecimal("3.96")));
-    i.updatePrice(p);
-    assertEquals(new BigDecimal("1.99"), i.getUnitPrice());
-    assertEquals(new BigDecimal("10.96"), i.getCasePrice());
+        Product.builder(ProductId.generateId(), ProductName.of("Bread"))
+            .withCategory(Category.of("Dry Goods"))
+            .withUnitsOfMeasurement(UnitOfMeasurement.of("Loaves", "4"))
+            .withUnitPrice(Price.of("0.99"))
+            .withCasePrice(Price.of("3.96"))
+            .build();
+
+    i.updateUnitPrice(Price.of("1.99"));
+    i.updateCasePrice(Price.of("10.96"));
+    assertEquals(Price.of("1.99"), i.getUnitPrice());
+    assertEquals(Price.of("10.96"), i.getCasePrice());
   }
 
   @Test
@@ -132,7 +129,7 @@ class ProductTest {
         "Cheese",
         Category.defaultCategory(),
         UnitOfMeasurement.of("ounces", "4"),
-        Price.of("0.50", "1.00")
+        Price.of("0.50")
     );
 
     p.receiveQty(Quantity.of("1"));
@@ -149,7 +146,7 @@ class ProductTest {
           "Cheese",
               Category.defaultCategory(),
               UnitOfMeasurement.of("Ounces", "5"),
-              Price.of("0.50", "1.00"),
+              Price.of("0.50"),
               Quantity.of("1")
        );
 
