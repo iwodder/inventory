@@ -9,6 +9,7 @@ public class Product extends Entity<ProductId> {
   private ProductName name;
   private Category category;
   private UnitOfMeasurement uom;
+  private CasePack casePack;
   private Price unitPrice;
   private Price casePrice;
   private Quantity quantity = Quantity.zero();
@@ -92,6 +93,7 @@ public class Product extends Entity<ProductId> {
     this.category = b.category;
     this.active = b.active;
     this.uom = b.uom;
+    this.casePack = b.casePack;
     this.unitPrice = b.unitPrice;
     this.casePrice = b.casePrice;
     this.quantity = b.quantity;
@@ -162,9 +164,6 @@ public class Product extends Entity<ProductId> {
     return uom;
   }
 
-  public int getUnitsPerCase() {
-    return uom.getItemsPerCase();
-  }
 
   public Price getCasePrice() {
     return this.casePrice;
@@ -184,6 +183,14 @@ public class Product extends Entity<ProductId> {
 
   public Quantity getQtyOnHand() {
     return quantity;
+  }
+
+  public void updateCasePack(CasePack casePack) {
+    this.casePack = casePack;
+  }
+
+  public CasePack getCasePack() {
+    return this.casePack;
   }
 
   @Override
@@ -214,7 +221,10 @@ public class Product extends Entity<ProductId> {
             .isActive(this.active);
 
     if (this.uom != null) {
-      b.withUnitOfMeasurement(uom.getUnit()).withItemsPerCase(uom.getItemsPerCase());
+      b.withUnitOfMeasurement(uom.getUnit());
+    }
+    if (this.casePack != null) {
+      b.withItemsPerCase(casePack.getValue());
     }
     if (this.unitPrice != null) {
       b.withItemPrice(unitPrice.getValue().toString());
@@ -242,6 +252,7 @@ public class Product extends Entity<ProductId> {
     private Price unitPrice;
     private Price casePrice;
     private Quantity quantity;
+    private CasePack casePack;
 
     private Builder(ProductId id, ProductName name) {
       if (name == null) {
@@ -283,6 +294,11 @@ public class Product extends Entity<ProductId> {
 
     public Builder withStockedCount(Quantity qty) {
       this.quantity = qty;
+      return this;
+    }
+
+    public Builder withCasePack(String itemsPerCase) {
+      this.casePack = CasePack.ofItemsPerCase(itemsPerCase);
       return this;
     }
 

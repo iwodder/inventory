@@ -63,7 +63,7 @@ class ProductServiceImpl implements ProductService {
         new Product(
             name,
             cat,
-            new UnitOfMeasurement(unit, unitsPerCase),
+            new UnitOfMeasurement(unit),
             new Price(unitPrice));
 
     return Optional.of(productRepository.createItem(item)).map(Product::toItemModel);
@@ -75,7 +75,7 @@ class ProductServiceImpl implements ProductService {
         categoryRepository.loadById(CategoryId.categoryIdOf(cmd.getCategoryId()));
 
     if (opt.isPresent()) {
-      UnitOfMeasurement uom = UnitOfMeasurement.of(cmd.getUnits(), cmd.getCasePack());
+      UnitOfMeasurement uom = UnitOfMeasurement.of(cmd.getUnits());
       Price price = Price.of(cmd.getUnitPrice());
       Category c = opt.get();
       Product newProduct = productRepository.createItem(
@@ -119,12 +119,12 @@ class ProductServiceImpl implements ProductService {
 
   @Override
   public Optional<ProductDto> updateProductUnitOfMeasurement(
-      String productId, String unitOfMeasurement, Integer unitsPerCase) {
+      String productId, String unitOfMeasurement) {
     Optional<Product> opt = productRepository.loadById(ProductId.productIdOf(productId));
     ;
     if (opt.isPresent()) {
       Product item = opt.get();
-      item.updateUnitOfMeasurement(new UnitOfMeasurement(unitOfMeasurement, unitsPerCase));
+      item.updateUnitOfMeasurement(new UnitOfMeasurement(unitOfMeasurement));
       productRepository.updateItem(item);
       return Optional.of(item.toItemModel());
     } else {
@@ -192,7 +192,7 @@ class ProductServiceImpl implements ProductService {
                 externalId,
                 e.getName(),
                 Category.defaultCategory(),
-                UnitOfMeasurement.of(e.getUnits().getValue(), e.getPack().getValue()),
+                UnitOfMeasurement.of(e.getUnits().getValue()),
                 Price.of(e.getPrice().getItemPrice())
             )));
 

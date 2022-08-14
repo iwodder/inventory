@@ -35,15 +35,15 @@ public class DataPopulation {
     Repository<Product, ProductId> productRepo = impl.getRepository(Product.class);
     productRepo.createItem(
         new Product(
-            "2% Milk", c2, new UnitOfMeasurement("Gallons", 2), new Price("2.98")));
+            "2% Milk", c2, new UnitOfMeasurement("Gallons"), new Price("2.98")));
     productRepo.createItem(
         new Product(
-            "Greek Yogurt", c2, new UnitOfMeasurement("Quarts", 2), new Price("1.99")));
+            "Greek Yogurt", c2, new UnitOfMeasurement("Quarts"), new Price("1.99")));
     productRepo.createItem(
         new Product(
-            "Ice", c2, new UnitOfMeasurement("Fluid Ounces", 12), new Price("0.99")));
+            "Ice", c2, new UnitOfMeasurement("Fluid Ounces"), new Price("0.99")));
     productRepo.createItem(
         new Product(
-            "Pistachios", c4, new UnitOfMeasurement("Pounds", 1), new Price("10.29")));
+            "Pistachios", c4, new UnitOfMeasurement("Pounds"), new Price("10.29")));
   }
 }

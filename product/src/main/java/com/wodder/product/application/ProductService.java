@@ -25,7 +25,7 @@ public interface ProductService {
   Optional<ProductDto> updateProductName(String productId, String name);
 
   Optional<ProductDto> updateProductUnitOfMeasurement(
-      String productId, String unitOfMeasurement, Integer unitsPerCase);
+      String productId, String unitOfMeasurement);
 
   Optional<ProductDto> updateProductPrice(String productId, String unitPrice, String casePrice);
 

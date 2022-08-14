@@ -64,14 +64,13 @@ class ProductTest {
   @Test
   @DisplayName("Inventory Item can be created with a Unit of Measurement")
   void has_uom() {
-    UnitOfMeasurement uom = new UnitOfMeasurement("Loaves", 4);
+    UnitOfMeasurement uom = new UnitOfMeasurement("Loaves");
     Product i =
         Product.builder(ProductId.generateId(), ProductName.of("Bread"))
             .withCategory(Category.of("Dry Goods"))
             .withUnitsOfMeasurement(uom)
             .build();
     assertEquals(uom, i.getUnits());
-    assertEquals(4, i.getUnitsPerCase());
   }
 
   @Test
@@ -82,11 +81,10 @@ class ProductTest {
             ProductId.generateId(),
             "Bread",
             new Category("Dry Goods"),
-            new UnitOfMeasurement("Loaves", 4));
-    UnitOfMeasurement newUom = new UnitOfMeasurement("Slices", 1200);
+            new UnitOfMeasurement("Loaves"));
+    UnitOfMeasurement newUom = new UnitOfMeasurement("Slices");
     i.updateUnitOfMeasurement(newUom);
     assertEquals(newUom, i.getUnits());
-    assertEquals(1200, i.getUnitsPerCase());
   }
 
   @Test
@@ -95,7 +93,7 @@ class ProductTest {
     Product i =
         Product.builder(ProductId.generateId(), ProductName.of("Bread"))
             .withCategory(Category.of("Dry Goods"))
-            .withUnitsOfMeasurement(UnitOfMeasurement.of("Loaves", "4"))
+            .withUnitsOfMeasurement(UnitOfMeasurement.of("Loaves"))
             .withUnitPrice(Price.of("0.99"))
             .withCasePrice(Price.of("3.96"))
             .build();
@@ -110,7 +108,7 @@ class ProductTest {
     Product i =
         Product.builder(ProductId.generateId(), ProductName.of("Bread"))
             .withCategory(Category.of("Dry Goods"))
-            .withUnitsOfMeasurement(UnitOfMeasurement.of("Loaves", "4"))
+            .withUnitsOfMeasurement(UnitOfMeasurement.of("Loaves"))
             .withUnitPrice(Price.of("0.99"))
             .withCasePrice(Price.of("3.96"))
             .build();
@@ -128,7 +126,7 @@ class ProductTest {
         ExternalId.of("e123"),
         "Cheese",
         Category.defaultCategory(),
-        UnitOfMeasurement.of("ounces", "4"),
+        UnitOfMeasurement.of("ounces"),
         Price.of("0.50")
     );
 
@@ -145,7 +143,7 @@ class ProductTest {
               ExternalId.of("e123"),
           "Cheese",
               Category.defaultCategory(),
-              UnitOfMeasurement.of("Ounces", "5"),
+              UnitOfMeasurement.of("Ounces"),
               Price.of("0.50"),
               Quantity.of("1")
        );
@@ -153,5 +151,28 @@ class ProductTest {
    p.receiveQty(Quantity.of("1"));
 
    assertEquals(Quantity.of("2"), p.getQtyOnHand());
+  }
+
+  @Test
+  @DisplayName("Can update a product's case pack")
+  void update_case_pack() {
+    Product p = Product.builder(
+        ProductId.productIdOf("p123"), ProductName.of("Bread"))
+        .build();
+
+    p.updateCasePack(CasePack.ofItemsPerCase("4"));
+
+    assertEquals(4, p.getCasePack().getValue());
+  }
+
+  @Test
+  @DisplayName("Can create a product with a case pack")
+  void create_with_case_pack() {
+    Product p = Product.builder(
+            ProductId.productIdOf("p123"), ProductName.of("Bread"))
+        .withCasePack("1")
+        .build();
+
+    assertEquals(1, p.getCasePack().getValue());
   }
 }

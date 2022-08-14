@@ -106,15 +106,14 @@ class ProductServiceImplTest {
     ProductDto newItem =
         storage.createNewProduct(getDefaultItem().build()).get();
     ProductDto result =
-        storage.updateProductUnitOfMeasurement(newItem.getId(), "Gallons", 4).get();
+        storage.updateProductUnitOfMeasurement(newItem.getId(), "Gallons").get();
     assertEquals("Gallons", result.getUnits());
-    assertEquals(4, result.getUnitsPerCase());
   }
 
   @Test
   @DisplayName("If item is not present then empty is returned")
   void item_not_found() {
-    Optional<ProductDto> opt = storage.updateProductUnitOfMeasurement("1", "Gallons", 4);
+    Optional<ProductDto> opt = storage.updateProductUnitOfMeasurement("1", "Gallons");
     assertTrue(opt.isEmpty());
   }
 
