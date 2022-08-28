@@ -34,6 +34,8 @@
         <logback.version>1.2.11</logback.version>
         <slf4j.version>1.7.36</slf4j.version>
         <jsonp.version>1.1.4</jsonp.version>
+        <postgresjdbc.version>42.4.2</postgresjdbc.version>
+        <hikari.version>5.0.1</hikari.version>
     </properties>
 
     <dependencyManagement>
@@ -51,6 +53,16 @@
                 <version>${junit.version}</version>
                 <type>pom</type>
                 <scope>import</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.postgresql</groupId>
+                <artifactId>postgresql</artifactId>
+                <version>${postgresjdbc.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.zaxxer</groupId>
+                <artifactId>HikariCP</artifactId>
+                <version>${hikari.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>

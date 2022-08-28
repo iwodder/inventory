@@ -23,7 +23,7 @@ public class ProductId {
     return new ProductId(value);
   }
 
-  public String getId() {
+  public String getValue() {
     return id;
   }
 

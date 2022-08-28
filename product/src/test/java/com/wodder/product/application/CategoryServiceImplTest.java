@@ -2,9 +2,9 @@ package com.wodder.product.application;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import com.wodder.product.domain.model.PersistenceFactory;
 import com.wodder.product.domain.model.category.Category;
 import com.wodder.product.dto.CategoryModel;
-import com.wodder.product.persistence.PersistenceFactory;
 import com.wodder.product.persistence.PersistenceFactoryImpl;
 import com.wodder.product.persistence.TestPersistenceFactory;
 import org.junit.jupiter.api.BeforeEach;

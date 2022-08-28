@@ -13,11 +13,13 @@ import javax.ws.rs.core.Response;
 import org.glassfish.jersey.internal.inject.AbstractBinder;
 import org.glassfish.jersey.server.ResourceConfig;
 import org.glassfish.jersey.test.JerseyTest;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 // Demonstrates unit testing JAX-RS/Jersey REST APIS using HK2
 // HK2 is manually configured in this example
+@Disabled
 class InventoryRestAdapterTestTwo extends JerseyTest {
 
   @Test

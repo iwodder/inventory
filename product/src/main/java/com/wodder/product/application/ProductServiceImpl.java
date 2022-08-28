@@ -1,21 +1,22 @@
 package com.wodder.product.application;
 
+import com.wodder.product.domain.model.Repository;
 import com.wodder.product.domain.model.category.Category;
 import com.wodder.product.domain.model.category.CategoryId;
 import com.wodder.product.domain.model.product.ExternalId;
 import com.wodder.product.domain.model.product.Price;
 import com.wodder.product.domain.model.product.Product;
 import com.wodder.product.domain.model.product.ProductId;
+import com.wodder.product.domain.model.product.ProductName;
+import com.wodder.product.domain.model.product.ProductRepository;
 import com.wodder.product.domain.model.product.Quantity;
 import com.wodder.product.domain.model.product.UnitOfMeasurement;
 import com.wodder.product.domain.model.shipment.LineItem;
 import com.wodder.product.domain.model.shipment.Shipment;
 import com.wodder.product.domain.model.shipment.ShipmentDomainService;
 import com.wodder.product.domain.model.shipment.ShipmentId;
+import com.wodder.product.domain.model.shipment.ShipmentRepository;
 import com.wodder.product.dto.ProductDto;
-import com.wodder.product.persistence.ProductRepository;
-import com.wodder.product.persistence.Repository;
-import com.wodder.product.persistence.ShipmentRepository;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -109,7 +110,7 @@ class ProductServiceImpl implements ProductService {
     Optional<Product> opt = productRepository.loadById(ProductId.productIdOf(productId));
     if (opt.isPresent()) {
       Product item = opt.get();
-      item.updateName(name);
+      item.updateName(ProductName.of(name));
       productRepository.updateItem(item);
       return Optional.of(item.toItemModel());
     } else {

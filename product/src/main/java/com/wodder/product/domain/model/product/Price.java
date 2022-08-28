@@ -1,13 +1,14 @@
 package com.wodder.product.domain.model.product;
 
 import java.math.BigDecimal;
+import java.math.MathContext;
 
 public class Price {
   private static final Price ZERO = new Price("0.00");
   private final BigDecimal value;
 
   public Price(String value) {
-    this(new BigDecimal(value));
+    this(new BigDecimal(value, new MathContext(4)));
   }
 
   public Price(BigDecimal value) {
@@ -31,6 +32,10 @@ public class Price {
 
   public BigDecimal getValue() {
     return value;
+  }
+
+  public String stringValue() {
+    return value.toString();
   }
 
   @Override

@@ -26,6 +26,10 @@ public class Quantity {
     return this.amt;
   }
 
+  public String getValue() {
+    return Integer.toString(this.amt);
+  }
+
   @Override
   public boolean equals(Object o) {
     if (this == o) {

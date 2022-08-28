@@ -14,7 +14,7 @@ public class ExternalId {
     return new ExternalId(value);
   }
 
-  public String getId() {
+  public String getValue() {
     return id;
   }
 
