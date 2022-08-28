@@ -1,7 +1,9 @@
-package com.wodder.product.persistence;
+package com.wodder.product.domain.model;
 
 
 import com.wodder.product.domain.model.product.Entity;
+import com.wodder.product.domain.model.product.ProductRepository;
+import com.wodder.product.domain.model.shipment.ShipmentRepository;
 
 public interface PersistenceFactory {
 

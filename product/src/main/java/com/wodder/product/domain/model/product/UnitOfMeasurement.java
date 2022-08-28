@@ -7,10 +7,6 @@ public class UnitOfMeasurement {
     setUnit(unit);
   }
 
-  public UnitOfMeasurement(UnitOfMeasurement that) {
-    this(that.unit);
-  }
-
   public static UnitOfMeasurement empty() {
     return new UnitOfMeasurement("empty");
   }
@@ -41,7 +37,7 @@ public class UnitOfMeasurement {
     }
 
     UnitOfMeasurement that = (UnitOfMeasurement) o;
-    return getUnit() != null ? getUnit().equalsIgnoreCase(that.getUnit()) : that.getUnit() == null;
+    return unit.equalsIgnoreCase(that.getUnit());
   }
 
   @Override
@@ -49,5 +45,10 @@ public class UnitOfMeasurement {
     int result = getUnit() != null ? getUnit().hashCode() : 0;
     result = 31 * result;
     return result;
+  }
+
+  @Override
+  public String toString() {
+    return "UnitOfMeasurement{unit='" + unit + "'}";
   }
 }

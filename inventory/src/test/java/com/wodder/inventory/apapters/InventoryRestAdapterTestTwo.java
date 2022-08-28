@@ -6,7 +6,6 @@ import com.wodder.inventory.application.inventory.ItemService;
 import com.wodder.inventory.application.inventory.ItemServiceImpl;
 import com.wodder.inventory.domain.model.inventory.Item;
 import com.wodder.inventory.persistence.TestPersistenceFactory;
-import javax.ws.rs.client.Entity;
 import javax.ws.rs.core.Application;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
@@ -15,9 +14,11 @@ import org.glassfish.jersey.server.ResourceConfig;
 import org.glassfish.jersey.test.JerseyTest;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.condition.EnabledIfSystemProperty;
 
 // Demonstrates unit testing JAX-RS/Jersey REST APIS using HK2
 // HK2 is manually configured in this example
+@EnabledIfSystemProperty(named = "CDI", matches = "HK2")
 class InventoryRestAdapterTestTwo extends JerseyTest {
 
   @Test
@@ -31,21 +32,12 @@ class InventoryRestAdapterTestTwo extends JerseyTest {
   @Test
   @DisplayName("Recognized item id returns a 200 with json body")
   void itemFound() {
-    Response r = target("inventory/item123").request(MediaType.APPLICATION_JSON).get();
+    Response r = target("item/item123").request(MediaType.APPLICATION_JSON).get();
 
     assertEquals(200, r.getStatus());
     assertEquals(
-        "{\"id\":\"item123\",\"name\":\"2% Milk\",\"location\":\"Refrigerator\"}",
+        "{\"id\":\"item123\",\"productId\":null,\"name\":\"2% Milk\",\"location\":\"Refrigerator\"}",
         r.readEntity(String.class));
-  }
-
-  @Test
-  @DisplayName("Creating an item returns the id")
-  void createItem() {
-    Response r = target("inventory/item").request().post(Entity.text("TEST"));
-
-    assertEquals(200, r.getStatus());
-    assertEquals("{\"id\":\"item123\"}", r.readEntity(String.class));
   }
 
   @Override

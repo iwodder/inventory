@@ -1,5 +1,6 @@
 package com.wodder.product.persistence;
 
+import com.wodder.product.domain.model.Repository;
 import com.wodder.product.domain.model.product.Entity;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;

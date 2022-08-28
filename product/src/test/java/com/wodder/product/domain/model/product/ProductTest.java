@@ -10,10 +10,10 @@ import org.junit.jupiter.api.Test;
 class ProductTest {
 
   @Test
-  @DisplayName("Identical values are equal")
+  @DisplayName("Products are equal based on id")
   void inventory_item_is_equal_based_on_desc() {
-    Product inv = new Product("2% Milk", new Category("Dry Goods"));
-    Product inv2 = new Product("2% Milk", new Category("Chemicals"));
+    Product inv = new Product(ProductId.productIdOf("p123"),"2% Milk", new Category("Dry Goods"));
+    Product inv2 = new Product(ProductId.productIdOf("p123"), "2% Milk", new Category("Chemicals"));
     assertEquals(inv, inv2);
   }
 

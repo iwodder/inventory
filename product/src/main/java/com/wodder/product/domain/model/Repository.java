@@ -1,4 +1,4 @@
-package com.wodder.product.persistence;
+package com.wodder.product.domain.model;
 
 import com.wodder.product.domain.model.product.Entity;
 import java.util.List;

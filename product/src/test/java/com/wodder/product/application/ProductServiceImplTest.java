@@ -7,9 +7,9 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import com.wodder.product.application.ReceiveShipmentCommand.Item;
+import com.wodder.product.domain.model.PersistenceFactory;
 import com.wodder.product.domain.model.category.Category;
 import com.wodder.product.dto.ProductDto;
-import com.wodder.product.persistence.PersistenceFactory;
 import com.wodder.product.persistence.TestPersistenceFactory;
 import java.util.List;
 import java.util.Optional;

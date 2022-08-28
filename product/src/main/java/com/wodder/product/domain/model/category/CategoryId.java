@@ -23,7 +23,7 @@ public class CategoryId {
     return new CategoryId(value);
   }
 
-  public String getId() {
+  public String getValue() {
     return id;
   }
 
