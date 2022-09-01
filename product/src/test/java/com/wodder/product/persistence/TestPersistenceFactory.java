@@ -1,12 +1,16 @@
 package com.wodder.product.persistence;
 
+import com.wodder.product.domain.model.PersistenceFactory;
+import com.wodder.product.domain.model.Repository;
 import com.wodder.product.domain.model.category.Category;
 import com.wodder.product.domain.model.category.CategoryId;
 import com.wodder.product.domain.model.product.Entity;
 import com.wodder.product.domain.model.product.ExternalId;
 import com.wodder.product.domain.model.product.Price;
 import com.wodder.product.domain.model.product.Product;
+import com.wodder.product.domain.model.product.ProductRepository;
 import com.wodder.product.domain.model.product.UnitOfMeasurement;
+import com.wodder.product.domain.model.shipment.ShipmentRepository;
 
 public class TestPersistenceFactory implements PersistenceFactory {
   private final InMemoryProductRepository productRepository;

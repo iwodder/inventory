@@ -11,4 +11,8 @@ public abstract class Entity<T> {
   public T getId() {
     return id;
   }
+
+  public Long getDatabaseId() {
+    return databaseId;
+  }
 }

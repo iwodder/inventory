@@ -33,6 +33,10 @@ public class Category extends Entity<CategoryId> {
     return new Category(name);
   }
 
+  public static Category of(CategoryId id, String name) {
+    return new Category(id, name);
+  }
+
   public String getName() {
     return name;
   }

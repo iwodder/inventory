@@ -3,6 +3,7 @@ package com.wodder.product.persistence;
 import com.wodder.product.domain.model.product.ExternalId;
 import com.wodder.product.domain.model.product.Product;
 import com.wodder.product.domain.model.product.ProductId;
+import com.wodder.product.domain.model.product.ProductRepository;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;

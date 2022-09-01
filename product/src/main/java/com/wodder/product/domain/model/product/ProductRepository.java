@@ -1,8 +1,6 @@
-package com.wodder.product.persistence;
+package com.wodder.product.domain.model.product;
 
-import com.wodder.product.domain.model.product.ExternalId;
-import com.wodder.product.domain.model.product.Product;
-import com.wodder.product.domain.model.product.ProductId;
+import com.wodder.product.domain.model.Repository;
 import java.util.List;
 import java.util.Optional;
 

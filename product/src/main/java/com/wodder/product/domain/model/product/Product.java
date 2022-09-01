@@ -72,6 +72,7 @@ public class Product extends Entity<ProductId> {
     this.casePrice = that.casePrice;
     this.externalId = that.externalId;
     this.quantity = that.quantity;
+    this.casePack = that.casePack;
   }
 
   private Product(
@@ -130,11 +131,14 @@ public class Product extends Entity<ProductId> {
     setCategory(category);
   }
 
-  public void updateName(String name) {
+  public void updateName(ProductName name) {
     if (this.name.equals(name)) {
       throw new IllegalArgumentException("Cannot update to the same name");
     }
-    setName(name);
+    if (name == null) {
+      throw new IllegalArgumentException("Name cannot be set to null");
+    }
+    this.name = name;
   }
 
   public void updateUnitOfMeasurement(UnitOfMeasurement uom) {
@@ -163,7 +167,6 @@ public class Product extends Entity<ProductId> {
   public UnitOfMeasurement getUnits() {
     return uom;
   }
-
 
   public Price getCasePrice() {
     return this.casePrice;
@@ -203,7 +206,7 @@ public class Product extends Entity<ProductId> {
     }
 
     Product that = (Product) o;
-    return getName().equals(that.getName());
+    return id.equals(that.getId());
   }
 
   @Override
@@ -214,7 +217,7 @@ public class Product extends Entity<ProductId> {
   public ProductDto toItemModel() {
     ProductDto.ProductModelBuilder b =
         ProductDto.builder()
-            .withId(this.id.getId())
+            .withId(this.id.getValue())
             .withName(this.name.getValue())
             .withCategory(this.category.getName())
             .withQuantityOnHand(String.valueOf(quantity.getAmount()))
@@ -233,13 +236,17 @@ public class Product extends Entity<ProductId> {
       b.withCasePrice(casePrice.getValue().toString());
     }
     if (this.externalId != null) {
-      b.withExternalId(externalId.getId());
+      b.withExternalId(externalId.getValue());
     }
     return b.build();
   }
 
   public static Builder builder(ProductId id, ProductName name) {
     return new Builder(id, name);
+  }
+
+  public static Builder builder(ProductName name) {
+    return new Builder(ProductId.generateId(), name);
   }
 
   public static class Builder {

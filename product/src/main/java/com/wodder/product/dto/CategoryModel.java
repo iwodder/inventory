@@ -12,7 +12,7 @@ public class CategoryModel {
 
   public CategoryModel(Category category) {
     this.name = category.getName();
-    this.id = category.getId().getId();
+    this.id = category.getId().getValue();
   }
 
   public String getName() {

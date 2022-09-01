@@ -1,8 +1,12 @@
 package com.wodder.product.persistence;
 
+import com.wodder.product.domain.model.PersistenceFactory;
+import com.wodder.product.domain.model.Repository;
 import com.wodder.product.domain.model.category.Category;
 import com.wodder.product.domain.model.product.Entity;
 import com.wodder.product.domain.model.product.Product;
+import com.wodder.product.domain.model.product.ProductRepository;
+import com.wodder.product.domain.model.shipment.ShipmentRepository;
 
 public class PersistenceFactoryImpl implements PersistenceFactory {
   private final ProductRepository productRepository;
