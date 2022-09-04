@@ -7,22 +7,25 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.wodder.inventory.application.inventory.CopyItemCommand;
+import com.wodder.inventory.application.inventory.ItemService;
+import com.wodder.inventory.application.inventory.ItemServiceImpl;
+import com.wodder.inventory.domain.model.inventory.Item;
+import com.wodder.inventory.persistence.TestPersistenceFactory;
 import javax.ws.rs.client.Entity;
+import javax.ws.rs.core.Application;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import org.glassfish.jersey.internal.inject.AbstractBinder;
 import org.glassfish.jersey.server.ResourceConfig;
 import org.glassfish.jersey.test.JerseyTest;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.condition.EnabledIfSystemProperty;
 
-// Demonstrates unit testing JAX-RS/Jersey REST APIS using Weld
-// Weld-SE
-class ItemRestAdapterTest extends JerseyTest {
-
-  @Override
-  protected ResourceConfig configure() {
-    return new ResourceConfig(ItemRestAdapter.class);
-  }
+// Demonstrates unit testing JAX-RS/Jersey REST APIS using HK2
+// HK2 is manually configured in this example
+@EnabledIfSystemProperty(named = "CDI", matches = "HK2")
+class Hk2ItemRestAdapterTest extends JerseyTest {
 
   @Test
   @DisplayName("Unrecognized item id returns a 404")
@@ -54,7 +57,7 @@ class ItemRestAdapterTest extends JerseyTest {
     input.put("location", "Refrigerator");
     input.put("measurementUnit", "Gallons");
 
-    Response r = target("item/item")
+    Response r = target("item")
         .request()
         .post(Entity.json(input.toString()));
 
@@ -119,5 +122,19 @@ class ItemRestAdapterTest extends JerseyTest {
     assertEquals(200, r.getStatus());
     JsonNode node = r.readEntity(JsonNode.class);
     assertFalse(node.get("id").textValue().isBlank());
+  }
+
+  @Override
+  protected Application configure() {
+    return new ResourceConfig(ItemRestAdapter.class).register(new TestBinder());
+  }
+
+  public static class TestBinder extends AbstractBinder {
+
+    @Override
+    protected void configure() {
+      bind(new ItemServiceImpl(TestPersistenceFactory.getPopulated().getRepository(Item.class)))
+          .to(ItemService.class);
+    }
   }
 }

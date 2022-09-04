@@ -4,10 +4,13 @@ import com.wodder.product.domain.model.PersistenceFactory;
 import com.wodder.product.domain.model.Repository;
 import com.wodder.product.domain.model.category.Category;
 import com.wodder.product.domain.model.category.CategoryId;
+import com.wodder.product.domain.model.category.CategoryRepository;
 import com.wodder.product.domain.model.product.Entity;
 import com.wodder.product.domain.model.product.ExternalId;
 import com.wodder.product.domain.model.product.Price;
 import com.wodder.product.domain.model.product.Product;
+import com.wodder.product.domain.model.product.ProductId;
+import com.wodder.product.domain.model.product.ProductName;
 import com.wodder.product.domain.model.product.ProductRepository;
 import com.wodder.product.domain.model.product.UnitOfMeasurement;
 import com.wodder.product.domain.model.shipment.ShipmentRepository;
@@ -44,6 +47,11 @@ public class TestPersistenceFactory implements PersistenceFactory {
   }
 
   @Override
+  public CategoryRepository getCategoryRepository() {
+    return categoryRepository;
+  }
+
+  @Override
   public <T extends Entity<U>, U> Repository<T, U> getRepository(Class<T> clazz) {
     if (clazz.isAssignableFrom(Category.class)) {
       @SuppressWarnings("unchecked")
@@ -72,16 +80,33 @@ public class TestPersistenceFactory implements PersistenceFactory {
     categoryRepository.createItem(c5);
 
     productRepository.createItem(
-        Product.from(ExternalId.of("item1"),
-            "2% Milk", c2, new UnitOfMeasurement("Gallons"), new Price("2.98")));
+        Product.builder(ProductId.productIdOf("p123"), ProductName.of("2% Milk"))
+            .withExternalId(ExternalId.of("item1"))
+            .withCategory(c2)
+            .withUnitsOfMeasurement(new UnitOfMeasurement("Gallons"))
+            .withUnitPrice(Price.of("2.98"))
+            .build());
     productRepository.createItem(
-        Product.from(ExternalId.of("item2"),
-            "Greek Yogurt", c2, new UnitOfMeasurement("Quarts"), new Price("1.99")));
+        Product.builder(ProductId.productIdOf("p234"), ProductName.of("Greek Yogurt"))
+            .withExternalId(ExternalId.of("item2"))
+            .withCategory(c2)
+            .withUnitsOfMeasurement(new UnitOfMeasurement("Quarts"))
+            .withUnitPrice(Price.of("1.99"))
+            .build());
     productRepository.createItem(
-        Product.from(ExternalId.of("item3"),
-            "Ice", c2, new UnitOfMeasurement("Fluid Ounces"), new Price("0.99")));
+        Product.builder(ProductId.productIdOf("p345"), ProductName.of("Ice"))
+            .withExternalId(ExternalId.of("item3"))
+            .withCategory(c2)
+            .withUnitsOfMeasurement(new UnitOfMeasurement("Fluid Ounces"))
+            .withUnitPrice(Price.of("0.99"))
+            .build());
     productRepository.createItem(
-        Product.from(ExternalId.of("item4"),
-            "Pistachios", c4, new UnitOfMeasurement("Pounds"), new Price("10.29")));
+        Product.builder(ProductId.productIdOf("p456"), ProductName.of("Pistachios"))
+            .withExternalId(ExternalId.of("item4"))
+            .withCategory(c4)
+            .withUnitsOfMeasurement(new UnitOfMeasurement("Pounds"))
+            .withUnitPrice(Price.of("10.29"))
+            .build());
+
   }
 }

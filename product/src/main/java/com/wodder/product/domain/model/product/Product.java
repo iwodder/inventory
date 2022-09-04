@@ -258,7 +258,7 @@ public class Product extends Entity<ProductId> {
     private UnitOfMeasurement uom;
     private Price unitPrice;
     private Price casePrice;
-    private Quantity quantity;
+    private Quantity quantity = Quantity.zero();
     private CasePack casePack;
 
     private Builder(ProductId id, ProductName name) {

@@ -1,8 +1,8 @@
 package com.wodder.product.application;
 
-import com.wodder.product.domain.model.Repository;
 import com.wodder.product.domain.model.category.Category;
 import com.wodder.product.domain.model.category.CategoryId;
+import com.wodder.product.domain.model.category.CategoryRepository;
 import com.wodder.product.domain.model.product.ExternalId;
 import com.wodder.product.domain.model.product.Price;
 import com.wodder.product.domain.model.product.Product;
@@ -20,16 +20,18 @@ import com.wodder.product.dto.ProductDto;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
+import javax.inject.Inject;
 
-class ProductServiceImpl implements ProductService {
+public class ProductServiceImpl implements ProductService {
 
   private final ProductRepository productRepository;
-  private final Repository<Category, CategoryId> categoryRepository;
+  private final CategoryRepository categoryRepository;
   private final ShipmentRepository shipmentRepository;
 
-  ProductServiceImpl(
+  @Inject
+  public ProductServiceImpl(
       ProductRepository productRepository,
-      Repository<Category, CategoryId> categoryRepository,
+      CategoryRepository categoryRepository,
       ShipmentRepository shipmentRepository) {
     this.productRepository = productRepository;
     this.categoryRepository = categoryRepository;
@@ -76,7 +78,7 @@ class ProductServiceImpl implements ProductService {
         categoryRepository.loadById(CategoryId.categoryIdOf(cmd.getCategoryId()));
 
     if (opt.isPresent()) {
-      UnitOfMeasurement uom = UnitOfMeasurement.of(cmd.getUnits());
+      UnitOfMeasurement uom = UnitOfMeasurement.of(cmd.getUnitMeasurement());
       Price price = Price.of(cmd.getUnitPrice());
       Category c = opt.get();
       Product newProduct = productRepository.createItem(
@@ -84,7 +86,7 @@ class ProductServiceImpl implements ProductService {
               ExternalId.of(cmd.getExternalId()),
               cmd.getName(), c, uom, price));
 
-      return newProduct.getId().toString();
+      return newProduct.getId().getValue();
     } else {
       throw new IllegalArgumentException(
           String.format("Unknown categoryId{ %s }", cmd.getCategoryId()));
@@ -122,7 +124,6 @@ class ProductServiceImpl implements ProductService {
   public Optional<ProductDto> updateProductUnitOfMeasurement(
       String productId, String unitOfMeasurement) {
     Optional<Product> opt = productRepository.loadById(ProductId.productIdOf(productId));
-    ;
     if (opt.isPresent()) {
       Product item = opt.get();
       item.updateUnitOfMeasurement(new UnitOfMeasurement(unitOfMeasurement));
@@ -139,8 +140,12 @@ class ProductServiceImpl implements ProductService {
     Optional<Product> opt = productRepository.loadById(ProductId.productIdOf(productId));
     if (opt.isPresent()) {
       Product i = opt.get();
-      i.updateUnitPrice(Price.of(unitPrice));
-      i.updateCasePrice(Price.of(casePrice));
+      if (unitPrice != null) {
+        i.updateUnitPrice(Price.of(unitPrice));
+      }
+      if (casePrice != null) {
+        i.updateCasePrice(Price.of(casePrice));
+      }
       productRepository.updateItem(i);
       return Optional.of(i.toItemModel());
     } else {

@@ -1,8 +1,8 @@
 package com.wodder.product.persistence;
 
-import com.wodder.product.domain.model.Repository;
 import com.wodder.product.domain.model.category.Category;
 import com.wodder.product.domain.model.category.CategoryId;
+import com.wodder.product.domain.model.category.CategoryRepository;
 import com.zaxxer.hikari.HikariDataSource;
 import java.lang.reflect.Field;
 import java.util.List;
@@ -11,7 +11,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class PostgresCategoryRepository extends JdbcRepository
-    implements Repository<Category, CategoryId> {
+    implements CategoryRepository {
 
   private static final Logger LOG = LoggerFactory.getLogger(PostgresCategoryRepository.class);
   private static final String INSERT_CATEGORY_SQL =

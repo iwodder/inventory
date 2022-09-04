@@ -9,7 +9,6 @@ public class CreateProductCommand {
   private String casePack;
   private String externalId;
 
-
   public String getName() {
     return name;
   }
@@ -24,10 +23,6 @@ public class CreateProductCommand {
 
   public void setCategoryId(String categoryId) {
     this.categoryId = categoryId;
-  }
-
-  public String getUnits() {
-    return unitMeasurement;
   }
 
   public String getCasePack() {
