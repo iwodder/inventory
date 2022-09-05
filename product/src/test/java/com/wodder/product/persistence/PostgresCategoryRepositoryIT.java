@@ -105,4 +105,15 @@ class PostgresCategoryRepositoryIT extends BasePostgresTest {
     assertTrue(opt.isPresent());
     assertEquals(c, opt.get(), "Retrieved item should match");
   }
+
+  @Test
+  @DisplayName("Should be able to load a category by name")
+  void load_by_name() {
+    Category c = new Category("Frozen");
+    repo.createItem(c);
+
+    Optional<Category> opt = repo.loadByName(c.getName());
+    assertTrue(opt.isPresent());
+    assertEquals(c, opt.get(), "Retrieved item should match");
+  }
 }

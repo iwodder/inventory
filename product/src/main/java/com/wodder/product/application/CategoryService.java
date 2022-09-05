@@ -1,14 +1,14 @@
 package com.wodder.product.application;
 
-import com.wodder.product.dto.CategoryModel;
+import com.wodder.product.dto.CategoryDto;
 import java.util.List;
 import java.util.Optional;
 
 public interface CategoryService {
 
-  Optional<CategoryModel> createCategory(String name);
+  CategoryDto createCategory(String name);
 
-  Optional<CategoryModel> loadCategory(String id);
+  Optional<CategoryDto> loadCategory(String id);
 
-  List<CategoryModel> loadCategories();
+  List<CategoryDto> loadCategories();
 }

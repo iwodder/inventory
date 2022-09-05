@@ -22,6 +22,8 @@ public class PostgresCategoryRepository extends JdbcRepository
       "SELECT * FROM product.categories WHERE uuid = ?;";
   private static final String SELECT_ALL_CATEGORIES = "SELECT * FROM product.categories;";
 
+  private static final String SELECT_BY_NAME = "SELECT * FROM product.categories WHERE name = ?;";
+
   private static final ObjectMapper<Category> CATEGORY_OBJECT_MAPPER = rs -> new Category(
       CategoryId.categoryIdOf(rs.getString("uuid")),
       rs.getString("name")
@@ -94,9 +96,18 @@ public class PostgresCategoryRepository extends JdbcRepository
     return deleteItem(item.getId());
   }
 
-  //openConnection()
-  //createStatement()
-  //potentiallyAddParams
-  //execute
-  //
+  @Override
+  public Optional<Category> loadByName(String name) {
+    List<Category> results = query(
+        SELECT_BY_NAME, s -> {
+          s.setString(1, name);
+          return s;
+        },
+        CATEGORY_OBJECT_MAPPER);
+    if (results.isEmpty()) {
+      return Optional.empty();
+    } else {
+      return Optional.of(results.get(0));
+    }
+  }
 }

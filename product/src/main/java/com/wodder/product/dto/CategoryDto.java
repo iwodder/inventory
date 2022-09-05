@@ -3,14 +3,14 @@ package com.wodder.product.dto;
 
 import com.wodder.product.domain.model.category.Category;
 
-public class CategoryModel {
+public class CategoryDto {
   private String name;
   private String id;
 
-  public CategoryModel() {
+  public CategoryDto() {
   }
 
-  public CategoryModel(Category category) {
+  public CategoryDto(Category category) {
     this.name = category.getName();
     this.id = category.getId().getValue();
   }
