@@ -8,6 +8,8 @@ import com.wodder.product.domain.model.product.Entity;
 import com.wodder.product.domain.model.product.Product;
 import com.wodder.product.domain.model.product.ProductRepository;
 import com.wodder.product.domain.model.shipment.ShipmentRepository;
+import javax.enterprise.inject.Default;
+import javax.enterprise.inject.Produces;
 
 public class PersistenceFactoryImpl implements PersistenceFactory {
   private final ProductRepository productRepository;
@@ -21,16 +23,22 @@ public class PersistenceFactoryImpl implements PersistenceFactory {
   }
 
   @Override
+  @Produces
+  @Default
   public ProductRepository getProductRepository() {
     return productRepository;
   }
 
   @Override
+  @Produces
+  @Default
   public ShipmentRepository getShipmentRepository() {
     return shipmentRepository;
   }
 
   @Override
+  @Produces
+  @Default
   public CategoryRepository getCategoryRepository() {
     return categoryRepository;
   }
