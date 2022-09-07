@@ -54,7 +54,7 @@ class PostgresProductRepositoryIT extends BasePostgresTest {
   @DisplayName("Should be able to save a product")
   void create_product() {
 
-    Product p = Product.builder(ProductName.of("Gravy"))
+    Product p = Product.builder("Gravy")
         .build();
     repo.createItem(p);
 
@@ -67,7 +67,7 @@ class PostgresProductRepositoryIT extends BasePostgresTest {
     Category c = Category.of("Dairy");
     cat.createItem(c);
 
-    Product p = Product.builder(ProductName.of("2% Milk"))
+    Product p = Product.builder("2% Milk")
         .withCategory(c)
         .withExternalId(ExternalId.of("e123"))
         .withUnitsOfMeasurement(UnitOfMeasurement.of("Gallons"))
@@ -99,7 +99,7 @@ class PostgresProductRepositoryIT extends BasePostgresTest {
     Category c = Category.of("Dairy");
     cat.createItem(c);
 
-    Product p = Product.builder(ProductName.of("2% Milk"))
+    Product p = Product.builder("2% Milk")
         .withCategory(c)
         .withExternalId(ExternalId.of("e123"))
         .withUnitsOfMeasurement(UnitOfMeasurement.of("Gallons"))
@@ -128,7 +128,7 @@ class PostgresProductRepositoryIT extends BasePostgresTest {
   @Test
   @DisplayName("Should be able to update product's name")
   void update_name() {
-    Product p = Product.builder(ProductName.of("2% Milk"))
+    Product p = Product.builder("2% Milk")
         .withCategory(category)
         .withExternalId(ExternalId.of("e123"))
         .withUnitsOfMeasurement(UnitOfMeasurement.of("Gallons"))
@@ -154,7 +154,7 @@ class PostgresProductRepositoryIT extends BasePostgresTest {
   @Test
   @DisplayName("Should be able to update product's item price")
   void update_item_price() {
-    Product p = Product.builder(ProductName.of("2% Milk"))
+    Product p = Product.builder("2% Milk")
         .withCategory(category)
         .withExternalId(ExternalId.of("e123"))
         .withUnitsOfMeasurement(UnitOfMeasurement.of("Gallons"))
@@ -180,7 +180,7 @@ class PostgresProductRepositoryIT extends BasePostgresTest {
   @Test
   @DisplayName("Should be able to update product's case price")
   void update_case_price() {
-    Product p = Product.builder(ProductName.of("2% Milk"))
+    Product p = Product.builder("2% Milk")
         .withCategory(category)
         .withExternalId(ExternalId.of("e123"))
         .withUnitsOfMeasurement(UnitOfMeasurement.of("Gallons"))
@@ -206,7 +206,7 @@ class PostgresProductRepositoryIT extends BasePostgresTest {
   @Test
   @DisplayName("Should be able to update product's units")
   void update_units() {
-    Product p = Product.builder(ProductName.of("2% Milk"))
+    Product p = Product.builder("2% Milk")
         .withCategory(category)
         .withExternalId(ExternalId.of("e123"))
         .withUnitsOfMeasurement(UnitOfMeasurement.of("Gallons"))
@@ -232,7 +232,7 @@ class PostgresProductRepositoryIT extends BasePostgresTest {
   @Test
   @DisplayName("Should be able to update product's active status")
   void update_active() {
-    Product p = Product.builder(ProductName.of("2% Milk"))
+    Product p = Product.builder("2% Milk")
         .withCategory(category)
         .withExternalId(ExternalId.of("e123"))
         .withUnitsOfMeasurement(UnitOfMeasurement.of("Gallons"))
@@ -257,7 +257,7 @@ class PostgresProductRepositoryIT extends BasePostgresTest {
   @Test
   @DisplayName("Should be able to update product's quantity on hand")
   void update_qty() {
-    Product p = Product.builder(ProductName.of("2% Milk"))
+    Product p = Product.builder("2% Milk")
         .withCategory(category)
         .withExternalId(ExternalId.of("e123"))
         .withUnitsOfMeasurement(UnitOfMeasurement.of("Gallons"))
@@ -282,7 +282,7 @@ class PostgresProductRepositoryIT extends BasePostgresTest {
   @Test
   @DisplayName("Should be able to update product's case pack")
   void update_case_pack() {
-    Product p = Product.builder(ProductName.of("2% Milk"))
+    Product p = Product.builder("2% Milk")
         .withCategory(category)
         .withExternalId(ExternalId.of("e123"))
         .withUnitsOfMeasurement(UnitOfMeasurement.of("Gallons"))
@@ -310,7 +310,7 @@ class PostgresProductRepositoryIT extends BasePostgresTest {
     Category c = Category.of("Dairy");
     cat.createItem(c);
 
-    Product p = Product.builder(ProductName.of("2% Milk"))
+    Product p = Product.builder("2% Milk")
         .withCategory(c)
         .withExternalId(ExternalId.of("e123"))
         .withUnitsOfMeasurement(UnitOfMeasurement.of("Gallons"))
@@ -342,7 +342,7 @@ class PostgresProductRepositoryIT extends BasePostgresTest {
     Category c = Category.of("Dairy");
     cat.createItem(c);
 
-    Product p = Product.builder(ProductName.of("2% Milk"))
+    Product p = Product.builder("2% Milk")
         .withCategory(c)
         .withExternalId(ExternalId.of("e123"))
         .withUnitsOfMeasurement(UnitOfMeasurement.of("Gallons"))
@@ -364,7 +364,7 @@ class PostgresProductRepositoryIT extends BasePostgresTest {
     Category c = Category.of("Dairy");
     cat.createItem(c);
 
-    Product p = Product.builder(ProductName.of("2% Milk"))
+    Product p = Product.builder("2% Milk")
         .withCategory(c)
         .withExternalId(ExternalId.of("e123"))
         .withUnitsOfMeasurement(UnitOfMeasurement.of("Gallons"))
@@ -383,7 +383,7 @@ class PostgresProductRepositoryIT extends BasePostgresTest {
   @Test
   @DisplayName("Should be able to load all products")
   void load_all_products() {
-    Product p = Product.builder(ProductName.of("2% Milk"))
+    Product p = Product.builder("2% Milk")
         .withCategory(category)
         .withExternalId(ExternalId.of("e123"))
         .withUnitsOfMeasurement(UnitOfMeasurement.of("Gallons"))
@@ -393,7 +393,7 @@ class PostgresProductRepositoryIT extends BasePostgresTest {
         .withCasePack("4")
         .isActive(true)
         .build();
-    Product p1 = Product.builder(ProductName.of("Cheese"))
+    Product p1 = Product.builder("Cheese")
         .withCategory(category)
         .withExternalId(ExternalId.of("e123"))
         .withUnitsOfMeasurement(UnitOfMeasurement.of("Gallons"))
@@ -403,7 +403,7 @@ class PostgresProductRepositoryIT extends BasePostgresTest {
         .withCasePack("4")
         .isActive(true)
         .build();
-    Product p2 = Product.builder(ProductName.of("Pine Sol"))
+    Product p2 = Product.builder("Pine Sol")
         .withCategory(category)
         .withExternalId(ExternalId.of("e123"))
         .withUnitsOfMeasurement(UnitOfMeasurement.of("Gallons"))
@@ -427,7 +427,7 @@ class PostgresProductRepositoryIT extends BasePostgresTest {
   @Test
   @DisplayName("Should be able to load all active products")
   void load_all_active() {
-    Product p = Product.builder(ProductName.of("2% Milk"))
+    Product p = Product.builder("2% Milk")
         .withCategory(category)
         .withExternalId(ExternalId.of("e123"))
         .withUnitsOfMeasurement(UnitOfMeasurement.of("Gallons"))
@@ -437,7 +437,7 @@ class PostgresProductRepositoryIT extends BasePostgresTest {
         .withCasePack("4")
         .isActive(true)
         .build();
-    Product p1 = Product.builder(ProductName.of("Cheese"))
+    Product p1 = Product.builder("Cheese")
         .withCategory(category)
         .withExternalId(ExternalId.of("e123"))
         .withUnitsOfMeasurement(UnitOfMeasurement.of("Gallons"))
@@ -447,7 +447,7 @@ class PostgresProductRepositoryIT extends BasePostgresTest {
         .withCasePack("4")
         .isActive(false)
         .build();
-    Product p2 = Product.builder(ProductName.of("Pine Sol"))
+    Product p2 = Product.builder("Pine Sol")
         .withCategory(category)
         .withExternalId(ExternalId.of("e123"))
         .withUnitsOfMeasurement(UnitOfMeasurement.of("Gallons"))

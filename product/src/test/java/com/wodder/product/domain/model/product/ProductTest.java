@@ -23,7 +23,7 @@ class ProductTest {
     assertThrows(
         IllegalArgumentException.class,
         () -> {
-          Product.builder(ProductId.generateId(), null).build();
+          Product.builder("p123", null).build();
         });
   }
 
@@ -32,7 +32,7 @@ class ProductTest {
   void blank_name() {
     assertThrows(
         IllegalArgumentException.class,
-        () -> Product.builder(ProductId.generateId(), ProductName.of("")).build());
+        () -> Product.builder("p123", "").build());
   }
 
   @Test
@@ -66,7 +66,7 @@ class ProductTest {
   void has_uom() {
     UnitOfMeasurement uom = new UnitOfMeasurement("Loaves");
     Product i =
-        Product.builder(ProductId.generateId(), ProductName.of("Bread"))
+        Product.builder("Bread")
             .withCategory(Category.of("Dry Goods"))
             .withUnitsOfMeasurement(uom)
             .build();
@@ -91,7 +91,7 @@ class ProductTest {
   @DisplayName("Product can be created with a price")
   void has_price() {
     Product i =
-        Product.builder(ProductId.generateId(), ProductName.of("Bread"))
+        Product.builder("Bread")
             .withCategory(Category.of("Dry Goods"))
             .withUnitsOfMeasurement(UnitOfMeasurement.of("Loaves"))
             .withUnitPrice(Price.of("0.99"))
@@ -106,7 +106,7 @@ class ProductTest {
   @DisplayName("Can successfully update an item's price")
   void update_price() {
     Product i =
-        Product.builder(ProductId.generateId(), ProductName.of("Bread"))
+        Product.builder("Bread")
             .withCategory(Category.of("Dry Goods"))
             .withUnitsOfMeasurement(UnitOfMeasurement.of("Loaves"))
             .withUnitPrice(Price.of("0.99"))
@@ -157,7 +157,7 @@ class ProductTest {
   @DisplayName("Can update a product's case pack")
   void update_case_pack() {
     Product p = Product.builder(
-        ProductId.productIdOf("p123"), ProductName.of("Bread"))
+        "p123", "Bread")
         .build();
 
     p.updateCasePack(CasePack.ofItemsPerCase("4"));
@@ -169,7 +169,7 @@ class ProductTest {
   @DisplayName("Can create a product with a case pack")
   void create_with_case_pack() {
     Product p = Product.builder(
-            ProductId.productIdOf("p123"), ProductName.of("Bread"))
+            "p123","Bread")
         .withCasePack("1")
         .build();
 

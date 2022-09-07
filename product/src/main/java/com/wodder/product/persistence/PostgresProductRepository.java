@@ -6,7 +6,6 @@ import com.wodder.product.domain.model.product.ExternalId;
 import com.wodder.product.domain.model.product.Price;
 import com.wodder.product.domain.model.product.Product;
 import com.wodder.product.domain.model.product.ProductId;
-import com.wodder.product.domain.model.product.ProductName;
 import com.wodder.product.domain.model.product.ProductRepository;
 import com.wodder.product.domain.model.product.Quantity;
 import com.wodder.product.domain.model.product.UnitOfMeasurement;
@@ -56,8 +55,8 @@ public class PostgresProductRepository extends JdbcRepository implements Product
   private static final String DELETE_PRODUCT = "DELETE FROM product.products WHERE uuid = ?;";
   public static final ObjectMapper<Product> PRODUCT_MAPPER = rs ->
       Product.builder(
-              ProductId.productIdOf(rs.getString("pid")),
-              ProductName.of(rs.getString("pname")))
+              rs.getString("pid"),
+              rs.getString("pname"))
           .withCategory(
               Category.of(
                   CategoryId.categoryIdOf(

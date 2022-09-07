@@ -9,8 +9,6 @@ import com.wodder.product.domain.model.product.Entity;
 import com.wodder.product.domain.model.product.ExternalId;
 import com.wodder.product.domain.model.product.Price;
 import com.wodder.product.domain.model.product.Product;
-import com.wodder.product.domain.model.product.ProductId;
-import com.wodder.product.domain.model.product.ProductName;
 import com.wodder.product.domain.model.product.ProductRepository;
 import com.wodder.product.domain.model.product.UnitOfMeasurement;
 import com.wodder.product.domain.model.shipment.ShipmentRepository;
@@ -80,28 +78,28 @@ public class TestPersistenceFactory implements PersistenceFactory {
     categoryRepository.createItem(c5);
 
     productRepository.createItem(
-        Product.builder(ProductId.productIdOf("p123"), ProductName.of("2% Milk"))
+        Product.builder("p123", "2% Milk")
             .withExternalId(ExternalId.of("item1"))
             .withCategory(c2)
             .withUnitsOfMeasurement(new UnitOfMeasurement("Gallons"))
             .withUnitPrice(Price.of("2.98"))
             .build());
     productRepository.createItem(
-        Product.builder(ProductId.productIdOf("p234"), ProductName.of("Greek Yogurt"))
+        Product.builder("p234", "Greek Yogurt")
             .withExternalId(ExternalId.of("item2"))
             .withCategory(c2)
             .withUnitsOfMeasurement(new UnitOfMeasurement("Quarts"))
             .withUnitPrice(Price.of("1.99"))
             .build());
     productRepository.createItem(
-        Product.builder(ProductId.productIdOf("p345"), ProductName.of("Ice"))
+        Product.builder("p345", "Ice")
             .withExternalId(ExternalId.of("item3"))
             .withCategory(c2)
             .withUnitsOfMeasurement(new UnitOfMeasurement("Fluid Ounces"))
             .withUnitPrice(Price.of("0.99"))
             .build());
     productRepository.createItem(
-        Product.builder(ProductId.productIdOf("p456"), ProductName.of("Pistachios"))
+        Product.builder("p456", "Pistachios")
             .withExternalId(ExternalId.of("item4"))
             .withCategory(c4)
             .withUnitsOfMeasurement(new UnitOfMeasurement("Pounds"))

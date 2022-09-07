@@ -20,7 +20,7 @@ import org.slf4j.LoggerFactory;
 @Path("category")
 public class CategoryRestAdapter {
 
-  private static final Logger LOGGER = LoggerFactory.getLogger(ProductRestAdapter.class);
+  private static final Logger LOGGER = LoggerFactory.getLogger(CategoryRestAdapter.class);
   private final CategoryService svc;
 
   @Inject

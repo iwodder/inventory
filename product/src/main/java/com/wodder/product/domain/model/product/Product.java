@@ -241,12 +241,12 @@ public class Product extends Entity<ProductId> {
     return b.build();
   }
 
-  public static Builder builder(ProductId id, ProductName name) {
+  public static Builder builder(String id, String name) {
     return new Builder(id, name);
   }
 
-  public static Builder builder(ProductName name) {
-    return new Builder(ProductId.generateId(), name);
+  public static Builder builder(String name) {
+    return new Builder(name);
   }
 
   public static class Builder {
@@ -261,12 +261,21 @@ public class Product extends Entity<ProductId> {
     private Quantity quantity = Quantity.zero();
     private CasePack casePack;
 
-    private Builder(ProductId id, ProductName name) {
+    private Builder(String id, String name) {
+      setName(name);
+      this.id = ProductId.productIdOf(id);
+    }
+
+    private Builder(String name) {
+      setName(name);
+      this.id = ProductId.generateId();
+    }
+
+    private void setName(String name) {
       if (name == null) {
         throw new IllegalArgumentException("ProductName is required.");
       }
-      this.id = id;
-      this.name = name;
+      this.name = ProductName.of(name);
     }
 
     public Builder withExternalId(ExternalId id) {
