@@ -255,7 +255,7 @@ public class Product extends Entity<ProductId> {
     private ExternalId extId;
     private Category category;
     private boolean active;
-    private UnitOfMeasurement uom;
+    private UnitOfMeasurement uom = UnitOfMeasurement.empty();
     private Price unitPrice;
     private Price casePrice;
     private Quantity quantity = Quantity.zero();
@@ -293,8 +293,8 @@ public class Product extends Entity<ProductId> {
       return this;
     }
 
-    public Builder withUnitsOfMeasurement(UnitOfMeasurement uom) {
-      this.uom = uom;
+    public Builder withUnitsOfMeasurement(String units) {
+      this.uom = UnitOfMeasurement.of(units);
       return this;
     }
 

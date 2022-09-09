@@ -8,7 +8,6 @@ import com.wodder.product.domain.model.product.Product;
 import com.wodder.product.domain.model.product.ProductId;
 import com.wodder.product.domain.model.product.ProductRepository;
 import com.wodder.product.domain.model.product.Quantity;
-import com.wodder.product.domain.model.product.UnitOfMeasurement;
 import com.zaxxer.hikari.HikariDataSource;
 import java.lang.reflect.Field;
 import java.util.List;
@@ -62,7 +61,7 @@ public class PostgresProductRepository extends JdbcRepository implements Product
                   CategoryId.categoryIdOf(
                       rs.getString("cid")), rs.getString("cname")))
           .withExternalId(rs.getString("extId"))
-          .withUnitsOfMeasurement(UnitOfMeasurement.of(rs.getString("units")))
+          .withUnitsOfMeasurement(rs.getString("units"))
           .withCasePrice(Price.of(rs.getString("casePrice")))
           .withUnitPrice(Price.of(rs.getString("unitPrice")))
           .withStockedCount(Quantity.of(rs.getString("qty")))

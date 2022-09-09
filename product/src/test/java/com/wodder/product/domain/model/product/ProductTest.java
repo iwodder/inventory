@@ -64,13 +64,12 @@ class ProductTest {
   @Test
   @DisplayName("Inventory Item can be created with a Unit of Measurement")
   void has_uom() {
-    UnitOfMeasurement uom = new UnitOfMeasurement("Loaves");
     Product i =
         Product.builder("Bread")
             .withCategory(Category.of("Dry Goods"))
-            .withUnitsOfMeasurement(uom)
+            .withUnitsOfMeasurement("Loaves")
             .build();
-    assertEquals(uom, i.getUnits());
+    assertEquals("Loaves", i.getUnits().getUnit());
   }
 
   @Test
@@ -93,7 +92,7 @@ class ProductTest {
     Product i =
         Product.builder("Bread")
             .withCategory(Category.of("Dry Goods"))
-            .withUnitsOfMeasurement(UnitOfMeasurement.of("Loaves"))
+            .withUnitsOfMeasurement("Loaves")
             .withUnitPrice(Price.of("0.99"))
             .withCasePrice(Price.of("3.96"))
             .build();
@@ -108,7 +107,7 @@ class ProductTest {
     Product i =
         Product.builder("Bread")
             .withCategory(Category.of("Dry Goods"))
-            .withUnitsOfMeasurement(UnitOfMeasurement.of("Loaves"))
+            .withUnitsOfMeasurement("Loaves")
             .withUnitPrice(Price.of("0.99"))
             .withCasePrice(Price.of("3.96"))
             .build();

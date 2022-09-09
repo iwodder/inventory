@@ -9,7 +9,6 @@ import com.wodder.product.domain.model.product.Entity;
 import com.wodder.product.domain.model.product.Price;
 import com.wodder.product.domain.model.product.Product;
 import com.wodder.product.domain.model.product.ProductRepository;
-import com.wodder.product.domain.model.product.UnitOfMeasurement;
 import com.wodder.product.domain.model.shipment.ShipmentRepository;
 
 public class TestPersistenceFactory implements PersistenceFactory {
@@ -80,28 +79,28 @@ public class TestPersistenceFactory implements PersistenceFactory {
         Product.builder("p123", "2% Milk")
             .withExternalId("item1")
             .withCategory(c2)
-            .withUnitsOfMeasurement(new UnitOfMeasurement("Gallons"))
+            .withUnitsOfMeasurement("Gallons")
             .withUnitPrice(Price.of("2.98"))
             .build());
     productRepository.createItem(
         Product.builder("p234", "Greek Yogurt")
             .withExternalId("item2")
             .withCategory(c2)
-            .withUnitsOfMeasurement(new UnitOfMeasurement("Quarts"))
+            .withUnitsOfMeasurement("Quarts")
             .withUnitPrice(Price.of("1.99"))
             .build());
     productRepository.createItem(
         Product.builder("p345", "Ice")
             .withExternalId("item3")
             .withCategory(c2)
-            .withUnitsOfMeasurement(new UnitOfMeasurement("Fluid Ounces"))
+            .withUnitsOfMeasurement("Fluid Ounces")
             .withUnitPrice(Price.of("0.99"))
             .build());
     productRepository.createItem(
         Product.builder("p456", "Pistachios")
             .withExternalId("item4")
             .withCategory(c4)
-            .withUnitsOfMeasurement(new UnitOfMeasurement("Pounds"))
+            .withUnitsOfMeasurement("Pounds")
             .withUnitPrice(Price.of("10.29"))
             .build());
 
