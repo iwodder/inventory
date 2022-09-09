@@ -3,7 +3,6 @@ package com.wodder.product.persistence;
 import com.wodder.product.domain.model.category.Category;
 import com.wodder.product.domain.model.category.CategoryId;
 import com.wodder.product.domain.model.product.ExternalId;
-import com.wodder.product.domain.model.product.Price;
 import com.wodder.product.domain.model.product.Product;
 import com.wodder.product.domain.model.product.ProductId;
 import com.wodder.product.domain.model.product.ProductRepository;
@@ -62,8 +61,8 @@ public class PostgresProductRepository extends JdbcRepository implements Product
                       rs.getString("cid")), rs.getString("cname")))
           .withExternalId(rs.getString("extId"))
           .withUnitsOfMeasurement(rs.getString("units"))
-          .withCasePrice(Price.of(rs.getString("casePrice")))
-          .withUnitPrice(Price.of(rs.getString("unitPrice")))
+          .withCasePrice(rs.getString("casePrice"))
+          .withUnitPrice(rs.getString("unitPrice"))
           .withStockedCount(Quantity.of(rs.getString("qty")))
           .withCasePack(rs.getString("itemsPerCase"))
           .isActive(rs.getBoolean("active"))

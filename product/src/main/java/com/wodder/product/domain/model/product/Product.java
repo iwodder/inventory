@@ -298,13 +298,13 @@ public class Product extends Entity<ProductId> {
       return this;
     }
 
-    public Builder withUnitPrice(Price p) {
-      this.unitPrice = p;
+    public Builder withUnitPrice(String unitPrice) {
+      this.unitPrice = Price.of(unitPrice);
       return this;
     }
 
-    public Builder withCasePrice(Price p) {
-      this.casePrice = p;
+    public Builder withCasePrice(String casePrice) {
+      this.casePrice = Price.of(casePrice);
       return this;
     }
 

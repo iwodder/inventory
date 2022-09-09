@@ -93,8 +93,8 @@ class ProductTest {
         Product.builder("Bread")
             .withCategory(Category.of("Dry Goods"))
             .withUnitsOfMeasurement("Loaves")
-            .withUnitPrice(Price.of("0.99"))
-            .withCasePrice(Price.of("3.96"))
+            .withUnitPrice("0.99")
+            .withCasePrice("3.96")
             .build();
 
     assertEquals(Price.of("0.99"), i.getUnitPrice());
@@ -108,8 +108,8 @@ class ProductTest {
         Product.builder("Bread")
             .withCategory(Category.of("Dry Goods"))
             .withUnitsOfMeasurement("Loaves")
-            .withUnitPrice(Price.of("0.99"))
-            .withCasePrice(Price.of("3.96"))
+            .withUnitPrice("0.99")
+            .withCasePrice("3.96")
             .build();
 
     i.updateUnitPrice(Price.of("1.99"));
