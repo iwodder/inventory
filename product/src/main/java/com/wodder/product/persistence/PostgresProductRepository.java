@@ -61,7 +61,7 @@ public class PostgresProductRepository extends JdbcRepository implements Product
               Category.of(
                   CategoryId.categoryIdOf(
                       rs.getString("cid")), rs.getString("cname")))
-          .withExternalId(ExternalId.of(rs.getString("extId")))
+          .withExternalId(rs.getString("extId"))
           .withUnitsOfMeasurement(UnitOfMeasurement.of(rs.getString("units")))
           .withCasePrice(Price.of(rs.getString("casePrice")))
           .withUnitPrice(Price.of(rs.getString("unitPrice")))

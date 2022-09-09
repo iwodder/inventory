@@ -8,7 +8,6 @@ import static org.junit.jupiter.api.Assertions.fail;
 
 import com.wodder.product.domain.model.category.Category;
 import com.wodder.product.domain.model.product.CasePack;
-import com.wodder.product.domain.model.product.ExternalId;
 import com.wodder.product.domain.model.product.Price;
 import com.wodder.product.domain.model.product.Product;
 import com.wodder.product.domain.model.product.ProductName;
@@ -69,7 +68,7 @@ class PostgresProductRepositoryIT extends BasePostgresTest {
 
     Product p = Product.builder("2% Milk")
         .withCategory(c)
-        .withExternalId(ExternalId.of("e123"))
+        .withExternalId("e123")
         .withUnitsOfMeasurement(UnitOfMeasurement.of("Gallons"))
         .withCasePrice(Price.of("3.99"))
         .withUnitPrice(Price.of("5.99"))
@@ -84,7 +83,7 @@ class PostgresProductRepositoryIT extends BasePostgresTest {
     Product result = opt.get();
     assertEquals(p, result, "Retrieved product didn't match created product.");
     assertEquals(c, result.getCategory());
-    assertEquals(ExternalId.of("e123"), result.getExternalId());
+    assertEquals("e123", result.getExternalId().getValue());
     assertEquals(Price.of("3.99"), result.getCasePrice());
     assertEquals(Price.of("5.99"), result.getUnitPrice());
     assertEquals(UnitOfMeasurement.of("Gallons"), result.getUnits());
@@ -101,7 +100,7 @@ class PostgresProductRepositoryIT extends BasePostgresTest {
 
     Product p = Product.builder("2% Milk")
         .withCategory(c)
-        .withExternalId(ExternalId.of("e123"))
+        .withExternalId("e123")
         .withUnitsOfMeasurement(UnitOfMeasurement.of("Gallons"))
         .withCasePrice(Price.of("3.99"))
         .withUnitPrice(Price.of("5.99"))
@@ -116,7 +115,7 @@ class PostgresProductRepositoryIT extends BasePostgresTest {
     Product result = opt.get();
     assertEquals(p, result, "Retrieved product didn't match created product.");
     assertEquals(c, result.getCategory());
-    assertEquals(ExternalId.of("e123"), result.getExternalId());
+    assertEquals("e123", result.getExternalId().getValue());
     assertEquals(Price.of("3.99"), result.getCasePrice());
     assertEquals(Price.of("5.99"), result.getUnitPrice());
     assertEquals(UnitOfMeasurement.of("Gallons"), result.getUnits());
@@ -130,7 +129,7 @@ class PostgresProductRepositoryIT extends BasePostgresTest {
   void update_name() {
     Product p = Product.builder("2% Milk")
         .withCategory(category)
-        .withExternalId(ExternalId.of("e123"))
+        .withExternalId("e123")
         .withUnitsOfMeasurement(UnitOfMeasurement.of("Gallons"))
         .withCasePrice(Price.of("3.99"))
         .withUnitPrice(Price.of("5.99"))
@@ -156,7 +155,7 @@ class PostgresProductRepositoryIT extends BasePostgresTest {
   void update_item_price() {
     Product p = Product.builder("2% Milk")
         .withCategory(category)
-        .withExternalId(ExternalId.of("e123"))
+        .withExternalId("e123")
         .withUnitsOfMeasurement(UnitOfMeasurement.of("Gallons"))
         .withCasePrice(Price.of("3.99"))
         .withUnitPrice(Price.of("5.99"))
@@ -182,7 +181,7 @@ class PostgresProductRepositoryIT extends BasePostgresTest {
   void update_case_price() {
     Product p = Product.builder("2% Milk")
         .withCategory(category)
-        .withExternalId(ExternalId.of("e123"))
+        .withExternalId("e123")
         .withUnitsOfMeasurement(UnitOfMeasurement.of("Gallons"))
         .withCasePrice(Price.of("3.99"))
         .withUnitPrice(Price.of("5.99"))
@@ -208,7 +207,7 @@ class PostgresProductRepositoryIT extends BasePostgresTest {
   void update_units() {
     Product p = Product.builder("2% Milk")
         .withCategory(category)
-        .withExternalId(ExternalId.of("e123"))
+        .withExternalId("e123")
         .withUnitsOfMeasurement(UnitOfMeasurement.of("Gallons"))
         .withCasePrice(Price.of("3.99"))
         .withUnitPrice(Price.of("5.99"))
@@ -234,7 +233,7 @@ class PostgresProductRepositoryIT extends BasePostgresTest {
   void update_active() {
     Product p = Product.builder("2% Milk")
         .withCategory(category)
-        .withExternalId(ExternalId.of("e123"))
+        .withExternalId("e123")
         .withUnitsOfMeasurement(UnitOfMeasurement.of("Gallons"))
         .withCasePrice(Price.of("3.99"))
         .withUnitPrice(Price.of("5.99"))
@@ -259,7 +258,7 @@ class PostgresProductRepositoryIT extends BasePostgresTest {
   void update_qty() {
     Product p = Product.builder("2% Milk")
         .withCategory(category)
-        .withExternalId(ExternalId.of("e123"))
+        .withExternalId("e123")
         .withUnitsOfMeasurement(UnitOfMeasurement.of("Gallons"))
         .withCasePrice(Price.of("3.99"))
         .withUnitPrice(Price.of("5.99"))
@@ -284,7 +283,7 @@ class PostgresProductRepositoryIT extends BasePostgresTest {
   void update_case_pack() {
     Product p = Product.builder("2% Milk")
         .withCategory(category)
-        .withExternalId(ExternalId.of("e123"))
+        .withExternalId("e123")
         .withUnitsOfMeasurement(UnitOfMeasurement.of("Gallons"))
         .withCasePrice(Price.of("3.99"))
         .withUnitPrice(Price.of("5.99"))
@@ -312,7 +311,7 @@ class PostgresProductRepositoryIT extends BasePostgresTest {
 
     Product p = Product.builder("2% Milk")
         .withCategory(c)
-        .withExternalId(ExternalId.of("e123"))
+        .withExternalId("e123")
         .withUnitsOfMeasurement(UnitOfMeasurement.of("Gallons"))
         .withCasePrice(Price.of("3.99"))
         .withUnitPrice(Price.of("5.99"))
@@ -327,7 +326,7 @@ class PostgresProductRepositoryIT extends BasePostgresTest {
     Product result = opt.get();
     assertEquals(p, result, "Retrieved product didn't match created product.");
     assertEquals(c, result.getCategory());
-    assertEquals(ExternalId.of("e123"), result.getExternalId());
+    assertEquals("e123", result.getExternalId().getValue());
     assertEquals(Price.of("3.99"), result.getCasePrice());
     assertEquals(Price.of("5.99"), result.getUnitPrice());
     assertEquals(UnitOfMeasurement.of("Gallons"), result.getUnits());
@@ -344,7 +343,7 @@ class PostgresProductRepositoryIT extends BasePostgresTest {
 
     Product p = Product.builder("2% Milk")
         .withCategory(c)
-        .withExternalId(ExternalId.of("e123"))
+        .withExternalId("e123")
         .withUnitsOfMeasurement(UnitOfMeasurement.of("Gallons"))
         .withCasePrice(Price.of("3.99"))
         .withUnitPrice(Price.of("5.99"))
@@ -366,7 +365,7 @@ class PostgresProductRepositoryIT extends BasePostgresTest {
 
     Product p = Product.builder("2% Milk")
         .withCategory(c)
-        .withExternalId(ExternalId.of("e123"))
+        .withExternalId("e123")
         .withUnitsOfMeasurement(UnitOfMeasurement.of("Gallons"))
         .withCasePrice(Price.of("3.99"))
         .withUnitPrice(Price.of("5.99"))
@@ -385,7 +384,7 @@ class PostgresProductRepositoryIT extends BasePostgresTest {
   void load_all_products() {
     Product p = Product.builder("2% Milk")
         .withCategory(category)
-        .withExternalId(ExternalId.of("e123"))
+        .withExternalId("e123")
         .withUnitsOfMeasurement(UnitOfMeasurement.of("Gallons"))
         .withCasePrice(Price.of("3.99"))
         .withUnitPrice(Price.of("5.99"))
@@ -395,7 +394,7 @@ class PostgresProductRepositoryIT extends BasePostgresTest {
         .build();
     Product p1 = Product.builder("Cheese")
         .withCategory(category)
-        .withExternalId(ExternalId.of("e123"))
+        .withExternalId("e123")
         .withUnitsOfMeasurement(UnitOfMeasurement.of("Gallons"))
         .withCasePrice(Price.of("3.99"))
         .withUnitPrice(Price.of("5.99"))
@@ -405,7 +404,7 @@ class PostgresProductRepositoryIT extends BasePostgresTest {
         .build();
     Product p2 = Product.builder("Pine Sol")
         .withCategory(category)
-        .withExternalId(ExternalId.of("e123"))
+        .withExternalId("e123")
         .withUnitsOfMeasurement(UnitOfMeasurement.of("Gallons"))
         .withCasePrice(Price.of("3.99"))
         .withUnitPrice(Price.of("5.99"))
@@ -429,7 +428,7 @@ class PostgresProductRepositoryIT extends BasePostgresTest {
   void load_all_active() {
     Product p = Product.builder("2% Milk")
         .withCategory(category)
-        .withExternalId(ExternalId.of("e123"))
+        .withExternalId("e123")
         .withUnitsOfMeasurement(UnitOfMeasurement.of("Gallons"))
         .withCasePrice(Price.of("3.99"))
         .withUnitPrice(Price.of("5.99"))
@@ -439,7 +438,7 @@ class PostgresProductRepositoryIT extends BasePostgresTest {
         .build();
     Product p1 = Product.builder("Cheese")
         .withCategory(category)
-        .withExternalId(ExternalId.of("e123"))
+        .withExternalId("e123")
         .withUnitsOfMeasurement(UnitOfMeasurement.of("Gallons"))
         .withCasePrice(Price.of("3.99"))
         .withUnitPrice(Price.of("5.99"))
@@ -449,7 +448,7 @@ class PostgresProductRepositoryIT extends BasePostgresTest {
         .build();
     Product p2 = Product.builder("Pine Sol")
         .withCategory(category)
-        .withExternalId(ExternalId.of("e123"))
+        .withExternalId("e123")
         .withUnitsOfMeasurement(UnitOfMeasurement.of("Gallons"))
         .withCasePrice(Price.of("3.99"))
         .withUnitPrice(Price.of("5.99"))

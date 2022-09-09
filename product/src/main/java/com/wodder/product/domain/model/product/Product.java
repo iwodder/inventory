@@ -278,8 +278,8 @@ public class Product extends Entity<ProductId> {
       this.name = ProductName.of(name);
     }
 
-    public Builder withExternalId(ExternalId id) {
-      this.extId = id;
+    public Builder withExternalId(String extId) {
+      this.extId = ExternalId.of(extId);
       return this;
     }
 
