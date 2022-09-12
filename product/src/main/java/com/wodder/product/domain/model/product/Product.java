@@ -308,8 +308,8 @@ public class Product extends Entity<ProductId> {
       return this;
     }
 
-    public Builder withStockedCount(Quantity qty) {
-      this.quantity = qty;
+    public Builder withStockedCount(String qty) {
+      this.quantity = Quantity.of(qty);
       return this;
     }
 

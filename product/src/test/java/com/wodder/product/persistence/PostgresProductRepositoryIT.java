@@ -72,7 +72,7 @@ class PostgresProductRepositoryIT extends BasePostgresTest {
         .withUnitsOfMeasurement("Gallons")
         .withCasePrice("3.99")
         .withUnitPrice("5.99")
-        .withStockedCount(Quantity.of("2"))
+        .withStockedCount("2")
         .withCasePack("4")
         .isActive(true)
         .build();
@@ -104,7 +104,7 @@ class PostgresProductRepositoryIT extends BasePostgresTest {
         .withUnitsOfMeasurement("Gallons")
         .withCasePrice("3.99")
         .withUnitPrice("5.99")
-        .withStockedCount(Quantity.of("2"))
+        .withStockedCount("2")
         .withCasePack("4")
         .isActive(true)
         .build();
@@ -133,7 +133,7 @@ class PostgresProductRepositoryIT extends BasePostgresTest {
         .withUnitsOfMeasurement("Gallons")
         .withCasePrice("3.99")
         .withUnitPrice("5.99")
-        .withStockedCount(Quantity.of("2"))
+        .withStockedCount("2")
         .withCasePack("4")
         .isActive(true)
         .build();
@@ -159,7 +159,7 @@ class PostgresProductRepositoryIT extends BasePostgresTest {
         .withUnitsOfMeasurement("Gallons")
         .withCasePrice("3.99")
         .withUnitPrice("5.99")
-        .withStockedCount(Quantity.of("2"))
+        .withStockedCount("2")
         .withCasePack("4")
         .isActive(true)
         .build();
@@ -185,7 +185,7 @@ class PostgresProductRepositoryIT extends BasePostgresTest {
         .withUnitsOfMeasurement("Gallons")
         .withCasePrice("3.99")
         .withUnitPrice("5.99")
-        .withStockedCount(Quantity.of("2"))
+        .withStockedCount("2")
         .withCasePack("4")
         .isActive(true)
         .build();
@@ -211,7 +211,7 @@ class PostgresProductRepositoryIT extends BasePostgresTest {
         .withUnitsOfMeasurement("Gallons")
         .withCasePrice("3.99")
         .withUnitPrice("5.99")
-        .withStockedCount(Quantity.of("2"))
+        .withStockedCount("2")
         .withCasePack("4")
         .isActive(true)
         .build();
@@ -237,7 +237,7 @@ class PostgresProductRepositoryIT extends BasePostgresTest {
         .withUnitsOfMeasurement("Gallons")
         .withCasePrice("3.99")
         .withUnitPrice("5.99")
-        .withStockedCount(Quantity.of("2"))
+        .withStockedCount("2")
         .withCasePack("4")
         .isActive(true)
         .build();
@@ -262,7 +262,7 @@ class PostgresProductRepositoryIT extends BasePostgresTest {
         .withUnitsOfMeasurement("Gallons")
         .withCasePrice("3.99")
         .withUnitPrice("5.99")
-        .withStockedCount(Quantity.of("2"))
+        .withStockedCount("2")
         .withCasePack("4")
         .isActive(true)
         .build();
@@ -287,7 +287,7 @@ class PostgresProductRepositoryIT extends BasePostgresTest {
         .withUnitsOfMeasurement("Gallons")
         .withCasePrice("3.99")
         .withUnitPrice("5.99")
-        .withStockedCount(Quantity.of("2"))
+        .withStockedCount("2")
         .withCasePack("4")
         .isActive(true)
         .build();
@@ -315,7 +315,7 @@ class PostgresProductRepositoryIT extends BasePostgresTest {
         .withUnitsOfMeasurement("Gallons")
         .withCasePrice("3.99")
         .withUnitPrice("5.99")
-        .withStockedCount(Quantity.of("2"))
+        .withStockedCount("2")
         .withCasePack("4")
         .isActive(true)
         .build();
@@ -347,7 +347,7 @@ class PostgresProductRepositoryIT extends BasePostgresTest {
         .withUnitsOfMeasurement("Gallons")
         .withCasePrice("3.99")
         .withUnitPrice("5.99")
-        .withStockedCount(Quantity.of("2"))
+        .withStockedCount("2")
         .withCasePack("4")
         .isActive(true)
         .build();
@@ -369,7 +369,7 @@ class PostgresProductRepositoryIT extends BasePostgresTest {
         .withUnitsOfMeasurement("Gallons")
         .withCasePrice("3.99")
         .withUnitPrice("5.99")
-        .withStockedCount(Quantity.of("2"))
+        .withStockedCount("2")
         .withCasePack("4")
         .isActive(true)
         .build();
@@ -388,7 +388,7 @@ class PostgresProductRepositoryIT extends BasePostgresTest {
         .withUnitsOfMeasurement("Gallons")
         .withCasePrice("3.99")
         .withUnitPrice("5.99")
-        .withStockedCount(Quantity.of("2"))
+        .withStockedCount("2")
         .withCasePack("4")
         .isActive(true)
         .build();
@@ -398,7 +398,7 @@ class PostgresProductRepositoryIT extends BasePostgresTest {
         .withUnitsOfMeasurement("Gallons")
         .withCasePrice("3.99")
         .withUnitPrice("5.99")
-        .withStockedCount(Quantity.of("2"))
+        .withStockedCount("2")
         .withCasePack("4")
         .isActive(true)
         .build();
@@ -408,7 +408,7 @@ class PostgresProductRepositoryIT extends BasePostgresTest {
         .withUnitsOfMeasurement("Gallons")
         .withCasePrice("3.99")
         .withUnitPrice("5.99")
-        .withStockedCount(Quantity.of("2"))
+        .withStockedCount("2")
         .withCasePack("4")
         .isActive(true)
         .build();
@@ -432,7 +432,7 @@ class PostgresProductRepositoryIT extends BasePostgresTest {
         .withUnitsOfMeasurement("Gallons")
         .withCasePrice("3.99")
         .withUnitPrice("5.99")
-        .withStockedCount(Quantity.of("2"))
+        .withStockedCount("2")
         .withCasePack("4")
         .isActive(true)
         .build();
@@ -442,7 +442,7 @@ class PostgresProductRepositoryIT extends BasePostgresTest {
         .withUnitsOfMeasurement("Gallons")
         .withCasePrice("3.99")
         .withUnitPrice("5.99")
-        .withStockedCount(Quantity.of("2"))
+        .withStockedCount("2")
         .withCasePack("4")
         .isActive(false)
         .build();
@@ -452,7 +452,7 @@ class PostgresProductRepositoryIT extends BasePostgresTest {
         .withUnitsOfMeasurement("Gallons")
         .withCasePrice("3.99")
         .withUnitPrice("5.99")
-        .withStockedCount(Quantity.of("2"))
+        .withStockedCount("2")
         .withCasePack("4")
         .isActive(true)
         .build();

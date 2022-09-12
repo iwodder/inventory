@@ -6,7 +6,6 @@ import com.wodder.product.domain.model.product.ExternalId;
 import com.wodder.product.domain.model.product.Product;
 import com.wodder.product.domain.model.product.ProductId;
 import com.wodder.product.domain.model.product.ProductRepository;
-import com.wodder.product.domain.model.product.Quantity;
 import com.zaxxer.hikari.HikariDataSource;
 import java.lang.reflect.Field;
 import java.util.List;
@@ -63,7 +62,7 @@ public class PostgresProductRepository extends JdbcRepository implements Product
           .withUnitsOfMeasurement(rs.getString("units"))
           .withCasePrice(rs.getString("casePrice"))
           .withUnitPrice(rs.getString("unitPrice"))
-          .withStockedCount(Quantity.of(rs.getString("qty")))
+          .withStockedCount(rs.getString("qty"))
           .withCasePack(rs.getString("itemsPerCase"))
           .isActive(rs.getBoolean("active"))
           .build();
