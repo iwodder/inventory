@@ -47,7 +47,6 @@ public class ItemRestAdapter {
   }
 
   @POST
-  @Path("item")
   @Produces(MediaType.APPLICATION_JSON)
   @Consumes(MediaType.APPLICATION_JSON)
   public Response createItem(CreateItemCommand command) {

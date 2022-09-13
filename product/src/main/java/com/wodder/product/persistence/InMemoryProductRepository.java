@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+@InMemory
 final class InMemoryProductRepository extends InMemoryRepository<Product, ProductId>
     implements ProductRepository {
 

@@ -241,12 +241,12 @@ public class Product extends Entity<ProductId> {
     return b.build();
   }
 
-  public static Builder builder(ProductId id, ProductName name) {
+  public static Builder builder(String id, String name) {
     return new Builder(id, name);
   }
 
-  public static Builder builder(ProductName name) {
-    return new Builder(ProductId.generateId(), name);
+  public static Builder builder(String name) {
+    return new Builder(name);
   }
 
   public static class Builder {
@@ -255,22 +255,31 @@ public class Product extends Entity<ProductId> {
     private ExternalId extId;
     private Category category;
     private boolean active;
-    private UnitOfMeasurement uom;
+    private UnitOfMeasurement uom = UnitOfMeasurement.empty();
     private Price unitPrice;
     private Price casePrice;
-    private Quantity quantity;
+    private Quantity quantity = Quantity.zero();
     private CasePack casePack;
 
-    private Builder(ProductId id, ProductName name) {
+    private Builder(String id, String name) {
+      setName(name);
+      this.id = ProductId.productIdOf(id);
+    }
+
+    private Builder(String name) {
+      setName(name);
+      this.id = ProductId.generateId();
+    }
+
+    private void setName(String name) {
       if (name == null) {
         throw new IllegalArgumentException("ProductName is required.");
       }
-      this.id = id;
-      this.name = name;
+      this.name = ProductName.of(name);
     }
 
-    public Builder withExternalId(ExternalId id) {
-      this.extId = id;
+    public Builder withExternalId(String extId) {
+      this.extId = ExternalId.of(extId);
       return this;
     }
 
@@ -284,23 +293,23 @@ public class Product extends Entity<ProductId> {
       return this;
     }
 
-    public Builder withUnitsOfMeasurement(UnitOfMeasurement uom) {
-      this.uom = uom;
+    public Builder withUnitsOfMeasurement(String units) {
+      this.uom = UnitOfMeasurement.of(units);
       return this;
     }
 
-    public Builder withUnitPrice(Price p) {
-      this.unitPrice = p;
+    public Builder withUnitPrice(String unitPrice) {
+      this.unitPrice = Price.of(unitPrice);
       return this;
     }
 
-    public Builder withCasePrice(Price p) {
-      this.casePrice = p;
+    public Builder withCasePrice(String casePrice) {
+      this.casePrice = Price.of(casePrice);
       return this;
     }
 
-    public Builder withStockedCount(Quantity qty) {
-      this.quantity = qty;
+    public Builder withStockedCount(String qty) {
+      this.quantity = Quantity.of(qty);
       return this;
     }
 

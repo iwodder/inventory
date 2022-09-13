@@ -1,38 +1,38 @@
 package com.wodder.product.application;
 
-import com.wodder.product.domain.model.Repository;
 import com.wodder.product.domain.model.category.Category;
 import com.wodder.product.domain.model.category.CategoryId;
-import com.wodder.product.dto.CategoryModel;
+import com.wodder.product.domain.model.category.CategoryRepository;
+import com.wodder.product.dto.CategoryDto;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
+import javax.inject.Inject;
 
 public class CategoryServiceImpl implements CategoryService {
 
-  private final Repository<Category, CategoryId> categoryRepository;
+  private final CategoryRepository categoryRepository;
 
-  CategoryServiceImpl(Repository<Category, CategoryId> categoryRepository) {
+  @Inject
+  public CategoryServiceImpl(CategoryRepository categoryRepository) {
     this.categoryRepository = categoryRepository;
   }
 
   @Override
-  public Optional<CategoryModel> createCategory(String name) {
-    if (categoryRepository.loadByItem(new Category(name)).isEmpty()) {
-      Category c = categoryRepository.createItem(new Category(name));
-      return c == null ? Optional.empty() : Optional.of(c.toModel());
-    } else {
-      return Optional.empty();
-    }
+  public CategoryDto createCategory(String name) {
+    return categoryRepository
+        .loadByName(name)
+        .map(Category::toModel)
+        .orElseGet(() -> categoryRepository.createItem(Category.of(name)).toModel());
   }
 
   @Override
-  public Optional<CategoryModel> loadCategory(String id) {
+  public Optional<CategoryDto> loadCategory(String id) {
     return categoryRepository.loadById(CategoryId.categoryIdOf(id)).map(Category::toModel);
   }
 
   @Override
-  public List<CategoryModel> loadCategories() {
+  public List<CategoryDto> loadCategories() {
     return categoryRepository.loadAllItems().stream()
         .map(Category::toModel)
         .collect(Collectors.toList());

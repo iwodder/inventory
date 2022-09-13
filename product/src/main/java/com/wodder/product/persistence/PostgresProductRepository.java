@@ -3,13 +3,9 @@ package com.wodder.product.persistence;
 import com.wodder.product.domain.model.category.Category;
 import com.wodder.product.domain.model.category.CategoryId;
 import com.wodder.product.domain.model.product.ExternalId;
-import com.wodder.product.domain.model.product.Price;
 import com.wodder.product.domain.model.product.Product;
 import com.wodder.product.domain.model.product.ProductId;
-import com.wodder.product.domain.model.product.ProductName;
 import com.wodder.product.domain.model.product.ProductRepository;
-import com.wodder.product.domain.model.product.Quantity;
-import com.wodder.product.domain.model.product.UnitOfMeasurement;
 import com.zaxxer.hikari.HikariDataSource;
 import java.lang.reflect.Field;
 import java.util.List;
@@ -56,17 +52,17 @@ public class PostgresProductRepository extends JdbcRepository implements Product
   private static final String DELETE_PRODUCT = "DELETE FROM product.products WHERE uuid = ?;";
   public static final ObjectMapper<Product> PRODUCT_MAPPER = rs ->
       Product.builder(
-              ProductId.productIdOf(rs.getString("pid")),
-              ProductName.of(rs.getString("pname")))
+              rs.getString("pid"),
+              rs.getString("pname"))
           .withCategory(
               Category.of(
                   CategoryId.categoryIdOf(
                       rs.getString("cid")), rs.getString("cname")))
-          .withExternalId(ExternalId.of(rs.getString("extId")))
-          .withUnitsOfMeasurement(UnitOfMeasurement.of(rs.getString("units")))
-          .withCasePrice(Price.of(rs.getString("casePrice")))
-          .withUnitPrice(Price.of(rs.getString("unitPrice")))
-          .withStockedCount(Quantity.of(rs.getString("qty")))
+          .withExternalId(rs.getString("extId"))
+          .withUnitsOfMeasurement(rs.getString("units"))
+          .withCasePrice(rs.getString("casePrice"))
+          .withUnitPrice(rs.getString("unitPrice"))
+          .withStockedCount(rs.getString("qty"))
           .withCasePack(rs.getString("itemsPerCase"))
           .isActive(rs.getBoolean("active"))
           .build();

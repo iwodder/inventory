@@ -1,8 +1,8 @@
 package com.wodder.product.persistence;
 
-import com.wodder.product.domain.model.Repository;
 import com.wodder.product.domain.model.category.Category;
 import com.wodder.product.domain.model.category.CategoryId;
+import com.wodder.product.domain.model.category.CategoryRepository;
 import com.zaxxer.hikari.HikariDataSource;
 import java.lang.reflect.Field;
 import java.util.List;
@@ -11,7 +11,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class PostgresCategoryRepository extends JdbcRepository
-    implements Repository<Category, CategoryId> {
+    implements CategoryRepository {
 
   private static final Logger LOG = LoggerFactory.getLogger(PostgresCategoryRepository.class);
   private static final String INSERT_CATEGORY_SQL =
@@ -21,6 +21,8 @@ public class PostgresCategoryRepository extends JdbcRepository
   private static final String SELECT_SINGLE_CATEGORY =
       "SELECT * FROM product.categories WHERE uuid = ?;";
   private static final String SELECT_ALL_CATEGORIES = "SELECT * FROM product.categories;";
+
+  private static final String SELECT_BY_NAME = "SELECT * FROM product.categories WHERE name = ?;";
 
   private static final ObjectMapper<Category> CATEGORY_OBJECT_MAPPER = rs -> new Category(
       CategoryId.categoryIdOf(rs.getString("uuid")),
@@ -94,9 +96,18 @@ public class PostgresCategoryRepository extends JdbcRepository
     return deleteItem(item.getId());
   }
 
-  //openConnection()
-  //createStatement()
-  //potentiallyAddParams
-  //execute
-  //
+  @Override
+  public Optional<Category> loadByName(String name) {
+    List<Category> results = query(
+        SELECT_BY_NAME, s -> {
+          s.setString(1, name);
+          return s;
+        },
+        CATEGORY_OBJECT_MAPPER);
+    if (results.isEmpty()) {
+      return Optional.empty();
+    } else {
+      return Optional.of(results.get(0));
+    }
+  }
 }

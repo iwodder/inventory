@@ -1,7 +1,7 @@
 package com.wodder.product.domain.model.category;
 
 import com.wodder.product.domain.model.product.Entity;
-import com.wodder.product.dto.CategoryModel;
+import com.wodder.product.dto.CategoryDto;
 import java.util.Objects;
 
 public class Category extends Entity<CategoryId> {
@@ -49,8 +49,8 @@ public class Category extends Entity<CategoryId> {
     }
   }
 
-  public CategoryModel toModel() {
-    return new CategoryModel(this);
+  public CategoryDto toModel() {
+    return new CategoryDto(this);
   }
 
   @Override
