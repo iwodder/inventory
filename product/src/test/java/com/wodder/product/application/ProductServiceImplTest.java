@@ -8,6 +8,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import com.wodder.product.application.ReceiveShipmentCommand.Item;
 import com.wodder.product.domain.model.PersistenceFactory;
+import com.wodder.product.domain.model.product.ProductCreated;
 import com.wodder.product.dto.ProductDto;
 import com.wodder.product.persistence.TestPersistenceFactory;
 import java.util.List;
@@ -19,15 +20,18 @@ import org.junit.jupiter.api.Test;
 class ProductServiceImplTest {
 
   private ProductService storage;
+  private FakeProductEvent fakeEvent;
 
   @BeforeEach
   void setup() {
     PersistenceFactory psf = TestPersistenceFactory.getPopulated();
+    fakeEvent = new FakeProductEvent();
     storage =
         new ProductServiceImpl(
             psf.getProductRepository(),
             psf.getCategoryRepository(),
-            psf.getShipmentRepository());
+            psf.getShipmentRepository(),
+            fakeEvent);
   }
 
   @Test
@@ -256,6 +260,25 @@ class ProductServiceImplTest {
   @DisplayName("Should be able to load a product by external id")
   void load_by_external() {
     assertTrue(storage.loadProductByExternalId("item1").isPresent());
+  }
+
+  @Test
+  @DisplayName("Creating a new product fires an event")
+  void product_created_event() {
+    CreateProductCommand cmd = new CreateProductCommand();
+    cmd.setName("Milk");
+    cmd.setUnitPrice("2.99");
+    cmd.setUnitMeasurement("Gallons");
+    cmd.setCategoryId("c1");
+
+    String id = storage.createProduct(cmd);
+
+    assertFalse(id.isBlank());
+    assertEquals(1, fakeEvent.events.size());
+    ProductCreated event = fakeEvent.events.get(0);
+    assertEquals(id, event.getProductId().getValue());
+    assertEquals("Milk", event.getName().getValue());
+    assertEquals("Gallons", event.getUnitOfMeasurement().getUnit());
   }
 
   private ProductDto.ProductModelBuilder getDefaultItem() {

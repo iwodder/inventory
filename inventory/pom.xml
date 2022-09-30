@@ -10,4 +10,12 @@
 
     <modelVersion>4.0.0</modelVersion>
     <artifactId>inventory</artifactId>
+
+  <dependencies>
+    <dependency>
+      <groupId>com.wodder</groupId>
+      <artifactId>product</artifactId>
+      <scope>provided</scope>
+    </dependency>
+  </dependencies>
 </project>

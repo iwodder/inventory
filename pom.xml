@@ -39,6 +39,7 @@
         <hikari.version>5.0.1</hikari.version>
         <tomcat.version>8.5.76</tomcat.version>
         <appassembler.version>2.1.0</appassembler.version>
+        <product.version>${project.version}</product.version>
     </properties>
 
     <dependencyManagement>
@@ -81,6 +82,12 @@
                 <groupId>org.jboss.weld.se</groupId>
                 <artifactId>weld-se-core</artifactId>
                 <version>${weld3.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.wodder</groupId>
+                <artifactId>product</artifactId>
+                <version>${product.version}</version>
+                <scope>provided</scope>
             </dependency>
         </dependencies>
     </dependencyManagement>

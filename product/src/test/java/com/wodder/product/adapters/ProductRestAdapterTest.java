@@ -9,6 +9,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.wodder.product.application.CreateProductCommand;
+import com.wodder.product.application.FakeProductEvent;
 import com.wodder.product.application.ProductService;
 import com.wodder.product.application.ProductServiceImpl;
 import com.wodder.product.application.UpdateCategoryCommand;
@@ -297,7 +298,8 @@ class ProductRestAdapterTest extends JerseyTest {
       bind(new ProductServiceImpl(
           tpf.getProductRepository(),
           tpf.getCategoryRepository(),
-          tpf.getShipmentRepository()
+          tpf.getShipmentRepository(),
+          new FakeProductEvent()
       )).to(ProductService.class);
     }
   }

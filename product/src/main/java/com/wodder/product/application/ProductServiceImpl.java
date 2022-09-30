@@ -6,6 +6,7 @@ import com.wodder.product.domain.model.category.CategoryRepository;
 import com.wodder.product.domain.model.product.ExternalId;
 import com.wodder.product.domain.model.product.Price;
 import com.wodder.product.domain.model.product.Product;
+import com.wodder.product.domain.model.product.ProductCreated;
 import com.wodder.product.domain.model.product.ProductId;
 import com.wodder.product.domain.model.product.ProductName;
 import com.wodder.product.domain.model.product.ProductRepository;
@@ -20,6 +21,7 @@ import com.wodder.product.dto.ProductDto;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
+import javax.enterprise.event.Event;
 import javax.inject.Inject;
 
 public class ProductServiceImpl implements ProductService {
@@ -27,15 +29,18 @@ public class ProductServiceImpl implements ProductService {
   private final ProductRepository productRepository;
   private final CategoryRepository categoryRepository;
   private final ShipmentRepository shipmentRepository;
+  private final Event<ProductCreated> productCreatedEvent;
 
   @Inject
   public ProductServiceImpl(
       ProductRepository productRepository,
       CategoryRepository categoryRepository,
-      ShipmentRepository shipmentRepository) {
+      ShipmentRepository shipmentRepository,
+      Event<ProductCreated> productCreatedEvent) {
     this.productRepository = productRepository;
     this.categoryRepository = categoryRepository;
     this.shipmentRepository = shipmentRepository;
+    this.productCreatedEvent = productCreatedEvent;
   }
 
   @Override
@@ -85,8 +90,10 @@ public class ProductServiceImpl implements ProductService {
               .withUnitPrice(cmd.getUnitPrice())
               .withUnitsOfMeasurement(cmd.getUnitMeasurement())
               .build();
-
-      return productRepository.createItem(product).getId().getValue();
+      String id = productRepository.createItem(product).getId().getValue();
+      productCreatedEvent.fire(
+          new ProductCreated(product.getId(), product.getName(), product.getUnits()));
+      return id;
     } else {
       throw new IllegalArgumentException(
           String.format("Unknown categoryId{ %s }", cmd.getCategoryId()));
