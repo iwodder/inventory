@@ -33,7 +33,7 @@ public interface ProductService {
 
   Optional<ProductDto> loadProductByExternalId(String externalId);
 
-  List<ProductDto> loadAllActiveProducts();
+  List<ProductDto> loadAllProducts();
 
   Boolean receiveShipmentOfProducts(ReceiveShipmentCommand cmd);
 }

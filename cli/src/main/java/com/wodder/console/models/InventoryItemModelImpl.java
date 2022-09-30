@@ -43,7 +43,7 @@ public class InventoryItemModelImpl implements InventoryItemModel {
 
   @Override
   public Result<List<ProductDto>, String> getItems() {
-    List<ProductDto> items = storage.loadAllActiveProducts();
+    List<ProductDto> items = storage.loadAllProducts();
     return items.isEmpty()
         ? new Result<>(null, "Unable to access items")
         : new Result<>(items, null);

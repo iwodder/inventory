@@ -12,6 +12,7 @@
         <module>product</module>
         <module>inventory</module>
         <module>cli</module>
+        <module>web</module>
     </modules>
 
     <name>Home Inventory</name>

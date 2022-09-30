@@ -1,4 +1,4 @@
-package com.wodder.product;
+package com.wodder;
 
 import java.io.File;
 import javax.ws.rs.ApplicationPath;
@@ -19,8 +19,8 @@ public class Main {
     tomcat.setPort(8080);
 
     Context ctx = tomcat.addContext("", new File(".").getAbsolutePath());
-    tomcat.addServlet("", "jax-rs", new ServletContainer(new Product()));
-    ctx.addServletMappingDecoded("/*", "jax-rs");
+    Tomcat.addServlet(ctx, "app", new ServletContainer(new App()));
+    ctx.addServletMappingDecoded("/*", "app");
     ctx.addApplicationListener(Listener.class.getName());
 
     tomcat.start();
@@ -29,9 +29,9 @@ public class Main {
   }
 
   @ApplicationPath("/")
-  public static class Product extends ResourceConfig {
-    public Product() {
-      packages("com.wodder.product");
+  private static class App extends ResourceConfig {
+    App() {
+      packages("com.wodder.product", "com.wodder.inventory");
     }
   }
 }

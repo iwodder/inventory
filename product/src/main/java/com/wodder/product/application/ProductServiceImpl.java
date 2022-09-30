@@ -78,15 +78,15 @@ public class ProductServiceImpl implements ProductService {
         categoryRepository.loadById(CategoryId.categoryIdOf(cmd.getCategoryId()));
 
     if (opt.isPresent()) {
-      UnitOfMeasurement uom = UnitOfMeasurement.of(cmd.getUnitMeasurement());
-      Price price = Price.of(cmd.getUnitPrice());
-      Category c = opt.get();
-      Product newProduct = productRepository.createItem(
-          Product.from(
-              ExternalId.of(cmd.getExternalId()),
-              cmd.getName(), c, uom, price));
+      Product product =
+          Product.builder(cmd.getName())
+              .withCategory(opt.get())
+              .withExternalId(cmd.getExternalId())
+              .withUnitPrice(cmd.getUnitPrice())
+              .withUnitsOfMeasurement(cmd.getUnitMeasurement())
+              .build();
 
-      return newProduct.getId().getValue();
+      return productRepository.createItem(product).getId().getValue();
     } else {
       throw new IllegalArgumentException(
           String.format("Unknown categoryId{ %s }", cmd.getCategoryId()));
@@ -193,14 +193,15 @@ public class ProductServiceImpl implements ProductService {
       for (LineItem e : s.getLineItems()) {
         ExternalId externalId = ExternalId.of(e.getId().getValue());
         Optional<Product> p = productRepository.loadByExternalId(externalId);
-        Product product = p.orElseGet(() -> productRepository.createItem(
-            Product.from(
-                externalId,
-                e.getName(),
-                Category.defaultCategory(),
-                UnitOfMeasurement.of(e.getUnits().getValue()),
-                Price.of(e.getPrice().getItemPrice())
-            )));
+        Product product = p.orElseGet(() ->
+            productRepository.createItem(
+                Product.builder(e.getName())
+                    .withExternalId(externalId.getValue())
+                    .withCategory(Category.defaultCategory())
+                    .withUnitsOfMeasurement(e.getUnits().getValue())
+                    .withUnitPrice(e.getPrice().getItemPrice())
+                    .build()
+            ));
 
         product.receiveQty(Quantity.of(e.getNumberOfPieces()));
       }
@@ -211,7 +212,7 @@ public class ProductServiceImpl implements ProductService {
   }
 
   @Override
-  public List<ProductDto> loadAllActiveProducts() {
+  public List<ProductDto> loadAllProducts() {
     return productRepository.loadAllItems().stream()
         .map(Product::toItemModel)
         .collect(Collectors.toList());

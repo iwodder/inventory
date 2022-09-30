@@ -36,6 +36,13 @@ public class ProductRestAdapter {
   }
 
   @GET
+  @Produces(MediaType.APPLICATION_JSON)
+  public Response getProducts() {
+    LOGGER.info(">> getProducts()");
+    return Response.ok(svc.loadAllProducts()).build();
+  }
+
+  @GET
   @Path("{id}")
   @Produces(MediaType.APPLICATION_JSON)
   public Response getProduct(@PathParam("id") String productId) {

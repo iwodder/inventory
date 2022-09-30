@@ -1,6 +1,7 @@
 package com.wodder.product.adapters;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -17,8 +18,10 @@ import com.wodder.product.application.UpdateUnitsCommand;
 import com.wodder.product.domain.model.PersistenceFactory;
 import com.wodder.product.dto.ProductDto;
 import com.wodder.product.persistence.TestPersistenceFactory;
+import java.util.List;
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.core.Application;
+import javax.ws.rs.core.GenericType;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import org.glassfish.jersey.internal.inject.AbstractBinder;
@@ -264,6 +267,20 @@ class ProductRestAdapterTest extends JerseyTest {
     assertEquals(201, r.getStatus());
     ProductDto dto = r.readEntity(ProductDto.class);
     assertEquals("13.99", dto.getCasePrice());
+  }
+
+  @Test
+  @DisplayName("Should be able to load all products")
+  void load_products() {
+    Response r = target("product")
+        .request(MediaType.APPLICATION_JSON)
+        .get();
+
+    assertEquals(200, r.getStatus());
+    assertEquals(MediaType.APPLICATION_JSON_TYPE, r.getMediaType());
+    List<ProductDto> products = r.readEntity(new GenericType<>() {});
+
+    assertFalse(products.isEmpty());
   }
 
   @Override

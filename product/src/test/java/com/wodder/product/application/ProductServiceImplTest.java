@@ -93,7 +93,7 @@ class ProductServiceImplTest {
   @Test
   @DisplayName("Can load all available items")
   void read_all_items() {
-    List<ProductDto> result = storage.loadAllActiveProducts();
+    List<ProductDto> result = storage.loadAllProducts();
     assertNotNull(result);
     assertFalse(result.isEmpty());
     assertEquals(4, result.size());
@@ -224,7 +224,7 @@ class ProductServiceImplTest {
         .setNumberOfItems("4"));
 
     assertTrue(storage.receiveShipmentOfProducts(cmd));
-    assertTrue(storage.loadAllActiveProducts()
+    assertTrue(storage.loadAllProducts()
         .stream()
         .anyMatch(p -> p.getExternalId().equals("item123"))
     );

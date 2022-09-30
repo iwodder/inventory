@@ -95,7 +95,7 @@ class ProductModelImplTest {
   @Test
   @DisplayName("Get items returns err on empty items list")
   void getItemsFailure1() {
-    when(productService.loadAllActiveProducts()).thenReturn(Collections.emptyList());
+    when(productService.loadAllProducts()).thenReturn(Collections.emptyList());
     Result<List<ProductDto>, String> result = inventoryItemModel.getItems();
     assertFalse(result.isOk());
     assertTrue(result.isErr());
@@ -106,7 +106,7 @@ class ProductModelImplTest {
   void getItemsSuccess() {
     List<ProductDto> items = new ArrayList<>();
     items.add(ProductDto.builder().build());
-    when(productService.loadAllActiveProducts()).thenReturn(items);
+    when(productService.loadAllProducts()).thenReturn(items);
     Result<List<ProductDto>, String> result = inventoryItemModel.getItems();
     assertFalse(result.isErr());
     assertTrue(result.isOk());
