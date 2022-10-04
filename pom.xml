@@ -87,7 +87,16 @@
                 <groupId>com.wodder</groupId>
                 <artifactId>product</artifactId>
                 <version>${product.version}</version>
-                <scope>provided</scope>
+            </dependency>
+            <dependency>
+                <groupId>com.wodder</groupId>
+                <artifactId>inventory</artifactId>
+                <version>${project.parent.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.h2database</groupId>
+                <artifactId>h2</artifactId>
+                <version>${h2.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>
@@ -98,11 +107,6 @@
             <artifactId>javaee-api</artifactId>
             <version>${javaee.version}</version>
             <scope>provided</scope>
-        </dependency>
-        <dependency>
-            <groupId>com.h2database</groupId>
-            <artifactId>h2</artifactId>
-            <version>${h2.version}</version>
         </dependency>
         <dependency>
             <groupId>org.junit.jupiter</groupId>

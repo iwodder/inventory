@@ -1,6 +1,6 @@
 package com.wodder;
 
-import java.io.File;
+import java.nio.file.Paths;
 import javax.ws.rs.ApplicationPath;
 import org.apache.catalina.Context;
 import org.apache.catalina.startup.Tomcat;
@@ -17,8 +17,10 @@ public class Main {
     LOGGER.info("Starting up application.");
     Tomcat tomcat = new Tomcat();
     tomcat.setPort(8080);
+    tomcat.getHost().setAppBase(".");
 
-    Context ctx = tomcat.addContext("", new File(".").getAbsolutePath());
+    Context ctx = tomcat.addContext("", Paths.get("").toAbsolutePath().toString());
+    LOGGER.debug("DocBase={}", ctx.getDocBase());
     Tomcat.addServlet(ctx, "app", new ServletContainer(new App()));
     ctx.addServletMappingDecoded("/*", "app");
     ctx.addApplicationListener(Listener.class.getName());
