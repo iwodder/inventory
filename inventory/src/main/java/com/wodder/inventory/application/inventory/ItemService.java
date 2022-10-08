@@ -1,6 +1,7 @@
 package com.wodder.inventory.application.inventory;
 
 import com.wodder.inventory.dto.ItemDto;
+import java.util.List;
 import java.util.Optional;
 
 public interface ItemService {
@@ -16,4 +17,6 @@ public interface ItemService {
   Optional<ItemDto> moveItem(String id, String location);
 
   String copyItemToNewLocation(String id, String location);
+
+  List<ItemDto> getAllItems();
 }

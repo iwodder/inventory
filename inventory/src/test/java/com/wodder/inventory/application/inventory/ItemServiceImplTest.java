@@ -10,6 +10,7 @@ import com.wodder.inventory.dto.ItemDto;
 import com.wodder.inventory.persistence.PersistenceFactory;
 import com.wodder.inventory.persistence.TestPersistenceFactory;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 class ItemServiceImplTest {
@@ -88,5 +89,33 @@ class ItemServiceImplTest {
     assertEquals(orig.getName(), dup.getName());
     assertEquals(orig.getProductId(), dup.getProductId());
     assertNotEquals(orig.getLocation(), dup.getLocation());
+  }
+
+  @Test
+  @DisplayName("Should be able to load all items")
+  void load_all() {
+    ItemServiceImpl itemService = new ItemServiceImpl(tpf.getRepository(Item.class));
+    itemService.addItem(
+        "p123",
+        "2% Milk",
+        "Refrigerator",
+        "Gallons"
+    );
+    itemService.addItem(
+        "p234",
+        "2% Milk",
+        "Refrigerator",
+        "Gallons"
+    );
+
+    assertEquals(2, itemService.getAllItems().size());
+  }
+
+  @Test
+  @DisplayName("No items should return an empty list")
+  void load_all_empty() {
+    ItemServiceImpl itemService = new ItemServiceImpl(tpf.getRepository(Item.class));
+
+    assertEquals(0, itemService.getAllItems().size());
   }
 }

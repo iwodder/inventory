@@ -89,6 +89,7 @@ public class ProductServiceImpl implements ProductService {
               .withExternalId(cmd.getExternalId())
               .withUnitPrice(cmd.getUnitPrice())
               .withUnitsOfMeasurement(cmd.getUnitMeasurement())
+              .isActive(true)
               .build();
       String id = productRepository.createItem(product).getId().getValue();
       productCreatedEvent.fire(

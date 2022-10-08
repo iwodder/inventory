@@ -10,9 +10,12 @@ import com.wodder.inventory.application.inventory.CopyItemCommand;
 import com.wodder.inventory.application.inventory.ItemService;
 import com.wodder.inventory.application.inventory.ItemServiceImpl;
 import com.wodder.inventory.domain.model.inventory.Item;
+import com.wodder.inventory.dto.ItemDto;
 import com.wodder.inventory.persistence.TestPersistenceFactory;
+import java.util.List;
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.core.Application;
+import javax.ws.rs.core.GenericType;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import org.glassfish.jersey.internal.inject.AbstractBinder;
@@ -122,6 +125,29 @@ class Hk2ItemRestAdapterTest extends JerseyTest {
     assertEquals(200, r.getStatus());
     JsonNode node = r.readEntity(JsonNode.class);
     assertFalse(node.get("id").textValue().isBlank());
+  }
+
+  @Test
+  @DisplayName("Loading all items returns a 200 response in json")
+  void loadItems() {
+    Response r = target("item")
+        .request(MediaType.APPLICATION_JSON)
+        .get();
+
+    assertEquals(200, r.getStatus());
+    assertEquals(MediaType.APPLICATION_JSON_TYPE, r.getMediaType());
+  }
+
+  @Test
+  @DisplayName("Loading all items returns a payload when items exist")
+  void loadItemsIsNotEmpty() {
+    Response r = target("item")
+        .request(MediaType.APPLICATION_JSON)
+        .get();
+
+    assertEquals(200, r.getStatus());
+    List<ItemDto> items = r.readEntity(new GenericType<>() {});
+    assertFalse(items.isEmpty());
   }
 
   @Override

@@ -91,5 +91,10 @@ class EventListenerTest {
     public String copyItemToNewLocation(String id, String location) {
       return null;
     }
+
+    @Override
+    public List<ItemDto> getAllItems() {
+      return new ArrayList<>();
+    }
   }
 }

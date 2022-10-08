@@ -34,6 +34,13 @@ public class ItemRestAdapter {
   }
 
   @GET
+  @Produces(MediaType.APPLICATION_JSON)
+  public Response getItems() {
+    LOGGER.info(">> getItems()");
+    return Response.ok(service.getAllItems()).build();
+  }
+
+  @GET
   @Path("{itemId}")
   @Produces(MediaType.APPLICATION_JSON)
   public Response getItem(@PathParam("itemId") String id) {

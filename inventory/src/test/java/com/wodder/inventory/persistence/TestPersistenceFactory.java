@@ -47,6 +47,7 @@ public class TestPersistenceFactory implements PersistenceFactory {
         Item.builder()
             .withId("item123")
             .withName("2% Milk")
+            .withProductId("p123")
             .withLocation("Refrigerator")
             .withUnits("Gallon")
             .build()

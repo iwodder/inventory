@@ -10,7 +10,9 @@ import com.wodder.product.domain.model.product.ProductRepository;
 import com.wodder.product.domain.model.shipment.ShipmentRepository;
 import javax.enterprise.inject.Default;
 import javax.enterprise.inject.Produces;
+import javax.inject.Singleton;
 
+@Singleton
 public class PersistenceFactoryImpl implements PersistenceFactory {
   private final ProductRepository productRepository;
   private final InMemoryCategoryRepository categoryRepository;

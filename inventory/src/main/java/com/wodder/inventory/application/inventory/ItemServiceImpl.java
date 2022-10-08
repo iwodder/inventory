@@ -5,8 +5,10 @@ import com.wodder.inventory.domain.model.inventory.ItemId;
 import com.wodder.inventory.domain.model.inventory.StorageLocation;
 import com.wodder.inventory.dto.ItemDto;
 import com.wodder.inventory.persistence.Repository;
+import java.util.List;
 import java.util.Optional;
 import java.util.function.Function;
+import java.util.stream.Collectors;
 import javax.inject.Inject;
 import javax.inject.Named;
 
@@ -88,5 +90,13 @@ public class ItemServiceImpl implements ItemService {
     } else {
       return null;
     }
+  }
+
+  @Override
+  public List<ItemDto> getAllItems() {
+    return repository.loadAllItems()
+        .stream()
+        .map(itemMapper)
+        .collect(Collectors.toList());
   }
 }
